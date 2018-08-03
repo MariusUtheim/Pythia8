@@ -35,6 +35,7 @@
 #include "Pythia8/PartonVertex.h"
 #include "Pythia8/ProcessLevel.h"
 #include "Pythia8/PythiaStdlib.h"
+#include "Pythia8/Rescattering.h"
 #include "Pythia8/ResonanceWidths.h"
 #include "Pythia8/RHadrons.h"
 #include "Pythia8/Ropewalk.h"
@@ -239,6 +240,9 @@ public:
   // ParticleData: the particle data table/database.
   ParticleData   particleData;
 
+  // CrossSectionData: the interaction data table/database.
+  CrossSectionData crossSectionData;
+
   // Random number generator.
   Rndm           rndm;
 
@@ -284,7 +288,8 @@ private:
   bool   doProcessLevel, doPartonLevel, doHadronLevel, doSoftQCDall,
          doSoftQCDinel, doCentralDiff, doDiffraction,
          doSoftQCD, doVMDsideA, doVMDsideB, doHardDiff, doResDec,
-         doFSRinRes, decayRHadrons, abortIfVeto, checkEvent, checkHistory;
+         doFSRinRes, doRescattering, decayRHadrons, abortIfVeto, checkEvent, 
+         checkHistory;
   int    nErrList;
   double epTolErr, epTolWarn, mTolErr, mTolWarn;
 
@@ -422,6 +427,9 @@ private:
 
   // The RHadrons class is used both at PartonLevel and HadronLevel.
   RHadrons   rHadrons;
+
+  // Class for calculating post-hadronization rescattering
+  Rescattering rescattering;
 
   // Flags for handling generation of heavy ion collisons.
   bool        hasHeavyIons, hasOwnHeavyIons, doHeavyIons;

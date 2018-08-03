@@ -10,7 +10,7 @@ PREFIX_SHARE=/Users/mariusutheim/pythia8235/share/Pythia8
 # Compilation flags (see ./configure --help for further documentation).
 ENABLE_SHARED=false
 CXX=g++
-CXX_COMMON=-O2  -pedantic -W -Wall -Wshadow -fPIC
+CXX_COMMON=-O2  -pedantic -W -Wall -Wshadow -fPIC -std=c++11
 CXX_SHARED=-dynamiclib
 CXX_SONAME=-Wl,-dylib_install_name,@rpath/
 LIB_SUFFIX=.dylib

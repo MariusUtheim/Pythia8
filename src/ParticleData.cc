@@ -470,7 +470,7 @@ bool ParticleDataEntry::preparePick(int idSgn, double mHat, int idInFlav) {
     for (int i = 0; i < int(channels.size()); ++i) {
       onMode = channels[i].onMode();
       currentBRNow = 0.;
-      if ( idSgn > 0 && (onMode == 1 || onMode == 2) )
+      if ( idSgn > 0 && (onMode == 1 || onMode == 2) ) // @TODO This part is messy
         currentBRNow = channels[i].bRatio();
       else if ( idSgn < 0 && (onMode == 1 || onMode == 3) )
         currentBRNow = channels[i].bRatio();
@@ -919,7 +919,7 @@ bool ParticleData::loadXML(istream& is, bool reset) {
 
     // Check for occurence of a file also to be read.
     if (word1 == "<file") {
-      string file = attributeValue(line, "name");
+      string file = attributeValue(line, "name"); ///TODO: This does nothing?
     }
 
     // Else save line to memory.

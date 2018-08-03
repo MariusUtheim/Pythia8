@@ -87,6 +87,13 @@ Pythia::Pythia(string xmlDir, bool printBanner) {
     info.errorMsg("Abort from Pythia::Pythia: particle data unavailable");
     return;
   }
+ 
+  crossSectionData.initPtr(&info, &settings, &rndm, couplingsPtr);
+  isConstructed = crossSectionData.init(xmlPath + "CrossSectionData.xml");
+  if (!isConstructed) {
+    info.errorMsg("Abort from Pythia::Pythia: cross-section data unavailable");
+    return;
+  }
 
   // Write the Pythia banner to output.
   if (printBanner) banner();
@@ -133,6 +140,8 @@ Pythia::Pythia(Settings& settingsIn, ParticleData& particleDataIn,
     return;
   }
 
+  ///TODO: What to do about crossSectionData
+
   // Write the Pythia banner to output.
   if (printBanner) banner();
 
@@ -173,6 +182,8 @@ Pythia::Pythia( istream& settingsStrings, istream& particleDataStrings,
     info.errorMsg("Abort from Pythia::Pythia: particle data unavailable");
     return;
   }
+
+  ///TODO: What to do about crossSectionData
 
   // Write the Pythia banner to output.
   if (printBanner) banner();
@@ -384,6 +395,8 @@ bool Pythia::readString(string line, bool warn) {
     if (passed) particleDataBuffer << line << endl;
     return passed;
   }
+
+  ///TODO: Handling cross-section specifications goes here
 
   // Everything else sent on to Settings.
   return settings.readString(line, warn);
@@ -625,6 +638,11 @@ bool Pythia::init() {
       "did not make sense");
     return false;
   }
+  if (crossSectionData.readingFailed()) {
+    info.errorMsg("Abort from Pythia::init: some user cross-section data "
+      "did not make sense");
+    return false;
+  }
 
   // Initialize the random number generator.
   if ( settings.flag("Random:setSeed") )
@@ -802,7 +820,7 @@ bool Pythia::init() {
   doVetoProcess    = false;
   doVetoPartons    = false;
   retryPartonLevel = false;
-  if (hasUserHooks) {
+  if (hasUserHooks) { ///TODO: Include cross-section data
     userHooksPtr->initPtr( &info, &settings, &particleData, &rndm, &beamA,
       &beamB, &beamPomA, &beamPomB, couplingsPtr, &partonSystems, &sigmaTot);
     if (!userHooksPtr->initAfterBeams()) {
@@ -889,7 +907,7 @@ bool Pythia::init() {
   }
 
   // Initialise merging hooks.
-  if ( doMerging && (hasMergingHooks || hasOwnMergingHooks) ) {
+  if ( doMerging && (hasMergingHooks || hasOwnMergingHooks) ) { ///TODO: include cross-section data
     mergingHooksPtr->initPtr( &settings, &info, &particleData, &partonSystems);
     mergingHooksPtr->init();
   }
@@ -1144,6 +1162,25 @@ bool Pythia::init() {
   doReconnect        = settings.flag("ColourReconnection:reconnect");
   reconnectMode      = settings.mode("ColourReconnection:mode");
   forceHadronLevelCR = settings.flag("ColourReconnection:forceHadronLevelCR");
+
+  // @TODO Everything relevant
+  // @TODO: Check that hadron vertices are set correctly
+  // Init rescattering
+  doRescattering = settings.flag("Rescattering:rescattering");
+  if (doRescattering) {
+    rescattering.initPtr(&info, &settings, &rndm, &particleData,
+                         &crossSectionData);
+    rescattering.init(couplingsPtr, timesDecPtr, decayHandlePtr, handledParticles);
+  }
+
+
+/*
+Info* infoPtrIn, Settings& settings,
+		Rndm* rndmPtrIn, ParticleData* particleDataPtrIn, Couplings* couplingsPtr,
+		TimeShower* timesDecPtr, DecayHandler* decayHandlePtr,
+		vector<int> handledParticles
+    
+    */
 
   // Succeeded.
   isInit = true;
@@ -1960,6 +1997,12 @@ bool Pythia::next() {
       info.errorMsg("Abort from Pythia::next: "
         "parton+hadronLevel failed; giving up");
       return false;
+    }
+
+    // @TODO: Put this at the right place
+    // Hadron rescattering
+    if (doRescattering) {
+      rescattering.next(event);
     }
 
     // Process- and parton-level statistics. Event scale.

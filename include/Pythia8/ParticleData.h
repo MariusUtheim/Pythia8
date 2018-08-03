@@ -744,7 +744,7 @@ private:
   map<int, ParticleDataEntry> pdt;
 
   // Pointer to current particle (e.g. when reading decay channels).
-  ParticleDataEntry* particlePtr;
+  ParticleDataEntry* particlePtr; ///TODO: Understand why this is required
 
   // Flag that initialization has been performed; whether any failures.
   bool   isInit, readingFailedSave;

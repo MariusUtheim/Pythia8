@@ -1,0 +1,20 @@
+<chapter name="Rescattering"> 
+ 
+<h2>Rescattering</h2> 
+ 
+Rescattering is going to be a thing.
+ 
+<h3>Rescattering parameters</h3> 
+ 
+<flag name="Rescattering:rescattering" default="off">
+When on, rescattering occurs.
+</flag>
+
+<parm name="Rescattering:tau0Max" default="1.0e-12" min="0.0"> 
+Particles with lifetimes smaller than this value will decay during
+rescattering.
+</param>
+
+</chapter>
+ 
+<!-- Copyright (C) 2018 Torbjorn Sjostrand --> 

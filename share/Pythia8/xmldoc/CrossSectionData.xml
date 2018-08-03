@@ -1,0 +1,25 @@
+<chapter name="Cross-Section Data"> 
+ 
+<h2>Cross-sections</h2> 
+ 
+<h3>Rescattering cross-sections</h3>
+
+<crossSection idA="130" idB="130" sigma="6.28e-39">
+  <interactionChannel resonance="113" onMode="1" bRatio="0.50" />
+  <interactionChannel resonance="111" onMode="12" bRatio="0.50" />
+</crossSection>
+
+<crossSection idA="2212" idB="2212" sigma="6.28e-40">
+  <interactionChannel resonance="2224" onMode="1" bRatio="1.0" />
+</crossSection>
+
+<crossSection idA="2212" idB="-2212" sigma="6.28e-38">
+  <interactionChannel resonance="2114" onMode="1" bRatio="0.10" />
+  <interactionChannel resonance="21" onMode="1" bRatio="0.85" />
+  <interactionChannel resonance="22" onMode="1" bRatio="0.049" />
+  <interactionChannel resonance="23" onMode="1" bRatio="0.001" />
+</crossSection>
+
+</chapter> 
+ 
+<!-- Copyright (C) 2018 Torbjorn Sjostrand --> 
