@@ -1,0 +1,5 @@
+HardQCD:all = on
+PhaseSpace:pTHatMin = 20.0
+Beams:eCM = 1400000
+
+Rescattering:rescattering = on

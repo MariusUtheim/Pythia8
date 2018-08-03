@@ -1,0 +1,2 @@
+
+g++ -std=c++11 main.cc -I../include -L../lib -lpythia8 -o mymain
