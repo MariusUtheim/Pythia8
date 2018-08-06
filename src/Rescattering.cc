@@ -19,16 +19,16 @@ namespace Pythia8 {
 
 class RescatteringEvent {
 public:
-	Vec4 origin;
-	int iFirst; 
-	int iSecond;
-
+// @TODO
 	RescatteringEvent(int iDecay, Vec4 origin)
-		: origin(origin), iFirst(iDecay), iSecond(0) {}
+		: iFirst(iDecay), iSecond(0), origin(origin) {}
 	RescatteringEvent(int iFirst, int iSecond, Vec4 origin)
-		: origin(origin), iFirst(iFirst), iSecond(iSecond) {}
+		: iFirst(iFirst), iSecond(iSecond), origin(origin) {}
 	
 	bool isDecay() { return iSecond == 0; }
+
+	int iFirst, iSecond;
+	Vec4 origin;
 };
 
 //--------------------------------------------------------------------------
@@ -171,7 +171,7 @@ void Rescattering::next(Event& event) {
 	auto candidates = std::priority_queue<RescatteringEvent,
 																				vector<RescatteringEvent>,
 																				RescatteringEventComparer>();
-
+	
 	for (int iFirst = 0; iFirst < event.size(); ++iFirst) {
 		if (!event[iFirst].isFinal())
 			continue;
