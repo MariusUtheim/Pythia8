@@ -85,6 +85,9 @@ bool Rescattering::calculateInteraction(Particle& p1In,
 
 	// Get cross section from data
   double sigma = crossSectionDataPtr->sigma(p1.id(), p2.id());
+	
+	// Calculate maximum distance, converting from mb to mm^2
+	double dmax = sqrt(sigma / M_PI * 10e-25); 
 
 	// Abort if the particles cannot interact
 	if (sigma == 0)
@@ -109,7 +112,7 @@ bool Rescattering::calculateInteraction(Particle& p1In,
 		return false;
 
 	// Abort if the impact parameter is too large
-	if ((x2 - x1).pT() > sqrt(sigma / M_PI))
+	if ((x2 - x1).pT() > dmax)
 		return false;
 
 	// Calculate origin in CM frame and transform to lab frame
