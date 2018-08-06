@@ -10,6 +10,10 @@ Rescattering is going to be a thing.
 When on, rescattering occurs.
 </flag>
 
+<flag name="Rescattering:allowSecondRescattering" default="on">
+When on, particles that have scattered can scatter again
+</flag>
+
 <parm name="Rescattering:tau0Max" default="1.0e-12" min="0.0"> 
 Particles with lifetimes smaller than this value will decay during
 rescattering.

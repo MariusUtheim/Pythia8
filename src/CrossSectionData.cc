@@ -136,18 +136,17 @@ bool CrossSectionData::readXML(istream &inStr, bool reset) {
         line += addLine;
       } 
 
-      // Read in channel properties - products so far only as a string.
-      int resonanceTmp   = intAttributeValue(line, "resonance");
+      // Read in basic channel properties
       int onModeTmp      = intAttributeValue(line, "onMode");
       double bRatioTmp   = doubleAttributeValue(line, "bRatio");
       int meModeTmp      = intAttributeValue(line, "meMode");
-
-
-      if (resonanceTmp == 0) {
-        infoPtr->errorMsg("Error in CrossSectionData::readXML:"
-                          " no resonance", line);
-        return false;
-      }
+      
+      // Parse products
+      vector<int> productsTmp;
+      int product;
+      stringstream productsStream(attributeValue(line, "products"));
+      while (productsStream >> product)
+        productsTmp.push_back(product);
 
       // Store new channel (if particle already known).
       if (!currentEntry) { // @TODO: This is sensitive to node naming conflicts (e.g. channels from ParticleData)
@@ -156,7 +155,7 @@ bool CrossSectionData::readXML(istream &inStr, bool reset) {
         return false;
       }
 
-      currentEntry->addChannel(resonanceTmp, onModeTmp, bRatioTmp, meModeTmp);
+      currentEntry->addChannel(onModeTmp, bRatioTmp, meModeTmp, productsTmp);
     };
   };
 

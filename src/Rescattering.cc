@@ -20,10 +20,10 @@ namespace Pythia8 {
 class RescatteringEvent {
 public:
 // @TODO
-	RescatteringEvent(int iDecay, Vec4 origin)
-		: iFirst(iDecay), iSecond(0), origin(origin) {}
-	RescatteringEvent(int iFirst, int iSecond, Vec4 origin)
-		: iFirst(iFirst), iSecond(iSecond), origin(origin) {}
+	RescatteringEvent(int iDecayIn, Vec4 originIn)
+		: iFirst(iDecayIn), iSecond(0), origin(originIn) {}
+	RescatteringEvent(int iFirstIn, int iSecondIn, Vec4 originIn)
+		: iFirst(iFirstIn), iSecond(iSecondIn), origin(originIn) {}
 	
 	bool isDecay() { return iSecond == 0; }
 
@@ -79,6 +79,10 @@ bool Rescattering::calculateInteraction(Particle& p1In,
 	Particle& p1 = p1In.tProd() < p2In.tProd() ? p1In : p2In;
 	Particle& p2 = p1In.tProd() < p2In.tProd() ? p2In : p1In;
 
+	if ((p1.statusAbs() == 111 || p2.statusAbs() == 111)
+		  && !settingsPtr->flag("Rescattering:allowSecondRescattering"))
+		return false;
+
 	// Get cross section from data
   double sigma = crossSectionDataPtr->sigma(p1.id(), p2.id());
 
@@ -123,6 +127,26 @@ bool Rescattering::calculateInteraction(Particle& p1In,
 
 //--------------------------------------------------------------------------
 
+static void phaseSpace2(Rndm* rndm, Vec4 pTotIn, double mAIn, double mBIn,
+											  Vec4& p1Out, Vec4& p2Out) {
+	double phi = 2 * M_PI * rndm->flat();
+	double theta = acos(2 * rndm->flat() - 1);
+
+	double mA2 = mAIn * mAIn, mB2 = mBIn * mBIn;
+	double s = pTotIn.m2Calc();
+	double p = sqrt(pow2(mA2 - mB2) / (4. * s) 
+									- (mA2 + mB2) / 2. + s / 4.);
+	
+	double x = p * cos(phi) * sin(theta),
+				 y = p * sin(phi) * sin(theta),
+				 z = p * cos(theta);
+
+	p1Out = Vec4(x, y, z, sqrt(p * p + mA2));
+	p1Out.bst(pTotIn);
+	p2Out = Vec4(-x, -y, -z, sqrt(p * p + mB2));
+	p2Out.bst(pTotIn);
+}
+
 void Rescattering::produceScatteringProducts(int id1, int id2, 
 	Vec4& origin, Event& event) {
 
@@ -131,23 +155,23 @@ void Rescattering::produceScatteringProducts(int id1, int id2,
 	int oldSize = event.size();
 	
   // Pick the interaction channel
-	auto entry = crossSectionDataPtr->findCrossSection(p1.id(), p2.id());
-	auto channel = entry->pickChannel();
+	CrossSectionDataEntry* entry 
+		= crossSectionDataPtr->findCrossSection(p1.id(), p2.id());
+	InteractionChannel channel = entry->pickChannel();
 
-	// Insert resonance particle
-  event.append(channel.resonance(), 119, id1, id2, 0, 0, 0, 0,
-							 p1.p() + p2.p(), (p1.p() + p2.p()).m2Calc());
-
-	// Force resonance particle to decay
-	if (!decays.decay(event.size() - 1, event))
-		infoPtr->errorMsg("Pythia8::Rescattering::produceScatteringProducts: failed to decay");
-
-	// Set correct status and mother for newly created particles
 	int status = (p1.status() == 111 || p2.status() == 111) ? 112 : 111;
-	for (int i = oldSize + 1; i < event.size(); ++i) {
-		event[i].status(status);
-		event[i].mothers(id1, id2);
-	}
+
+	Vec4 mom1, mom2;
+	phaseSpace2(this->rndmPtr, p1.p() + p2.p(),
+							particleDataPtr->m0(channel.product(0)),
+							particleDataPtr->m0(channel.product(1)),
+				      mom1, mom2);
+	
+	// @TODO: More than two particles
+	event.append(channel.product(0), status, id1, id2, 0, 0, 0, 0,
+	  					 mom1, mom1.mCalc());
+	event.append(channel.product(1), status, id1, id2, 0, 0, 0, 0,
+	  					 mom2, mom2.mCalc());
 
 	// Update the interacting particles
 	for (int i : { id1, id2 }) {

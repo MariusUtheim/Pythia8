@@ -35,20 +35,23 @@ class InteractionChannel {
 
 public:
 
-	InteractionChannel(int resonanceIn = 0, int onModeIn = 0, double bRatioIn = 0., int meModeIn = 0)
-    : resonanceSave(resonanceIn), onModeSave(onModeIn), bRatioSave(bRatioIn), meModeSave(meModeIn)
+	InteractionChannel(int onModeIn = 0, double bRatioIn = 0., int meModeIn = 0,
+                     vector<int> productsIn = vector<int>())
+    : onModeSave(onModeIn), bRatioSave(bRatioIn), meModeSave(meModeIn),
+      productsSave(productsIn)
 		  { }
 
 	// @TODO: Implement copy constructor
 
 	// Member functions for output.
-  int    resonance()    const { return resonanceSave; }
 	int 	 onMode()       const { return onModeSave; } 	
 	double bRatio()       const { return bRatioSave; }
   int    meMode()       const { return meModeSave; }
-//  int    nProducts()    const { return productsSave.size(); }
-//  int    product(int i) const { return (i >= 0 && i < (int)productsSave.size()) 
-//                                       ? productsSave[i] : 0; }
+  int    nProducts()    const { return productsSave.size(); }
+  int    product(int i) const { return (i >= 0 && i < (int)productsSave.size()) 
+                                       ? productsSave[i] : 0; }
+  
+  const vector<int>& products() { return productsSave; }
   
   bool isActive(int idSgn) const { 
     return (onModeSave == 1 || (onModeSave == 2 && idSgn > 0)
@@ -58,11 +61,10 @@ public:
 private:
 
   ///Comments
-  int resonanceSave;
 	int onModeSave;
 	double bRatioSave;
   int meModeSave;
-//	vector<int> productsSave;  // @TODO Should it be const or otherwise encapsulated?
+	vector<int> productsSave; // @TODO Should it be const or otherwise encapsulated?
 
 };
 
@@ -95,8 +97,9 @@ public:
   void clearChannels() { channels.resize(0); }
 
   // Add a decay channel to the decay table.
-  void addChannel(int resonance, int onMode = 0, double bRatio = 0., int meMode = 0) {
-    channels.push_back( InteractionChannel(resonance, onMode, bRatio, meMode) ); }
+  void addChannel(int onMode = 0, double bRatio = 0., int meMode = 0,
+                  vector<int> products = vector<int>()) {
+    channels.push_back(InteractionChannel(onMode, bRatio, meMode, products)); }
 
   // Decay table size.
   int sizeChannels() const { return channels.size(); }
