@@ -216,6 +216,17 @@ public:
   // Set the overall impact parameter for the MPI treatment.
   virtual double doSetImpactParameter() { return 0.0; }
 
+
+  // @TODO Review
+  virtual bool canVetoRescatteringInteraction() const { return false; }
+  virtual bool doVetoRescatteringInteraction(Particle&,
+    Particle&, Vec4&) { return false; }
+
+  //virtual bool canVetoRescatteringDecay() const { return false; }
+  //virtual bool doVetoRescatteringDecay() const { return false; }
+
+
+
 protected:
 
   // Constructor.

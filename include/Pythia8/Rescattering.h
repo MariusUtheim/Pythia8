@@ -19,10 +19,11 @@ public:
 	Rescattering() {}
 
 	void initPtr(Info* infoPtrIn, Settings* settingsPtrIn, Rndm* rndmPtrIn,
-		ParticleData* particleDataPtrIn, CrossSectionData* crossSectionDataPtrIn) {
+		ParticleData* particleDataPtrIn, CrossSectionData* crossSectionDataPtrIn,
+		UserHooks* userHooksIn) {
 			infoPtr = infoPtrIn; settingsPtr = settingsPtrIn; rndmPtr = rndmPtrIn;
 			particleDataPtr = particleDataPtrIn;
-			crossSectionDataPtr = crossSectionDataPtrIn;
+			crossSectionDataPtr = crossSectionDataPtrIn; userHooksPtr = userHooksIn;
 		}
 
 	// @TODO: How to intialize decays?
@@ -50,12 +51,14 @@ private:
 
 	CrossSectionData* crossSectionDataPtr;
 
+	UserHooks* userHooksPtr;
+
 	StringFlav flavSel;
 
 	ParticleDecays decays;
 
 	ResonanceDecays resonanceDecays;
-
+ 
 
 	bool calculateDecay(Particle& pIn, Vec4& originOut);
 	bool calculateInteraction(Particle& p1In, Particle& p2In, Vec4& originOut);

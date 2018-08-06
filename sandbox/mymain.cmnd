@@ -1,6 +1,6 @@
 HardQCD:all = on
 PhaseSpace:pTHatMin = 20.0
-Beams:eCM = 7000
+Beams:eCM = 700
 
 Rescattering:rescattering = on
 Rescattering:allowSecondRescattering = on

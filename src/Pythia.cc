@@ -1152,7 +1152,7 @@ bool Pythia::init() {
   nShowEvt     = settings.mode("Next:numberShowEvent");
   showSaV      = settings.flag("Next:showScaleAndVertex");
   showMaD      = settings.flag("Next:showMothersAndDaughters");
-
+ 
   // Init colour reconnection and junction splitting.
   colourReconnection.init( &info, settings, &rndm, &particleData,
     &beamA, &beamB, &partonSystems);
@@ -1169,7 +1169,7 @@ bool Pythia::init() {
   doRescattering = settings.flag("Rescattering:rescattering");
   if (doRescattering) {
     rescattering.initPtr(&info, &settings, &rndm, &particleData,
-                         &crossSectionData);
+                         &crossSectionData, userHooksPtr);
     rescattering.init(couplingsPtr, timesDecPtr, decayHandlePtr, handledParticles);
   }
 

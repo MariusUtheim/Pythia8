@@ -120,6 +120,10 @@ bool Rescattering::calculateInteraction(Particle& p1In,
 	m.invert();
 	collisionOrigin.rotbst(m);
 
+	if ((userHooksPtr != nullptr) && userHooksPtr->canVetoRescatteringInteraction())
+		if (userHooksPtr->doVetoRescatteringInteraction(p1, p2, collisionOrigin))
+			return false;
+
 	// Return event candidate
 	originOut = collisionOrigin;
 	return true;
