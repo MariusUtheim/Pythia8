@@ -75,25 +75,20 @@ bool Rescattering::produceDecayProducts(int iDec, Event& event) {
 bool Rescattering::calculateInteraction(int idA, int idB, 
   Event& event, Vec4& originOut) {
 
-  Particle& hadA = event[idA];
-  Particle& hadB = event[idB];
+  // Abort if the two particles come from the same decay
+  // @TODO: Test what happens if this gets turned off
+  if (event[idA].mother1() == event[idB].mother1()
+      && (event[idA].status() >= 90 && event[idA].status() <= 99))
+    return false;
 
   // Get cross section from data
   // @TODO: double sigma = crossSectionDataPtr->sigma(hadA.id(), hadB.id());
-  double sigma;
-  if (hadA.idAbs() > 1000 && hadB.idAbs() > 1000)
-    sigma = (hadA.id() * hadB.id() < 0) ? 60 : 50;
-  else if ((hadA.idAbs() > 1000 && hadB.idAbs() > 100) 
-        || (hadA.idAbs() > 100 && hadB.idAbs() > 1000))
-    sigma = 40;
-  else if (hadA.idAbs() > 100 && hadB.idAbs() > 100)
-    sigma = 30;
-  else
-    return false;
+  // if (sigma == 0) return false;
+  double sigma = 40;
 
   // Set up positions for each particle in their CM frame
   RotBstMatrix frame;
-  frame.toCMframe(hadA.p(), hadB.p());
+  frame.toCMframe(event[idA].p(), event[idB].p());
 
   Vec4 vA = event[idA].vProd();
   Vec4 pA = event[idA].p();
