@@ -35,17 +35,17 @@ class InteractionChannel {
 
 public:
 
-	InteractionChannel(int onModeIn = 0, double bRatioIn = 0., int meModeIn = 0,
+  InteractionChannel(int onModeIn = 0, double bRatioIn = 0., int meModeIn = 0,
                      vector<int> productsIn = vector<int>())
     : onModeSave(onModeIn), bRatioSave(bRatioIn), meModeSave(meModeIn),
       productsSave(productsIn)
-		  { }
+      { }
 
-	// @TODO: Implement copy constructor
+  // @TODO: Implement copy constructor
 
-	// Member functions for output.
-	int 	 onMode()       const { return onModeSave; } 	
-	double bRatio()       const { return bRatioSave; }
+  // Member functions for output.
+  int    onMode()       const { return onModeSave; }   
+  double bRatio()       const { return bRatioSave; }
   int    meMode()       const { return meModeSave; }
   int    nProducts()    const { return productsSave.size(); }
   int    product(int i) const { return (i >= 0 && i < (int)productsSave.size()) 
@@ -61,10 +61,10 @@ public:
 private:
 
   ///Comments
-	int onModeSave;
-	double bRatioSave;
+  int onModeSave;
+  double bRatioSave;
   int meModeSave;
-	vector<int> productsSave; // @TODO Should it be const or otherwise encapsulated?
+  vector<int> productsSave; // @TODO Should it be const or otherwise encapsulated?
 
 };
 
@@ -76,24 +76,24 @@ class CrossSectionDataEntry {
 
 public:
 
-	CrossSectionDataEntry(int idAIn = 0, int idBIn = 0, double sigmaIn = 0.)
-		: idASave(idAIn), idBSave(idBIn), sigmaSave(sigmaIn) {}
+  CrossSectionDataEntry(int idAIn = 0, int idBIn = 0, double sigmaIn = 0.)
+    : idASave(idAIn), idBSave(idBIn), sigmaSave(sigmaIn) {}
 
-	// @TODO: Implement copy constructor
+  // @TODO: Implement copy constructor
 
-	void initPtr(CrossSectionData* crossSectionDataPtrIn) {
+  void initPtr(CrossSectionData* crossSectionDataPtrIn) {
     crossSectionDataPtr = crossSectionDataPtrIn; }
-	
-	// Accessors
-  int 	 idA() 	 const { return idASave; }
-	int 	 idB() 	 const { return idBSave; }
-	double sigma() const { return sigmaSave; }
+  
+  // Accessors
+  int    idA()    const { return idASave; }
+  int    idB()    const { return idBSave; }
+  double sigma() const { return sigmaSave; }
 
   void idA(int idAIn)        { idASave = idAIn; }
   void idB(int idBIn)        { idBSave = idBIn; }
   void sigma(double sigmaIn) { sigmaSave = sigmaIn; }
 
-	// Reset to empty interaction table.
+  // Reset to empty interaction table.
   void clearChannels() { channels.resize(0); }
 
   // Add a decay channel to the decay table.
@@ -125,9 +125,9 @@ public:
 
 private:
 
-	int idASave, idBSave;
-	double sigmaSave;
-	vector<InteractionChannel> channels;
+  int idASave, idBSave;
+  double sigmaSave;
+  vector<InteractionChannel> channels;
 
   // Summed branching ratio of currently open channels.
   double currentBRSum;
@@ -149,18 +149,18 @@ class CrossSectionData {
 
 public:
 
-	CrossSectionData() : infoPtr(0), settingsPtr(0), rndmPtr(0), 
-		couplingsPtr(0), isInit(false) {}
+  CrossSectionData() : infoPtr(0), settingsPtr(0), rndmPtr(0), 
+    couplingsPtr(0), isInit(false) {}
 
-	// @TODO: Initialize copy operator
+  // @TODO: Initialize copy operator
 
-	// Initialize pointers.
+  // Initialize pointers.
   void initPtr(Info* infoPtrIn, Settings* settingsPtrIn, Rndm* rndmPtrIn,
     Couplings* couplingsPtrIn) {infoPtr = infoPtrIn;
     settingsPtr = settingsPtrIn; rndmPtr = rndmPtrIn;
     couplingsPtr = couplingsPtrIn;}
 
-	// Read in database from specific file.
+  // Read in database from specific file.
   bool init(string startFile = "../share/Pythia8/xmldoc/ParticleData.xml") {
     initCommon(); return readXML(startFile); }
 
@@ -234,7 +234,7 @@ private:
   // The individual particle need access to the full database.
   friend class CrossSectionDataEntry;
 
-	// Pointer to various information on the generation.
+  // Pointer to various information on the generation.
   Info*     infoPtr;
 
   // Pointer to the settings database.
