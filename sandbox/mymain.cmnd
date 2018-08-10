@@ -4,7 +4,7 @@ Beams:eCM = 2000
 Fragmentation:setVertices = on
 
 Rescattering:rescattering = on
-Rescattering:allowSecondRescattering = on
+Rescattering:doSecondRescattering = on
 
 Next:numberCount = 1000
 

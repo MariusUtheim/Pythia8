@@ -1,0 +1,6 @@
+make
+cd sandbox
+sh b
+sh r
+python myplot.py
+okular outplot.pdf &

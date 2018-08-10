@@ -72,7 +72,7 @@ void main_timeRescattering() {
 	Pythia pythiaR(string("../share/Pythia8/xmldoc"), false);
 	pythiaR.readFile("mymain.cmnd");
 	pythiaR.readString("Rescattering:rescattering = on");
-	pythiaR.readString("Rescattering:allowSecondRescattering = off");
+	pythiaR.readString("Rescattering:doSecondRescattering = off");
 	pythiaR.init();
 
 	tBefore = high_resolution_clock::now();
@@ -85,7 +85,7 @@ void main_timeRescattering() {
 	Pythia pythia2(string("../share/Pythia8/xmldoc"), false);
 	pythia2.readFile("mymain.cmnd");
 	pythia2.readString("Rescattering:rescattering = on");
-	pythia2.readString("Rescattering:allowSecondRescattering = on");
+	pythia2.readString("Rescattering:doSecondRescattering = on");
 	pythia2.init();
 
 	tBefore = high_resolution_clock::now();
@@ -110,9 +110,10 @@ void main_doTest() {
 	pythia.readFile("mymain.cmnd");
 	pythia.init();
 
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 1000; ++i)
 		pythia.next();
 
+  RescatteringLogger::_().print();
 }
 
 

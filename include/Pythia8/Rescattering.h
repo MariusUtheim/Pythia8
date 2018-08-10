@@ -31,25 +31,18 @@ public:
 
   void print()
   {
-    int nTot = nHit + nObviousAway + nMissImpact + nMissAway + nSpacelike;
-    double totFac = sqrt(nHit) + sqrt(nObviousAway) + sqrt(nMissImpact) + sqrt(nMissAway) + sqrt(nSpacelike);
-    cout << "\n ==== Rescattering report === " << endl
-         << left 
-         << " #nHit   = " << setw(10) << nHit        << 100 * sqrt(nHit)        / totFac << endl
-         << " #Away!  = " << setw(10) << nObviousAway<< 100 * sqrt(nObviousAway)/ totFac << endl
-         << " #TooFar = " << setw(10) << nMissImpact << 100 * sqrt(nMissImpact) / totFac << endl
-         << " #Away   = " << setw(10) << nMissAway   << 100 * sqrt(nMissAway  ) / totFac << endl
-         << " #S.like = " << setw(10) << nSpacelike  << 100 * sqrt(nSpacelike ) / totFac << endl
-         << " #TOTAL  = " << setw(1) << (int)nTot << endl
+    //int nTot = nHit + nObviousAway + nMissImpact + nMissAway + nSpacelike;
+    //double totFac = sqrt(nHit) + sqrt(nObviousAway) + sqrt(nMissImpact) + sqrt(nMissAway) + sqrt(nSpacelike);
+    cout 
          << impactParameter
-         << r << phi
+         << r
          << eCM;
 
 
     HistPlot hpl("myplot");
-    hpl.plotFrame("outplot", impactParameter / nHit, "Impact parameter", "$b$", "$p$");
-    hpl.plotFrame("", r / nHit, "Collision radius", "$r$", "$p$");
-    hpl.plotFrame("", eCM / nHit, "Center of mass energy", "$E_{CM}$", "$p$");
+    hpl.plotFrame("outplot", impactParameter, "Impact parameter", "$b$", "$p$");
+    hpl.plotFrame("", r, "Collision radius", "$r$", "$p$");
+    hpl.plotFrame("", eCM, "Center of mass energy", "$E_{CM}$", "$p$");
   }
 
 private:
@@ -58,7 +51,7 @@ private:
       impactParameter("Impact parameter", 50, 0, 4, false),
       r("r", 50, 0, 100, false),
       phi("phi", 100, -M_PI, M_PI),
-      eCM("eCM", 30, 0.05, 5, true)
+      eCM("eCM", 30, 0.1, 10, true)
   { }
 
 };
