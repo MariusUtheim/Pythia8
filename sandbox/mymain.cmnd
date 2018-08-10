@@ -1,6 +1,10 @@
-HardQCD:all = on
-PhaseSpace:pTHatMin = 20.0
-Beams:eCM = 700
+SoftQCD:nonDiffractive = on
+Beams:eCM = 2000
+
+Fragmentation:setVertices = on
 
 Rescattering:rescattering = on
 Rescattering:allowSecondRescattering = on
+
+Next:numberCount = 1000
+

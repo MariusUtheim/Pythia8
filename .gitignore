@@ -36,3 +36,11 @@
 
 # VSCode
 .vscode/*
+
+# Sandbox output
+sandbox/*.py
+sandbox/*.pdf
+sandbox/*.dat
+sandbox/*.txt
+sandbox/mymain
+sandbox/mymain.output
