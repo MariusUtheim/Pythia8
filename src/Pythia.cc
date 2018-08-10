@@ -1168,9 +1168,19 @@ bool Pythia::init() {
   // Init rescattering
   doRescattering = settings.flag("Rescattering:rescattering");
   if (doRescattering) {
-    rescattering.initPtr(&info, &settings, &rndm, &particleData,
-                         &crossSectionData, userHooksPtr);
-    rescattering.init(couplingsPtr, timesDecPtr, decayHandlePtr, handledParticles);
+    if (!settings.flag("Fragmentation:setVertices"))
+    {
+      // @TODO Handle error message correctly
+      info.errorMsg("Error: Rescattering:rescattering is on, but "
+        "Fragmentation:setVertices is off. Rescattering will be turned off.");
+      doRescattering = false;
+    }
+    else
+    {
+      rescattering.initPtr(&info, &settings, &rndm, &particleData,
+                          &crossSectionData, userHooksPtr);
+      rescattering.init(couplingsPtr, timesDecPtr, decayHandlePtr, handledParticles);
+    }
   }
 
 
