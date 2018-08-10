@@ -11,10 +11,62 @@
 
 namespace Pythia8 {
 
+class RescatteringLogger
+{
+public:
+
+  int nHit,  nObviousAway, nMissImpact, nMissAway, nSpacelike;
+  Hist impactParameter;
+  Hist r, phi;
+  Hist eCM;
+
+  static RescatteringLogger& _()
+  {
+    static RescatteringLogger _instance;
+    return _instance;
+  }
+
+  RescatteringLogger(RescatteringLogger const &) = delete;
+  void operator =(RescatteringLogger const &) = delete;
+
+  void print()
+  {
+    int nTot = nHit + nObviousAway + nMissImpact + nMissAway + nSpacelike;
+    double totFac = sqrt(nHit) + sqrt(nObviousAway) + sqrt(nMissImpact) + sqrt(nMissAway) + sqrt(nSpacelike);
+    cout << "\n ==== Rescattering report === " << endl
+         << left 
+         << " #nHit   = " << setw(10) << nHit        << 100 * sqrt(nHit)        / totFac << endl
+         << " #Away!  = " << setw(10) << nObviousAway<< 100 * sqrt(nObviousAway)/ totFac << endl
+         << " #TooFar = " << setw(10) << nMissImpact << 100 * sqrt(nMissImpact) / totFac << endl
+         << " #Away   = " << setw(10) << nMissAway   << 100 * sqrt(nMissAway  ) / totFac << endl
+         << " #S.like = " << setw(10) << nSpacelike  << 100 * sqrt(nSpacelike ) / totFac << endl
+         << " #TOTAL  = " << setw(1) << (int)nTot << endl
+         << impactParameter
+         << r << phi
+         << eCM;
+
+
+    HistPlot hpl("myplot");
+    hpl.plotFrame("outplot", impactParameter / nHit, "Impact parameter", "$b$", "$p$");
+    hpl.plotFrame("", r / nHit, "Collision radius", "$r$", "$p$");
+    hpl.plotFrame("", eCM / nHit, "Center of mass energy", "$E_{CM}$", "$p$");
+  }
+
+private:
+  RescatteringLogger() 
+    : nMissImpact(0), nMissAway(0), nSpacelike(0),
+      impactParameter("Impact parameter", 50, 0, 4, false),
+      r("r", 50, 0, 100, false),
+      phi("phi", 100, -M_PI, M_PI),
+      eCM("eCM", 30, 0.05, 5, true)
+  { }
+
+};
 
 class Rescattering {
 
 public:
+
 
 	Rescattering() {}
 
@@ -27,6 +79,7 @@ public:
 		}
 
 	// @TODO: How to intialize decays?
+  // @TODO: Cache settings
 	void init(Couplings* couplingsPtrIn, TimeShower* timesDecPtrIn, 
 					  DecayHandler* decayHandlerPtrIn, vector<int> handledParticles) {
 		flavSel.init(*settingsPtr, particleDataPtr, rndmPtr, infoPtr);
@@ -37,7 +90,6 @@ public:
 	}
 
 	void next(Event& event);
-
 
 private: 
 
@@ -61,7 +113,7 @@ private:
  
 
 	bool calculateDecay(Particle& pIn, Vec4& originOut);
-	bool calculateInteraction(Particle& p1In, Particle& p2In, Vec4& originOut);
+	bool calculateInteraction(int idA, int idB, Event& event, Vec4& originOut);
 	
 	bool produceDecayProducts(int iDec, Event& event);
 

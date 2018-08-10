@@ -14,10 +14,11 @@ When on, rescattering occurs.
 When on, particles that have scattered can scatter again
 </flag>
 
-<parm name="Rescattering:tau0Max" default="1.0e-12" min="0.0"> 
-Particles with lifetimes smaller than this value will decay during
-rescattering.
-</param>
+
+<parm name="Rescattering:maxRadius" default="1.0e-9" min="0.0">
+The radius around the collision origin outside of which rescattering
+is not allowed.
+</parm>
 
 </chapter>
  

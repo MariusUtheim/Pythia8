@@ -20,23 +20,23 @@ namespace Pythia8 {
 class RescatteringEvent {
 public:
 // @TODO
-	RescatteringEvent(int iDecayIn, Vec4 originIn)
-		: iFirst(iDecayIn), iSecond(0), origin(originIn) {}
-	RescatteringEvent(int iFirstIn, int iSecondIn, Vec4 originIn)
-		: iFirst(iFirstIn), iSecond(iSecondIn), origin(originIn) {}
-	
-	bool isDecay() { return iSecond == 0; }
+  RescatteringEvent(int iDecayIn, Vec4 originIn)
+    : iFirst(iDecayIn), iSecond(0), origin(originIn) {}
+  RescatteringEvent(int iFirstIn, int iSecondIn, Vec4 originIn)
+    : iFirst(iFirstIn), iSecond(iSecondIn), origin(originIn) {}
+  
+  bool isDecay() { return iSecond == 0; }
 
-	int iFirst, iSecond;
-	Vec4 origin;
+  int iFirst, iSecond;
+  Vec4 origin;
 };
 
 //--------------------------------------------------------------------------
 
 struct RescatteringEventComparer {
-	bool operator()(const RescatteringEvent& lhs, const RescatteringEvent& rhs) {
-		return lhs.origin.e() > rhs.origin.e();
-	}
+  bool operator()(const RescatteringEvent& lhs, const RescatteringEvent& rhs) {
+    return lhs.origin.e() > rhs.origin.e();
+  }
 };
 
 //==========================================================================
@@ -47,12 +47,12 @@ struct RescatteringEventComparer {
 
 bool Rescattering::calculateDecay(Particle& pIn, Vec4& originOut) {
   // @TODO: Also check maximum lifetime
-	if (!pIn.canDecay() || !pIn.mayDecay() 
-			|| pIn.tau() > settingsPtr->parm("Rescattering:tau0Max"))
-		return false;
+  if (!pIn.canDecay() || !pIn.mayDecay() 
+      || pIn.tau() > settingsPtr->parm("Rescattering:tau0Max"))
+    return false;
 
-	originOut = pIn.vDec();
-	return true;
+  originOut = pIn.vDec();
+  return true;
 }
 
 //--------------------------------------------------------------------------
@@ -61,201 +61,258 @@ bool Rescattering::produceDecayProducts(int iDec, Event& event) {
 
   int oldSize = event.size();
 
-	// @TODO: Something with the return value
-	decays.decay(iDec, event);
+  // @TODO: Something with the return value
+  decays.decay(iDec, event);
 
-	for (int i = oldSize; i < event.size(); ++i)
-		event[i].status(113);
+  for (int i = oldSize; i < event.size(); ++i)
+    event[i].status(113);
 
-	return true;
+  return true;
 }
 
 //--------------------------------------------------------------------------
 
-bool Rescattering::calculateInteraction(Particle& p1In,
-	Particle& p2In, Vec4& originOut) {
+bool Rescattering::calculateInteraction(int idA, int idB, 
+  Event& event, Vec4& originOut) {
 
-	// Order particles so that p1 is produced before p2
-	Particle& p1 = p1In.tProd() < p2In.tProd() ? p1In : p2In;
-	Particle& p2 = p1In.tProd() < p2In.tProd() ? p2In : p1In;
+  Particle& hadA = event[idA];
+  Particle& hadB = event[idB];
 
-	if ((p1.statusAbs() == 111 || p2.statusAbs() == 111)
-		  && !settingsPtr->flag("Rescattering:allowSecondRescattering"))
-		return false;
+  // Get cross section from data
+  // @TODO: double sigma = crossSectionDataPtr->sigma(hadA.id(), hadB.id());
+  double sigma;
+  if (hadA.idAbs() > 1000 && hadB.idAbs() > 1000)
+    sigma = (hadA.id() * hadB.id() < 0) ? 60 : 50;
+  else if ((hadA.idAbs() > 1000 && hadB.idAbs() > 100) 
+        || (hadA.idAbs() > 100 && hadB.idAbs() > 1000))
+    sigma = 40;
+  else if (hadA.idAbs() > 100 && hadB.idAbs() > 100)
+    sigma = 30;
+  else
+    return false;
 
-	// Get cross section from data
-  double sigma = crossSectionDataPtr->sigma(p1.id(), p2.id());
-	
-	// Calculate maximum distance, converting from mb to mm^2
-	double dmax = sqrt(sigma / M_PI * 10e-25); 
+  // Set up positions for each particle in their CM frame
+  RotBstMatrix frame;
+  frame.toCMframe(hadA.p(), hadB.p());
 
-	// Abort if the particles cannot interact
-	if (sigma == 0)
-		return false;
+  Vec4 vA = event[idA].vProd();
+  Vec4 pA = event[idA].p();
+  Vec4 vB = event[idB].vProd();
+  Vec4 pB = event[idB].p();
 
-	// Set up positions and velocities for each particle in their CM frame
-	RotBstMatrix m;
-	m.toCMframe(p1.p(), p2.p());
+  vA.rotbst(frame); vB.rotbst(frame);
+  pA.rotbst(frame); pB.rotbst(frame);
 
-	Vec4 v1 = p1.p() / p1.e(); 
-	Vec4 v2 = p2.p() / p2.e();
-	Vec4 x1 = p1.vProd(); 
-	Vec4 x2 = p2.vProd();
-	v1.rotbst(m); v2.rotbst(m);
-	x1.rotbst(m); x2.rotbst(m);
-		
-	// Move the first particle to time origin of the second particle
-	x1 += v1 * (x2.e() - x1.e());
+  // Abort if impact parameter is too large
+  if ((vA - vB).pT2() > (0.1 * FM2MM * FM2MM) * sigma / M_PI)
+    return false;
 
-	// Abort if the particles are not moving towards each other
-	if (dot3(x2 - x1, v2 - v1) >= 0)
-		return false;
+  // Check if particles have already passed each other
+  double t0 = max(vA.e(), vB.e());
+  double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
+  double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
 
-	// Abort if the impact parameter is too large
-	if ((x2 - x1).pT() > dmax)
-		return false;
+  if (zA >= zB)
+    return false;
 
-	// Calculate origin in CM frame and transform to lab frame
-	double dv = v1.pz() - v2.pz();
-	double tColl = -(x1 - x2).pz() / dv;
-	Vec4 collisionOrigin((x1.px() + x2.px()) / 2, (x1.py() + x2.py()) / 2,
-										   x1.pz() + tColl * v1.pz(), x1.e() + tColl);
-	m.invert();
-	collisionOrigin.rotbst(m);
+  // Calculate collision origin and transform to lab frame
+  double tCollision = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
+  Vec4 origin(0.5 * (vA.px() + vB.px()),
+              0.5 * (vA.py() + vB.py()),
+              zA + pA.pz() / pA.e() * (tCollision - t0),
+              tCollision);
 
-	if ((userHooksPtr != nullptr) && userHooksPtr->canVetoRescatteringInteraction())
-		if (userHooksPtr->doVetoRescatteringInteraction(p1, p2, collisionOrigin))
-			return false;
+  frame.invert();
+  origin.rotbst(frame);
 
-	// Return event candidate
-	originOut = collisionOrigin;
-	return true;
+  // @TODO: Abort if final separation is spacelike?
+
+  // Return event candidate
+  originOut = origin;
+  return true;
 }
 
 //--------------------------------------------------------------------------
 
-static void phaseSpace2(Rndm* rndm, Vec4 pTotIn, double mAIn, double mBIn,
-											  Vec4& p1Out, Vec4& p2Out) {
-	double phi = 2 * M_PI * rndm->flat();
-	double theta = acos(2 * rndm->flat() - 1);
+static void phaseSpace2(Rndm* rndm, Vec4 pTotIn, double mA, double mB,
+                        Vec4& p1Out, Vec4& p2Out) {
+  
+  double m0 = pTotIn.mCalc();
 
-	double mA2 = mAIn * mAIn, mB2 = mBIn * mBIn;
-	double s = pTotIn.m2Calc();
-	double p = sqrt(pow2(mA2 - mB2) / (4. * s) 
-									- (mA2 + mB2) / 2. + s / 4.);
-	
-	double x = p * cos(phi) * sin(theta),
-				 y = p * sin(phi) * sin(theta),
-				 z = p * cos(theta);
+  double eA = 0.5 * (m0 + (mA * mA - mB * mB) / m0);
+  double eB = 0.5 * (m0 + (mB * mB - mA * mA) / m0);
 
-	p1Out = Vec4(x, y, z, sqrt(p * p + mA2));
-	p1Out.bst(pTotIn);
-	p2Out = Vec4(-x, -y, -z, sqrt(p * p + mB2));
-	p2Out.bst(pTotIn);
+  double p = 0.5 / m0 * sqrtpos((m0 + (mA + mB)) * (m0 - (mA + mB))
+                              * (m0 + (mA - mB)) * (m0 - (mA - mB))); 
+															
+  double phi = 2 * M_PI * rndm->flat();
+  double costh = 2 * rndm->flat() - 1;
+  double sinth = sqrt(1 - costh * costh);
+
+  double x = p * sinth * cos(phi),
+         y = p * sinth * sin(phi),
+         z = p * costh;
+
+  p1Out = Vec4(x, y, z, eA);
+  p1Out.bst(pTotIn);
+  p2Out = Vec4(-x, -y, -z, eB);
+  p2Out.bst(pTotIn);
+
+  double err = (p1Out + p2Out - pTotIn).pAbs() 
+                / (p1Out + p2Out + pTotIn).pAbs();
+  if (isnan(err) || isinf(err) || err > 1.0e-9)
+  {
+    cout << "Phase space not quite good " << endl
+         << "   In: " << pTotIn 
+         << "  Out: " << p1Out + p2Out
+         << "error: " << scientific << err << endl
+         << endl;
+  }
+
 }
 
-void Rescattering::produceScatteringProducts(int id1, int id2, 
-	Vec4& origin, Event& event) {
+void Rescattering::produceScatteringProducts(int idA, int idB, 
+  Vec4& origin, Event& event) {
 
-	Particle& p1 = event[id1];
-	Particle& p2 = event[id2]; 
-	int oldSize = event.size();
-	
+  Particle& hadA = event[idA];
+  Particle& hadB = event[idB]; 
+  int oldSize = event.size();
+  
+  /* @TODO
   // Pick the interaction channel
-	CrossSectionDataEntry* entry 
-		= crossSectionDataPtr->findCrossSection(p1.id(), p2.id());
-	InteractionChannel channel = entry->pickChannel();
+  CrossSectionDataEntry* entry 
+    = crossSectionDataPtr->findCrossSection(hadA.id(), hadB.id());
 
-	int status = (p1.status() == 111 || p2.status() == 111) ? 112 : 111;
+  if (entry == nullptr) 
+  {
+    // @TODO: Output error
+    return;
+  }
+  
+  InteractionChannel channel = entry->pickChannel();
 
-	Vec4 mom1, mom2;
-	phaseSpace2(this->rndmPtr, p1.p() + p2.p(),
-							particleDataPtr->m0(channel.product(0)),
-							particleDataPtr->m0(channel.product(1)),
-				      mom1, mom2);
-	
-	// @TODO: More than two particles
-	event.append(channel.product(0), status, id1, id2, 0, 0, 0, 0,
-	  					 mom1, mom1.mCalc());
-	event.append(channel.product(1), status, id1, id2, 0, 0, 0, 0,
-	  					 mom2, mom2.mCalc());
+  int status = (hadA.status() == 111 || hadB.status() == 111) ? 112 : 111;
 
-	// Update the interacting particles
-	for (int i : { id1, id2 }) {
+  Vec4 mom1, mom2;
+  phaseSpace2(this->rndmPtr, hadA.p() + hadB.p(),
+              particleDataPtr->m0(channel.product(0)),
+              particleDataPtr->m0(channel.product(1)),
+              mom1, mom2);
+  
+  vector<Particle> newParticles;
 
-		event[i].statusNeg();
-		event[i].daughters(oldSize, event.size() - 1);
+  newParticles.push_back(Particle(channel.product(0), status, idA, idB, 0, 0, 
+                                  0, 0, mom1, mom1.mCalc()));
+  newParticles.push_back(Particle(channel.product(1), status, idA, idB, 0, 0, 
+                                  0, 0, mom2, mom2.mCalc()));
+*/
 
-		// Set proper lifetime (decay vertex the point closest to origin)
-		// @TODO: Test that the lifetime is set correctly
-		Vec4 beta = event[i].p() / event[i].e();
-		double gamma = 1 / sqrt(1 - dot3(beta, beta));
-		double t = dot3(origin - event[i].vProd(), beta) / dot3(beta, beta);
-		event[i].tau(t / gamma);
-	}
+  int status = (hadA.status() == 111 || hadB.status() == 111) ? 112 : 111;
+
+  Vec4 mom1, mom2;
+  phaseSpace2(this->rndmPtr, hadA.p() + hadB.p(),
+              hadA.m0(), hadB.m0(),
+              mom1, mom2);
+  
+  vector<Particle> newParticles;
+
+  newParticles.push_back(Particle(hadA.id(), status, idA, idB, 0, 0, 
+                                  0, 0, mom1, mom1.mCalc()));
+  newParticles.push_back(Particle(hadB.id(), status, idA, idB, 0, 0, 
+                                  0, 0, mom2, mom2.mCalc()));
+
+  for (auto pt = newParticles.begin(); pt < newParticles.end(); ++pt)
+    event.append(*pt);
+
+  // Update the interacting particles
+  for (int i : { idA, idB }) {
+
+    event[i].statusNeg();
+    event[i].daughters(oldSize, event.size() - 1);
+
+    // Set proper lifetime (decay vertex the point closest to origin)
+    // @TODO: Test that the lifetime is set correctly
+    Vec4 beta = event[i].p() / event[i].e();
+    double gamma = 1 / sqrt(1 - dot3(beta, beta));
+    double t = dot3(origin - event[i].vProd(), beta) / dot3(beta, beta);
+    event[i].tau(t / gamma);
+  }
 }
 
 //-------------------------------------------------------------------------- 
 
 void Rescattering::next(Event& event) {
+  
+  auto candidates = std::priority_queue<RescatteringEvent,
+                                        vector<RescatteringEvent>,
+                                        RescatteringEventComparer>();
+  
+  
+  double maxr = settingsPtr->parm("Rescattering:maxRadius");
 
-	auto candidates = std::priority_queue<RescatteringEvent,
-																				vector<RescatteringEvent>,
-																				RescatteringEventComparer>();
-	
-	for (int iFirst = 0; iFirst < event.size(); ++iFirst) {
-		if (!event[iFirst].isFinal())
-			continue;
+  auto canScatter = [maxr](Particle p) {
+    return p.isFinal() && p.isHadron()
+           && p.vProd().pAbs() < maxr
+           && p.m2Calc() > 0
+           ;
+  };
 
-		Vec4 origin;
-		if (calculateDecay(event[iFirst], origin)) {
-			candidates.push(RescatteringEvent(iFirst, origin));
-		}
+  for (int iFirst = 0; iFirst < event.size(); ++iFirst) {
+    if (!canScatter(event[iFirst]))
+      continue;
 
-		for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
-			if (!event[iSecond].isFinal())
-				continue; 
-			if (calculateInteraction(event[iFirst], event[iSecond], origin)) {
-				candidates.push(RescatteringEvent(iFirst, iSecond, origin));
-			}
-		}
-	}
+    Vec4 origin;
+    if (calculateDecay(event[iFirst], origin)) {
+      candidates.push(RescatteringEvent(iFirst, origin));
+    }
 
-	while (!candidates.empty()) {
-		RescatteringEvent ev = candidates.top();
-		candidates.pop();
+    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
+      if (!canScatter(event[iSecond]))
+        continue; 
+      if (calculateInteraction(iFirst, iSecond, event, origin)) {
+        candidates.push(RescatteringEvent(iFirst, iSecond, origin));
+      }
+    }
+  }
 
-		// Abort if either particle has already interacted elsewhere
-		if (!event[ev.iFirst].isFinal() 
-		|| (!ev.isDecay() && !event[ev.iSecond].isFinal()))
-			continue;
+  while (!candidates.empty()) {
+    RescatteringEvent ev = candidates.top();
+    candidates.pop();
 
-		int oldSize = event.size();
+    // Abort if either particle has already interacted elsewhere
+    if (!event[ev.iFirst].isFinal() 
+    || (!ev.isDecay() && !event[ev.iSecond].isFinal()))
+      continue;
 
-		// Produce products
-		if (ev.isDecay())
-			produceDecayProducts(ev.iFirst, event);
-		else
-			produceScatteringProducts(ev.iFirst, ev.iSecond, ev.origin, event);
+    int oldSize = event.size();
 
-		// Check for new interactions
-		for (int iFirst = oldSize; iFirst < event.size(); ++iFirst) {
-			if (!event[iFirst].isFinal())
-				continue;
-			
-			Vec4 origin;
-			if (calculateDecay(event[iFirst], origin))
-				candidates.push(RescatteringEvent(iFirst, origin));
+    // Produce products
+    if (ev.isDecay())
+      produceDecayProducts(ev.iFirst, event);
+    else
+      produceScatteringProducts(ev.iFirst, ev.iSecond, ev.origin, event);
 
-			for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
-				if (!event[iSecond].isFinal())
-					continue;
+    // Check for new interactions
+    if (settingsPtr->flag("Rescattering:allowSecondRescattering"))
+    {
+      for (int iFirst = oldSize; iFirst < event.size(); ++iFirst) {
+        if (!canScatter(event[iFirst]))
+          continue;
+        
+        Vec4 origin;
+        if (calculateDecay(event[iFirst], origin))
+          candidates.push(RescatteringEvent(iFirst, origin));
 
-				if (calculateInteraction(event[iFirst], event[iSecond], origin))
-					candidates.push(RescatteringEvent(iFirst, iSecond, origin));
-			}
-		}
-	}
+        for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
+          if (!canScatter(event[iFirst]))
+            continue;
+
+          if (calculateInteraction(iFirst, iSecond, event, origin))
+            candidates.push(RescatteringEvent(iFirst, iSecond, origin));
+        }
+      }
+    }
+  }
 }
 
 } // end namespace Pythia8
