@@ -48,7 +48,7 @@ struct RescatteringEventComparer {
 bool Rescattering::calculateDecay(Particle& pIn, Vec4& originOut) {
   // @TODO: Also check maximum lifetime
   if (!pIn.canDecay() || !pIn.mayDecay() 
-      || pIn.tau() > settingsPtr->parm("Rescattering:tau0Max"))
+      || pIn.tau() > tau0Max)
     return false;
 
   originOut = pIn.vDec();
@@ -242,12 +242,9 @@ void Rescattering::next(Event& event) {
                                         vector<RescatteringEvent>,
                                         RescatteringEventComparer>();
   
-  
-  double maxr = settingsPtr->parm("Rescattering:maxRadius");
-
-  auto canScatter = [maxr](Particle p) {
+  auto canScatter = [radiusMax = this->radiusMax](Particle p) {
     return p.isFinal() && p.isHadron()
-           && p.vProd().pAbs() < maxr
+           && p.vProd().pAbs() < radiusMax
            && p.m2Calc() > 0
            ;
   };
@@ -288,7 +285,7 @@ void Rescattering::next(Event& event) {
       produceScatteringProducts(ev.iFirst, ev.iSecond, ev.origin, event);
 
     // Check for new interactions
-    if (settingsPtr->flag("Rescattering:allowSecondRescattering"))
+    if (doSecondRescattering)
     {
       for (int iFirst = oldSize; iFirst < event.size(); ++iFirst) {
         if (!canScatter(event[iFirst]))

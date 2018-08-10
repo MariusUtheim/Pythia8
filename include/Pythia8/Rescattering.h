@@ -87,6 +87,10 @@ public:
 								couplingsPtrIn, timesDecPtrIn, &flavSel, decayHandlerPtrIn,
 								handledParticles);
 		resonanceDecays.init(infoPtr, particleDataPtr, rndmPtr);
+
+    doSecondRescattering = settingsPtr->flag("Rescattering:doSecondRescattering");
+    tau0Max = settingsPtr->flag("Rescattering:tau0Max");
+    radiusMax = settingsPtr->flag("Rescattering:radiusMax");
 	}
 
 	void next(Event& event);
@@ -118,6 +122,9 @@ private:
 	bool produceDecayProducts(int iDec, Event& event);
 
 	void produceScatteringProducts(int iP1, int iP2, Vec4& origin, Event& event);
+
+  bool doSecondRescattering;
+  double tau0Max, radiusMax;
 
 };
 
