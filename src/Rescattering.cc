@@ -216,8 +216,9 @@ void Rescattering::produceScatteringProducts(int idA, int idB,
   newParticles.push_back(Particle(hadB.id(), status, idA, idB, 0, 0, 
                                   0, 0, mom2, mom2.mCalc()));
 
-  for (auto pt = newParticles.begin(); pt < newParticles.end(); ++pt)
-    event.append(*pt);
+  // @TODO Some value copying going on here, but this is placeholder anyway
+  for (auto particle : newParticles)
+    event.append(particle);
 
   // Update the interacting particles
   for (int i : { idA, idB }) {
@@ -236,18 +237,17 @@ void Rescattering::produceScatteringProducts(int idA, int idB,
 
 //-------------------------------------------------------------------------- 
 
+bool Rescattering::canScatter(Particle& particle)
+{
+  return particle.isFinal() && particle.isHadron()
+      && particle.vProd().pAbs() < radiusMax;
+}
+
 void Rescattering::next(Event& event) {
   
   auto candidates = std::priority_queue<RescatteringEvent,
                                         vector<RescatteringEvent>,
                                         RescatteringEventComparer>();
-  
-  auto canScatter = [radiusMax = this->radiusMax](Particle p) {
-    return p.isFinal() && p.isHadron()
-           && p.vProd().pAbs() < radiusMax
-           && p.m2Calc() > 0
-           ;
-  };
 
   for (int iFirst = 0; iFirst < event.size(); ++iFirst) {
     if (!canScatter(event[iFirst]))

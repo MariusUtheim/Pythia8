@@ -11,51 +11,6 @@
 
 namespace Pythia8 {
 
-class RescatteringLogger
-{
-public:
-
-  int nHit,  nObviousAway, nMissImpact, nMissAway, nSpacelike;
-  Hist impactParameter;
-  Hist r, phi;
-  Hist eCM;
-
-  static RescatteringLogger& _()
-  {
-    static RescatteringLogger _instance;
-    return _instance;
-  }
-
-  RescatteringLogger(RescatteringLogger const &) = delete;
-  void operator =(RescatteringLogger const &) = delete;
-
-  void print()
-  {
-    //int nTot = nHit + nObviousAway + nMissImpact + nMissAway + nSpacelike;
-    //double totFac = sqrt(nHit) + sqrt(nObviousAway) + sqrt(nMissImpact) + sqrt(nMissAway) + sqrt(nSpacelike);
-    cout 
-         << impactParameter
-         << r
-         << eCM;
-
-
-    HistPlot hpl("myplot");
-    hpl.plotFrame("outplot", impactParameter, "Impact parameter", "$b$", "$p$");
-    hpl.plotFrame("", r, "Collision radius", "$r$", "$p$");
-    hpl.plotFrame("", eCM, "Center of mass energy", "$E_{CM}$", "$p$");
-  }
-
-private:
-  RescatteringLogger() 
-    : nMissImpact(0), nMissAway(0), nSpacelike(0),
-      impactParameter("Impact parameter", 50, 0, 4, false),
-      r("r", 50, 0, 100, false),
-      phi("phi", 100, -M_PI, M_PI),
-      eCM("eCM", 30, 0.1, 10, true)
-  { }
-
-};
-
 class Rescattering {
 
 public:
@@ -115,6 +70,8 @@ private:
 	bool produceDecayProducts(int iDec, Event& event);
 
 	void produceScatteringProducts(int iP1, int iP2, Vec4& origin, Event& event);
+
+  bool canScatter(Particle& particle);
 
   bool doSecondRescattering;
   double tau0Max, radiusMax;
