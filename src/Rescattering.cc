@@ -203,7 +203,8 @@ void Rescattering::produceScatteringProducts(int idA, int idB,
                                   0, 0, mom2, mom2.mCalc()));
 */
 
-  int status = (hadA.status() == 111 || hadB.status() == 111) ? 112 : 111;
+  int status = (hadA.status() == 111 || hadA.status() == 112
+             || hadB.status() == 111 || hadB.status() == 112) ? 112 : 111;
 
   Vec4 mom1, mom2;
   phaseSpace2(this->rndmPtr, hadA.p() + hadB.p(),
@@ -219,7 +220,10 @@ void Rescattering::produceScatteringProducts(int idA, int idB,
 
   // @TODO Some value copying going on here, but this is placeholder anyway
   for (auto particle : newParticles)
+  {
+    particle.vProd(origin);
     event.append(particle);
+  }
 
   // Update the interacting particles
   for (int i : { idA, idB }) {
@@ -301,7 +305,7 @@ void Rescattering::next(Event& event) {
           candidates.push(RescatteringVertex(iFirst, origin));
 
         for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
-          if (!canScatter(event[iFirst]))
+          if (!canScatter(event[iSecond]))
             continue;
 
           if (calculateInteraction(iFirst, iSecond, event, origin))
