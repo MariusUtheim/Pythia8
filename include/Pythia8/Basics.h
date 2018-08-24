@@ -526,7 +526,7 @@ public:
 
   // Add a histogram to the current plot, with optional style and legend.
   void add( const Hist& histIn, string styleIn = "h",
-    string legendIn = "void") { histos.push_back(&histIn);
+    string legendIn = "void") { histos.push_back(histIn);
     styles.push_back(styleIn); legends.push_back(legendIn); }
 
   // Plot a frame given the information from the new and add calls.
@@ -548,7 +548,7 @@ private:
   ofstream toPython;
   int      nPDF, nFrame, nTable;
   string   frameName, title, xLabel, yLabel, fileName, tmpFig;
-  vector<const Hist*> histos;
+  vector<Hist> histos;
   vector<string> styles, legends;
 
 };
