@@ -70,6 +70,24 @@ public:
   // Did decay result in new partons to hadronize?
   bool moreToDo() const {return hasPartons && keepPartons;}
 
+  // Decay all particles with widths larger than the specified value
+  bool decayAll(Event& event, double minWidth = -INFINITY) 
+  {
+    bool gotMoreToDo = false;
+    // Loop through all entries to find those that should decay.
+    for (int iDec = 0; iDec < event.size(); ++iDec)
+    {
+      Particle& decayer = event[iDec];
+      if (decayer.isFinal() && decayer.canDecay() && decayer.mayDecay()
+        && (decayer.mWidth() > minWidth || decayer.idAbs() == 311) ) {
+        decay(iDec, event);
+        gotMoreToDo = gotMoreToDo || moreToDo();
+      }
+    }
+
+    return gotMoreToDo;
+  }
+
 private:
 
   // Constants: could only be changed in the code itself.

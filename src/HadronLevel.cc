@@ -221,17 +221,7 @@ bool HadronLevel::next( Event& event) {
 
     // Second part: sequential decays of short-lived particles (incl. K0).
     if (doDecay) {
-
-      // Loop through all entries to find those that should decay.
-      int iDec = 0;
-      do {
-        Particle& decayer = event[iDec];
-        if ( decayer.isFinal() && decayer.canDecay() && decayer.mayDecay()
-          && (decayer.mWidth() > widthSepBE || decayer.idAbs() == 311) ) {
-          decays.decay( iDec, event);
-          if (decays.moreToDo()) moreToDo = true;
-        }
-      } while (++iDec < event.size());
+      moreToDo = decays.decayAll(event, widthSepBE);
     }
 
     // Third part: include Bose-Einstein effects among current particles.
@@ -239,19 +229,10 @@ bool HadronLevel::next( Event& event) {
       if (!boseEinstein.shiftEvent(event)) return false;
       doBoseEinsteinNow = false;
     }
-
+ 
     // Fourth part: sequential decays also of long-lived particles.
     if (doDecay) {
-
-      // Loop through all entries to find those that should decay.
-      int iDec = 0;
-      do {
-        Particle& decayer = event[iDec];
-        if ( decayer.isFinal() && decayer.canDecay() && decayer.mayDecay() ) {
-          decays.decay( iDec, event);
-          if (decays.moreToDo()) moreToDo = true;
-        }
-      } while (++iDec < event.size());
+      moreToDo = decays.decayAll(event);
     }
 
   // Normally done first time around, but sometimes not (e.g. Upsilon).
