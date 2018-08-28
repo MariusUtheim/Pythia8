@@ -15,7 +15,6 @@
 #include "Pythia8/Event.h"
 #include "Pythia8/FragmentationFlavZpT.h"
 #include "Pythia8/FragmentationSystems.h"
-#include "Pythia8/HadronScatter.h"
 #include "Pythia8/HiddenValleyFragmentation.h"
 #include "Pythia8/Info.h"
 #include "Pythia8/JunctionSplitting.h"
@@ -68,10 +67,6 @@ private:
   bool   doHadronize, doDecay, doBoseEinstein, allowRH, closePacking;
   double mStringMin, eNormJunction, widthSepBE;
 
-  // Settings for hadron scattering.
-  bool   doHadronScatter, hsAfterDecay;
-  int    hadronScatMode;
-
   // Pointer to various information on the generation.
   Info*         infoPtr;
 
@@ -103,9 +98,6 @@ private:
 
   // The generator class for normal decays.
   ParticleDecays decays;
-
-  // The generator class for hadron scattering.
-  HadronScatter hadronScatter;
 
   // Class for event geometry for Rope Hadronization. Production vertices.
   Ropewalk ropewalk;

@@ -40,7 +40,6 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
 
   // Main flags.
   doHadronize     = settings.flag("HadronLevel:Hadronize");
-  doHadronScatter = settings.flag("hadronLevel:HadronScatter");
   doDecay         = settings.flag("HadronLevel:Decay");
   doBoseEinstein  = settings.flag("HadronLevel:BoseEinstein");
 
@@ -58,10 +57,6 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
 
   // Need string density information be collected?
   closePacking     = settings.flag("StringPT:closePacking");
-
-  // Hadron scattering.
-  hadronScatMode  = settings.mode("HadronScatter:mode");
-  hsAfterDecay    = settings.flag("HadronScatter:afterDecay");
 
   // Rope hadronization. Setting of partonic production vertices.
   doRopes         = settings.flag("Ropewalk:RopeHadronization");
@@ -96,10 +91,6 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
 
   // Initialize BoseEinstein.
   boseEinstein.init(infoPtr, settings, *particleDataPtr);
-
-  // Initialize HadronScatter.
-  if (doHadronScatter)
-    hadronScatter.init(infoPtr, settings, rndmPtr, particleDataPtr);
 
   // Initialize Hidden-Valley fragmentation, if necessary.
   useHiddenValley = hiddenvalleyFrag.init(infoPtr, settings,
@@ -146,8 +137,7 @@ bool HadronLevel::next( Event& event) {
   }
 
   // Possibility of hadronization inside decay, but then no BE second time.
-  // Hadron scattering, first pass only --rjc
-  bool moreToDo, firstPass = true;
+  bool moreToDo;
   bool doBoseEinsteinNow = doBoseEinstein;
   do {
     moreToDo = false;
@@ -229,15 +219,6 @@ bool HadronLevel::next( Event& event) {
       }
     }
 
-    // Hadron scattering.
-    if (doHadronScatter) {
-      // New model.
-      if (hadronScatMode < 2) hadronScatter.scatter(event);
-      // Old model, before dacys.
-      else if ((hadronScatMode == 2) && !hsAfterDecay && firstPass)
-        hadronScatter.scatterOld(event);
-    }
-
     // Second part: sequential decays of short-lived particles (incl. K0).
     if (doDecay) {
 
@@ -252,10 +233,6 @@ bool HadronLevel::next( Event& event) {
         }
       } while (++iDec < event.size());
     }
-
-    // Hadron scattering, old model, after decays.
-    if (doHadronScatter && (hadronScatMode == 2) && hsAfterDecay && firstPass)
-      hadronScatter.scatterOld(event);
 
     // Third part: include Bose-Einstein effects among current particles.
     if (doBoseEinsteinNow) {
