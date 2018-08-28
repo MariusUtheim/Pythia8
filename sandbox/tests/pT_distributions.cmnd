@@ -6,9 +6,6 @@ Main:numberOfEvents = 10000
 Fragmentation:setVertices = on
 HadronLevel:Decay = off
 
-Rescattering:rescattering = on
-Rescattering:doSecondRescattering = on
+Rescattering:rescattering = off
+Rescattering:doSecondRescattering = off
 Rescattering:doDecays = off
-
-
-Next:numberCount = 1000
