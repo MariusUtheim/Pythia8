@@ -11,15 +11,20 @@ When on, rescattering occurs.
 </flag>
 
 <flag name="Rescattering:doSecondRescattering" default="on">
-When on, particles that have scattered can scatter again
+When on, particles that have rescattered can rescatter again.
 </flag>
 
-<parm name="Rescattering:tau0Max" default="1.0e-9" min="0.0">
+<flag name="Rescattering:doDecays" default="on">
+When on, particles with short lifetimes can decay during rescattering 
+calculations.
+</flag>
+
+<parm name="Rescattering:tau0Max" default="1.0e-6" min="0.0">
 The timescale for the rescattering process. Particles will not decay or 
 rescatter after this time.
 </parm>
 
-<parm name="Rescattering:radiusMax" default="1.0e-9" min="0.0">
+<parm name="Rescattering:radiusMax" default="1.0e-6" min="0.0">
 The radius around the collision origin outside of which rescattering
 is not allowed.
 </parm>

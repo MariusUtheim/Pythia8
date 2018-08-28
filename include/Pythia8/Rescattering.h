@@ -11,55 +11,7 @@
 
 namespace Pythia8 {
 
-class RescatteringLogger
-{
-public:
 
-  int nHit,  nObviousAway, nMissImpact, nMissAway, nSpacelike;
-  Hist impactParameter;
-  Hist r, phi;
-  Hist eCM, ytau;
-  int nScatter;
-
-  static RescatteringLogger& instance()
-  {
-    static RescatteringLogger _instance;
-    return _instance;
-  }
-
-  RescatteringLogger(RescatteringLogger const &) = delete;
-  void operator =(RescatteringLogger const &) = delete;
-
-  void print()
-  {
-    //int nTot = nHit + nObviousAway + nMissImpact + nMissAway + nSpacelike;
-    //double totFac = sqrt(nHit) + sqrt(nObviousAway) + sqrt(nMissImpact) + sqrt(nMissAway) + sqrt(nSpacelike);
-    cout 
-         << phi
-         << r
-         << eCM
-         << ytau;
-
-
-    HistPlot hpl("myplot");
-    hpl.plotFrame("outplot", phi / nScatter, "Azimuthal angle", "$\\phi$", "$n$");
-    hpl.plotFrame("", r / nScatter, "Collision radius", "$r$", "$p$");
-    hpl.plotFrame("", eCM / nScatter, "Center of mass energy", "$E_{CM}$", "$p$");
-    hpl.plotFrame("", ytau / nScatter, "ytau", "$y_\\tau$", "$p$");
-  }
-
-private:
-  RescatteringLogger() 
-    : nMissImpact(0), nMissAway(0), nSpacelike(0),
-      impactParameter("Impact parameter", 50, 0, 4, false),
-      r("r", 50, 0, 100, false),
-      phi("phi", 30, -M_PI, M_PI),
-      eCM("eCM", 30, 0.1, 10, true),
-      ytau("ytau", 50, -10, 10, false),
-      nScatter(0)
-  { }
-
-};
 
 class Rescattering {
 
@@ -86,6 +38,7 @@ public:
     resonanceDecays.init(infoPtr, particleDataPtr, rndmPtr);
 
     doSecondRescattering = settingsPtr->flag("Rescattering:doSecondRescattering");
+    doDecays = settingsPtr->flag("Rescattering:doDecays");
     tau0Max = settingsPtr->parm("Rescattering:tau0Max");
     radiusMax = settingsPtr->parm("Rescattering:radiusMax");
   }
@@ -122,7 +75,7 @@ private:
 
   bool canScatter(Particle& particle);
 
-  bool doSecondRescattering;
+  bool doSecondRescattering, doDecays;
   double tau0Max, radiusMax;
 
 };

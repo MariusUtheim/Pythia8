@@ -51,7 +51,7 @@ struct RescatteringEventComparer {
 bool Rescattering::calculateDecay(Particle& hadIn, Vec4& originOut) {
   // @TODO: Also check maximum lifetime
   if (!hadIn.canDecay() || !hadIn.mayDecay() 
-      || hadIn.tau() > tau0Max)
+      )//|| hadIn.tau() > tau0Max)
     return false;
 
   originOut = hadIn.vDec();
@@ -256,23 +256,23 @@ void Rescattering::next(Event& event) {
                                         vector<RescatteringVertex>,
                                         RescatteringEventComparer>();
 
-
   // @TODO Stress test and optimise if needed
   for (int iFirst = 0; iFirst < event.size(); ++iFirst) {
     if (!canScatter(event[iFirst]))
       continue;
 
     Vec4 origin;
-    if (calculateDecay(event[iFirst], origin)) {
+
+    if (doDecays && calculateDecay(event[iFirst], origin)) {
       candidates.push(RescatteringVertex(iFirst, origin));
     }
+
 
     for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
       if (!canScatter(event[iSecond]))
         continue; 
-      if (calculateInteraction(iFirst, iSecond, event, origin)) {
+      if (calculateInteraction(iFirst, iSecond, event, origin))
         candidates.push(RescatteringVertex(iFirst, iSecond, origin));
-      }
     }
   }
 
@@ -288,7 +288,7 @@ void Rescattering::next(Event& event) {
     int oldSize = event.size();
 
     // Produce products
-    if (ev.isDecay())
+    if (ev.isDecay()) 
       produceDecayProducts(ev.iFirst, event);
     else
       produceScatteringProducts(ev.iFirst, ev.iSecond, ev.origin, event);
@@ -301,7 +301,7 @@ void Rescattering::next(Event& event) {
           continue;
         
         Vec4 origin;
-        if (calculateDecay(event[iFirst], origin))
+        if (doDecays && calculateDecay(event[iFirst], origin))
           candidates.push(RescatteringVertex(iFirst, origin));
 
         for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
