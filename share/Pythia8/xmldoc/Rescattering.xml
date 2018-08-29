@@ -5,18 +5,9 @@
 Rescattering is going to be a thing.
  
 <h3>Rescattering parameters</h3> 
- 
-<flag name="Rescattering:rescattering" default="off">
-When on, rescattering occurs.
-</flag>
 
-<flag name="Rescattering:doSecondRescattering" default="on">
+<flag name="Rescattering:allowMultipleRescatterings" default="on">
 When on, particles that have rescattered can rescatter again.
-</flag>
-
-<flag name="Rescattering:doDecays" default="on">
-When on, particles with short lifetimes can decay during rescattering 
-calculations.
 </flag>
 
 <parm name="Rescattering:tau0Max" default="1.0e-6" min="0.0">

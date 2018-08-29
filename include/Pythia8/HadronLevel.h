@@ -104,6 +104,8 @@ private:
   // The generator class for rescatterings.
   Rescattering rescatterings;
 
+  bool allowMultipleRescatterings;
+
   // Class for event geometry for Rope Hadronization. Production vertices.
   Ropewalk ropewalk;
   bool doRopes, doShoving, doFlavour, doVertex, doBuffon;
@@ -151,8 +153,8 @@ private:
   struct PriorityNode;
 
   // Calculate the time of each decay and scatter and add them to the queue
-  void queueDecayScatter(Event& event, int iStart,
-                         priority_queue<PriorityNode>& queue);
+  void queueDecaysAndRescatterings(Event& event, int iStart,
+                                   priority_queue<PriorityNode>& queue);
   
 };
 

@@ -75,11 +75,15 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   // Allow R-hadron formation.
   allowRH         = settings.flag("RHadrons:allow");
 
+  // Allow decayed/rescattered particles to rescatter again
+  allowMultipleRescatterings
+                  = settings.flag("Rescattering:allowMultipleRescatterings");
+
   // Particles that should decay or not before Bose-Einstein stage.
   widthSepBE      = settings.parm("BoseEinstein:widthSep");
 
   // Need string density information be collected?
-  closePacking     = settings.flag("StringPT:closePacking");
+  closePacking    = settings.flag("StringPT:closePacking");
 
   // Rope hadronization. Setting of partonic production vertices.
   doRopes         = settings.flag("Ropewalk:RopeHadronization");
@@ -113,15 +117,14 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
     timesDecPtr, &flavSel, decayHandlePtr, handledParticles);
 
   rescatterings.init(infoPtr, particleDataPtr, rndmPtr,
-    nullptr, userHooksPtr);
+    nullptr /* @TODO Replace by CrossSectionData */, userHooksPtr);
 
-  /*
-  if (!settings.flag("Fragmentation:setVertices"))
-    {
-      // @TODO Handle error message correctly
-      info.errorMsg("Error: Rescattering:rescattering is on, but "
-        "Fragmentation:setVertices is off.
-        */
+  if (doRescatter && !settings.flag("Fragmentation:setVertices"))
+  {
+    // @TODO Handle error message correctly and at the right location
+    infoPtr->errorMsg("Error in HadronLevel::init: HadronLevel:Rescatter "
+      "is on, but Fragmentation:setVertices is off.");
+  }
 
   // Initialize BoseEinstein.
   boseEinstein.init(infoPtr, settings, *particleDataPtr);
@@ -259,7 +262,7 @@ bool HadronLevel::next( Event& event) {
       //@TODO: Pick the best underlying data structure (probably red-black tree)
       priority_queue<PriorityNode> candidates; 
 
-      queueDecayScatter(event, 0, candidates);
+      queueDecaysAndRescatterings(event, 0, candidates);
 
       while (!candidates.empty()) {
         PriorityNode node = candidates.top();
@@ -284,15 +287,14 @@ bool HadronLevel::next( Event& event) {
         }
 
         // @TODO Check for new interactions
-        //if (doSecondRescattering)
-          queueDecayScatter(event, oldSize, candidates);
+        if (allowMultipleRescatterings)
+          queueDecaysAndRescatterings(event, oldSize, candidates);
       }
     }
     // If rescattering is off, we don't care about the order of the decays
     else if (doDecay) 
     {
       decaysProducedPartons = decays.decayAll(event, widthSepBE);
-      if (decays.moreToDo()) decaysProducedPartons = true;
     }
 
     // Third part: include Bose-Einstein effects among current particles.
@@ -306,6 +308,7 @@ bool HadronLevel::next( Event& event) {
       decaysProducedPartons = decays.decayAll(event);
     }
 
+  // @TODO If not done, the next time around, rescatterings are not in order
   // Normally done first time around, but sometimes not (e.g. Upsilon).
   } while (decaysProducedPartons);
 
@@ -318,7 +321,7 @@ bool HadronLevel::next( Event& event) {
 
 // Calculate possible decays and rescatterings and add all to the queue.
 
-void HadronLevel::queueDecayScatter(Event& event, int iStart, 
+void HadronLevel::queueDecaysAndRescatterings(Event& event, int iStart, 
   priority_queue<HadronLevel::PriorityNode>& queue)
 {
   // @TODO Stress test and optimise if needed
