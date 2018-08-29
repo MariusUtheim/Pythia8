@@ -13,48 +13,7 @@ namespace Pythia8 {
 
 //==========================================================================
 
-// PriorityVertex data structure
-
-//--------------------------------------------------------------------------
-
-struct Rescattering::PriorityVertex {
-public:
-// @TODO
-  PriorityVertex(int iDecayIn, Vec4 originIn)
-    : iFirst(iDecayIn), iSecond(0), origin(originIn) {}
-  PriorityVertex(int iFirstIn, int iSecondIn, Vec4 originIn)
-    : iFirst(iFirstIn), iSecond(iSecondIn), origin(originIn) {}
-  
-  bool isDecay() { return iSecond == 0; }
-
-  // Priority comparison; the one with lowest time has highest priority!
-  bool operator<(const PriorityVertex& r) const
-  { return origin.e() > r.origin.e(); }
-
-  int iFirst, iSecond;
-  Vec4 origin;
-};
-
-//==========================================================================
-
 // The Rescattering class
-
-//--------------------------------------------------------------------------
-
-bool Rescattering::produceDecayProducts(int iDec, Event& event) {
-
-  int oldSize = event.size();
-
-  // @TODO: Something with the return value
-  decays.decay(iDec, event);
-
-  for (int i = oldSize; i < event.size(); ++i)
-    event[i].status(113);
-
-  return true;
-}
-
-
 
 //--------------------------------------------------------------------------
 
@@ -95,8 +54,8 @@ static void phaseSpace2(Rndm* rndmPtr, Vec4 pTotIn, double mA, double mB,
 
 }
 
-void Rescattering::produceScatteringProducts(int idA, int idB, 
-  Vec4& origin, Event& event) {
+void Rescattering::rescatter(int idA, int idB, 
+  Vec4 origin, Event& event) {
 
   Particle& hadA = event[idA];
   Particle& hadB = event[idB]; 
@@ -165,112 +124,6 @@ void Rescattering::produceScatteringProducts(int idA, int idB,
     double gamma = event[i].e() / event[i].m();
     double t = dot3(origin - event[i].vProd(), beta) / dot3(beta, beta);
     event[i].tau(t / gamma);
-  }
-}
-
-//-------------------------------------------------------------------------- 
-
-void Rescattering::calcDecaysRescatters(Event& event, int iStart,
-                            priority_queue<PriorityVertex>& queue)
-{
-  // @TODO Stress test and optimise if needed
-  for (int iFirst = iStart; iFirst < event.size(); ++iFirst) {
-    Particle& hadA = event[iFirst];
-
-    if (!hadA.isFinal() || !hadA.isHadron() 
-        || hadA.vProd().pAbs() >= radiusMax)
-      continue;
-
-    if (doDecays && hadA.canDecay() && hadA.mayDecay())
-      queue.push(PriorityVertex(iFirst, hadA.vDec()));
-
-    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
-      Particle& hadB = event[iSecond];
-      if (!hadB.isFinal() || !hadB.isHadron() 
-          || hadB.vProd().pAbs() >= radiusMax)
-        continue;
-      
-      // Continue if the two particles come from the same decay
-      // @TODO: Test what happens if this gets turned off
-      if (hadA.mother1() == hadB.mother1() 
-          && (hadA.status() >= 90 && hadA.status() <= 99))
-        continue;
-
-      // Get cross section from data
-      // @TODO: actually get cross section from somewhere
-      double sigma = 40;
-
-      // @TODO: Ideally, we just care about the invariant closest distance and
-      //  the time of closest approach at this point. All these calculations
-      //  could be shortened. In particular, profiling shows that
-      //  frame.toCMframe takes a significant part of the running time
-
-      // Set up positions for each particle in their CM frame
-      RotBstMatrix frame;
-      frame.toCMframe(hadA.p(), hadB.p());
-
-      Vec4 vA = hadA.vProd();
-      Vec4 pA = hadA.p();
-      Vec4 vB = hadB.vProd();
-      Vec4 pB = hadB.p();
-
-      vA.rotbst(frame); vB.rotbst(frame);
-      pA.rotbst(frame); pB.rotbst(frame);
-
-      // Abort if impact parameter is too large
-      if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
-        continue;
-
-      // Check if particles have already passed each other
-      double t0 = max(vA.e(), vB.e());
-      double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
-      double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
-
-      if (zA >= zB)
-        continue;
-
-      // Calculate collision origin and transform to lab frame
-      double tCollision = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
-      Vec4 origin(0.5 * (vA.px() + vB.px()),
-                  0.5 * (vA.py() + vB.py()),
-                  zA + pA.pz() / pA.e() * (tCollision - t0),
-                  tCollision);
-
-      frame.invert();
-      origin.rotbst(frame);
-
-      // Return event candidate
-      queue.push(PriorityVertex(iFirst, iSecond, origin));
-    }
-  }
-}
-
-void Rescattering::next(Event& event) {
-  
-  priority_queue<PriorityVertex> candidates; 
-
-  calcDecaysRescatters(event, 0, candidates);
-
-  while (!candidates.empty()) {
-    PriorityVertex ev = candidates.top();
-    candidates.pop();
-
-    // Abort if either particle has already interacted elsewhere
-    if (!event[ev.iFirst].isFinal() 
-    || (!ev.isDecay() && !event[ev.iSecond].isFinal()))
-      continue;
-
-    int oldSize = event.size();
-
-    // Produce products
-    if (ev.isDecay()) 
-      produceDecayProducts(ev.iFirst, event);
-    else
-      produceScatteringProducts(ev.iFirst, ev.iSecond, ev.origin, event);
-
-    // Check for new interactions
-    if (doSecondRescattering)
-      calcDecaysRescatters(event, oldSize, candidates);
   }
 }
 

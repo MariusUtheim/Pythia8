@@ -10,47 +10,27 @@
 
 namespace Pythia8 {
 
-
-
 class Rescattering {
 
 public:
 
-
   Rescattering() {}
 
-  void initPtr(Info* infoPtrIn, Settings* settingsPtrIn, Rndm* rndmPtrIn,
-    ParticleData* particleDataPtrIn, CrossSectionData* crossSectionDataPtrIn,
-    UserHooks* userHooksIn) {
-      infoPtr = infoPtrIn; settingsPtr = settingsPtrIn; rndmPtr = rndmPtrIn;
-      particleDataPtr = particleDataPtrIn;
-      crossSectionDataPtr = crossSectionDataPtrIn; userHooksPtr = userHooksIn;
-    }
-
-  // @TODO: How to intialize decays?
-  void init(Couplings* couplingsPtrIn, TimeShower* timesDecPtrIn, 
-            DecayHandler* decayHandlerPtrIn, vector<int> handledParticles) {
-    flavSel.init(*settingsPtr, particleDataPtr, rndmPtr, infoPtr);
-    decays.init(infoPtr, *settingsPtr, particleDataPtr, rndmPtr, 
-                couplingsPtrIn, timesDecPtrIn, &flavSel, decayHandlerPtrIn,
-                handledParticles);
-    resonanceDecays.init(infoPtr, particleDataPtr, rndmPtr);
-
-    doSecondRescattering = settingsPtr->flag("Rescattering:doSecondRescattering");
-    doDecays = settingsPtr->flag("Rescattering:doDecays");
-    tau0Max = settingsPtr->parm("Rescattering:tau0Max");
-    radiusMax = settingsPtr->parm("Rescattering:radiusMax");
+  void init(Info* infoPtrIn, //@TODO Probably have some Settings& settingsIn
+    ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
+    CrossSectionData* crossSectionDataPtrIn, UserHooks* userHooksIn) 
+  {
+    infoPtr = infoPtrIn; rndmPtr = rndmPtrIn;
+    particleDataPtr = particleDataPtrIn;
+    crossSectionDataPtr = crossSectionDataPtrIn; userHooksPtr = userHooksIn;
   }
 
-  void next(Event& event);
+  // @TODO calculate origin in rescatter call?
+  void rescatter(int idA, int idB, Vec4 origin, Event& event);
 
 private: 
 
-  struct PriorityVertex;
-
   Info* infoPtr;
-
-  Settings* settingsPtr;
 
   Rndm* rndmPtr;
 
@@ -60,23 +40,9 @@ private:
 
   UserHooks* userHooksPtr;
 
-  StringFlav flavSel;
-
-  ParticleDecays decays;
-
-  ResonanceDecays resonanceDecays;
- 
-  void calcDecaysRescatters(Event& event, int iStart,
-                            priority_queue<PriorityVertex>& queue);
-  
   bool calculateInteraction(int idA, int idB, Event& event, Vec4& originOut);
-  
-  bool produceDecayProducts(int iDec, Event& event);
 
   void produceScatteringProducts(int iP1, int iP2, Vec4& origin, Event& event);
-
-  bool doSecondRescattering, doDecays;
-  double tau0Max, radiusMax;
 
 };
 

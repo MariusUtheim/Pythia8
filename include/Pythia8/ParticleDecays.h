@@ -72,6 +72,7 @@ public:
 
   // Decay all particles with widths larger than the specified value
   bool decayAll(Event& event, double minWidth = -INFINITY) 
+  // @TODO implement in .cc
   {
     bool gotMoreToDo = false;
     // Loop through all entries to find those that should decay.
@@ -79,9 +80,10 @@ public:
     {
       Particle& decayer = event[iDec];
       if (decayer.isFinal() && decayer.canDecay() && decayer.mayDecay()
-        && (decayer.mWidth() > minWidth || decayer.idAbs() == 311) ) {
+        && (decayer.mWidth() > minWidth || decayer.idAbs() == 311))
+      {
         decay(iDec, event);
-        gotMoreToDo = gotMoreToDo || moreToDo();
+        if (moreToDo()) gotMoreToDo = true;
       }
     }
 

@@ -4,7 +4,7 @@ Beams:eCM = 7000
 Main:numberOfEvents = 10000
 
 Fragmentation:setVertices = on
-Rescattering:rescattering = on
-Rescattering:doSecondRescattering = on
+
+HadronLevel:Rescatter = on
 
 Next:numberCount = 1000

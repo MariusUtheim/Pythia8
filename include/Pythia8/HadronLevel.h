@@ -22,6 +22,7 @@
 #include "Pythia8/ParticleData.h"
 #include "Pythia8/ParticleDecays.h"
 #include "Pythia8/PythiaStdlib.h"
+#include "Pythia8/Rescattering.h"
 #include "Pythia8/RHadrons.h"
 #include "Pythia8/Settings.h"
 #include "Pythia8/StringFragmentation.h"
@@ -64,7 +65,8 @@ private:
   static const double MTINY;
 
   // Initialization data, read from Settings.
-  bool   doHadronize, doDecay, doBoseEinstein, allowRH, closePacking;
+  bool   doHadronize, doDecay, doRescatter, doBoseEinstein, 
+         allowRH, closePacking;
   double mStringMin, eNormJunction, widthSepBE;
 
   // Pointer to various information on the generation.
@@ -98,6 +100,9 @@ private:
 
   // The generator class for normal decays.
   ParticleDecays decays;
+
+  // The generator class for rescatterings.
+  Rescattering rescatterings;
 
   // Class for event geometry for Rope Hadronization. Production vertices.
   Ropewalk ropewalk;
@@ -142,6 +147,13 @@ private:
     double temp = log( ( pIn.e() + abs(pIn.pz()) ) / max( mTiny, pIn.mT()) );
     return (pIn.pz() > 0) ? temp : -temp; }
 
+  // Node for ordering scatterings and decays
+  struct PriorityNode;
+
+  // Calculate the time of each decay and scatter and add them to the queue
+  void queueDecayScatter(Event& event, int iStart,
+                         priority_queue<PriorityNode>& queue);
+  
 };
 
 //==========================================================================

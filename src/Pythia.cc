@@ -1163,27 +1163,6 @@ bool Pythia::init() {
   reconnectMode      = settings.mode("ColourReconnection:mode");
   forceHadronLevelCR = settings.flag("ColourReconnection:forceHadronLevelCR");
 
-  // @TODO Everything relevant
-  // @TODO: Check that hadron vertices are set correctly
-  // Init rescattering
-  doRescattering = settings.flag("Rescattering:rescattering");
-  if (doRescattering) {
-    if (!settings.flag("Fragmentation:setVertices"))
-    {
-      // @TODO Handle error message correctly
-      info.errorMsg("Error: Rescattering:rescattering is on, but "
-        "Fragmentation:setVertices is off. Rescattering will be turned off.");
-      doRescattering = false;
-    }
-    else
-    {
-      rescattering.initPtr(&info, &settings, &rndm, &particleData,
-                          &crossSectionData, userHooksPtr);
-      rescattering.init(couplingsPtr, timesDecPtr, decayHandlePtr, handledParticles);
-    }
-  }
-
-
 /*
 Info* infoPtrIn, Settings& settings,
 		Rndm* rndmPtrIn, ParticleData* particleDataPtrIn, Couplings* couplingsPtr,
@@ -2007,12 +1986,6 @@ bool Pythia::next() {
       info.errorMsg("Abort from Pythia::next: "
         "parton+hadronLevel failed; giving up");
       return false;
-    }
-
-    // @TODO: Put this at the right place
-    // Hadron rescattering
-    if (doRescattering) {
-      rescattering.next(event);
     }
 
     // Process- and parton-level statistics. Event scale.

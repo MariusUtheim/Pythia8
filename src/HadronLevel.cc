@@ -22,6 +22,28 @@ const double HadronLevel::MTINY = 0.1;
 
 //--------------------------------------------------------------------------
 
+// Node for ordering scatterings and decays
+
+struct HadronLevel::PriorityNode {
+// @TODO
+  PriorityNode(int iDecayIn, Vec4 originIn)
+    : iFirst(iDecayIn), iSecond(0), origin(originIn) {}
+  PriorityNode(int iFirstIn, int iSecondIn, Vec4 originIn)
+    : iFirst(iFirstIn), iSecond(iSecondIn), origin(originIn) {}
+  
+  bool isDecay() { return iSecond == 0; }
+
+  // Priority comparison to be used by priority_queue
+  // Note that lower t means higher priority!
+  bool operator<(const PriorityNode& r) const
+  { return origin.e() > r.origin.e(); }
+
+  int iFirst, iSecond;
+  Vec4 origin;
+};
+
+//--------------------------------------------------------------------------
+
 // Find settings. Initialize HadronLevel classes as required.
 
 bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
@@ -41,6 +63,7 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   // Main flags.
   doHadronize     = settings.flag("HadronLevel:Hadronize");
   doDecay         = settings.flag("HadronLevel:Decay");
+  doRescatter     = settings.flag("HadronLevel:Rescatter");
   doBoseEinstein  = settings.flag("HadronLevel:BoseEinstein");
 
   // Boundary mass between string and ministring handling.
@@ -85,9 +108,20 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   ministringFrag.init(infoPtr, settings, particleDataPtr, rndmPtr,
     &flavSel, &pTSel, &zSel);
 
-  // Initialize particle decays.
+  // Initialize particle decays and rescatterings.
   decays.init(infoPtr, settings, particleDataPtr, rndmPtr, couplingsPtr,
     timesDecPtr, &flavSel, decayHandlePtr, handledParticles);
+
+  rescatterings.init(infoPtr, particleDataPtr, rndmPtr,
+    nullptr, userHooksPtr);
+
+  /*
+  if (!settings.flag("Fragmentation:setVertices"))
+    {
+      // @TODO Handle error message correctly
+      info.errorMsg("Error: Rescattering:rescattering is on, but "
+        "Fragmentation:setVertices is off.
+        */
 
   // Initialize BoseEinstein.
   boseEinstein.init(infoPtr, settings, *particleDataPtr);
@@ -137,10 +171,10 @@ bool HadronLevel::next( Event& event) {
   }
 
   // Possibility of hadronization inside decay, but then no BE second time.
-  bool moreToDo;
+  bool decaysProducedPartons;
   bool doBoseEinsteinNow = doBoseEinstein;
   do {
-    moreToDo = false;
+    decaysProducedPartons = false;
 
     // First part: string fragmentation.
     if (doHadronize) {
@@ -220,8 +254,44 @@ bool HadronLevel::next( Event& event) {
     }
 
     // Second part: sequential decays of short-lived particles (incl. K0).
-    if (doDecay) {
-      moreToDo = decays.decayAll(event, widthSepBE);
+    if (doRescatter)
+    {
+      //@TODO: Pick the best underlying data structure (probably red-black tree)
+      priority_queue<PriorityNode> candidates; 
+
+      queueDecayScatter(event, 0, candidates);
+
+      while (!candidates.empty()) {
+        PriorityNode node = candidates.top();
+        candidates.pop();
+
+        // Abort if either particle has already interacted elsewhere
+        if (!event[node.iFirst].isFinal() 
+        || (!node.isDecay() && !event[node.iSecond].isFinal()))
+          continue;
+
+        int oldSize = event.size();
+
+        // Produce products
+        if (node.isDecay())
+        {
+          decays.decay(node.iFirst, event);
+        }
+        else
+        {
+          rescatterings.rescatter(node.iFirst, node.iSecond, node.origin, event);
+        }
+
+        // @TODO Check for new interactions
+        //if (doSecondRescattering)
+          queueDecayScatter(event, oldSize, candidates);
+      }
+    }
+    // If rescattering is off, we don't care about the order of the decays
+    else if (doDecay) 
+    {
+      decaysProducedPartons = decays.decayAll(event, widthSepBE);
+      if (decays.moreToDo()) decaysProducedPartons = true;
     }
 
     // Third part: include Bose-Einstein effects among current particles.
@@ -232,15 +302,92 @@ bool HadronLevel::next( Event& event) {
  
     // Fourth part: sequential decays also of long-lived particles.
     if (doDecay) {
-      moreToDo = decays.decayAll(event);
+      decaysProducedPartons = decays.decayAll(event);
     }
 
   // Normally done first time around, but sometimes not (e.g. Upsilon).
-  } while (moreToDo);
+  } while (decaysProducedPartons);
 
   // Done.
   return true;
 
+}
+
+
+void HadronLevel::queueDecayScatter(Event& event, int iStart, 
+  priority_queue<HadronLevel::PriorityNode>& queue)
+{
+  // @TODO Stress test and optimise if needed
+  for (int iFirst = iStart; iFirst < event.size(); ++iFirst) 
+  {
+    Particle& hadA = event[iFirst];
+
+    if (!hadA.isFinal() || !hadA.isHadron())
+      continue;
+
+    // @TODO Have the right upper bound here
+    if (doDecay && hadA.canDecay() && hadA.mayDecay()
+    && (hadA.mWidth() > widthSepBE || hadA.id() == 311))
+      queue.push(PriorityNode(iFirst, hadA.vDec()));
+
+    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
+      Particle& hadB = event[iSecond];
+      if (!hadB.isFinal() || !hadB.isHadron())
+        continue;
+      
+      // Continue if the two particles come from the same decay
+      // @TODO: Test what happens if this gets turned off
+      if (hadA.mother1() == hadB.mother1() 
+          && (hadA.status() >= 90 && hadA.status() <= 99))
+        continue;
+
+      // Get cross section from data
+      // @TODO: actually get cross section from somewhere
+      double sigma = 40;
+
+      // @TODO: Ideally, we just care about the invariant closest distance and
+      //  the time of closest approach at this point. All these calculations
+      //  could be shortened. In particular, profiling shows that
+      //  frame.toCMframe takes a significant part of the running time
+
+      // Set up positions for each particle in their CM frame
+      RotBstMatrix frame;
+      frame.toCMframe(hadA.p(), hadB.p());
+
+      Vec4 vA = hadA.vProd();
+      Vec4 pA = hadA.p();
+      Vec4 vB = hadB.vProd();
+      Vec4 pB = hadB.p();
+
+      vA.rotbst(frame); vB.rotbst(frame);
+      pA.rotbst(frame); pB.rotbst(frame);
+
+      // Abort if impact parameter is too large
+      if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
+        continue;
+
+      // Check if particles have already passed each other
+      double t0 = max(vA.e(), vB.e());
+      double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
+      double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
+
+      if (zA >= zB)
+        continue;
+
+      // Calculate collision origin and transform to lab frame
+      double tCollision = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
+      Vec4 origin(0.5 * (vA.px() + vB.px()),
+                  0.5 * (vA.py() + vB.py()),
+                  zA + pA.pz() / pA.e() * (tCollision - t0),
+                  tCollision);
+
+      frame.invert();
+      origin.rotbst(frame);
+
+      // Return event candidate
+      queue.push(PriorityNode(iFirst, iSecond, origin));
+    }
+  }
 }
 
 //--------------------------------------------------------------------------
