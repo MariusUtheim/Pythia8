@@ -276,6 +276,7 @@ bool HadronLevel::next( Event& event) {
         if (node.isDecay())
         {
           decays.decay(node.iFirst, event);
+          if (decays.moreToDo()) decaysProducedPartons = true;
         }
         else
         {
@@ -339,56 +340,17 @@ void HadronLevel::queueDecayScatter(Event& event, int iStart,
         continue;
       
       // Continue if the two particles come from the same decay
-      // @TODO: Test what happens if this gets turned off
-      if (hadA.mother1() == hadB.mother1() 
+      // @TODO: Test if this actually does something
+      /*if (hadA.mother1() == hadB.mother1() 
           && (hadA.status() >= 90 && hadA.status() <= 99))
+      {
         continue;
-
-      // Get cross section from data
-      // @TODO: actually get cross section from somewhere
-      double sigma = 40;
-
-      // @TODO: Ideally, we just care about the invariant closest distance and
-      //  the time of closest approach at this point. All these calculations
-      //  could be shortened. In particular, profiling shows that
-      //  frame.toCMframe takes a significant part of the running time
-
-      // Set up positions for each particle in their CM frame
-      RotBstMatrix frame;
-      frame.toCMframe(hadA.p(), hadB.p());
-
-      Vec4 vA = hadA.vProd();
-      Vec4 pA = hadA.p();
-      Vec4 vB = hadB.vProd();
-      Vec4 pB = hadB.p();
-
-      vA.rotbst(frame); vB.rotbst(frame);
-      pA.rotbst(frame); pB.rotbst(frame);
-
-      // Abort if impact parameter is too large
-      if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
-        continue;
-
-      // Check if particles have already passed each other
-      double t0 = max(vA.e(), vB.e());
-      double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
-      double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
-
-      if (zA >= zB)
-        continue;
-
-      // Calculate collision origin and transform to lab frame
-      double tCollision = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
-      Vec4 origin(0.5 * (vA.px() + vB.px()),
-                  0.5 * (vA.py() + vB.py()),
-                  zA + pA.pz() / pA.e() * (tCollision - t0),
-                  tCollision);
-
-      frame.invert();
-      origin.rotbst(frame);
-
-      // Return event candidate
-      queue.push(PriorityNode(iFirst, iSecond, origin));
+      }
+*/
+      
+      Vec4 origin;
+      if (rescatterings.calculateRescatterOrigin(iFirst, iSecond, event, origin))
+        queue.push(PriorityNode(iFirst, iSecond, origin));
     }
   }
 }

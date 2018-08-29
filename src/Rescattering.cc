@@ -43,7 +43,7 @@ static void phaseSpace2(Rndm* rndmPtr, Vec4 pTotIn, double mA, double mB,
  
   double err = (p1Out + p2Out - pTotIn).pAbs() 
                 / (p1Out + p2Out + pTotIn).pAbs();
-  if (isnan(err) || isinf(err) || err > 1.0e-9)
+  if (isnan(err) || isinf(err) || err > 1.0e-8)
   {
     cerr << "Phase space not quite good " << endl
          << "   In: " << pTotIn 
@@ -125,6 +125,70 @@ void Rescattering::rescatter(int idA, int idB,
     double t = dot3(origin - event[i].vProd(), beta) / dot3(beta, beta);
     event[i].tau(t / gamma);
   }
+}
+
+bool Rescattering::calculateRescatterOrigin(int idA, int idB, Event& event, 
+  Vec4& originOut)
+{
+  Particle& hadA = event[idA];
+  Particle& hadB = event[idB];
+
+  // Get cross section from data
+  // @TODO: actually get cross section from somewhere
+  double sigma = 40;
+
+  // @TODO: Ideally, we just care about the invariant closest distance and
+  //  the time of closest approach at this point. All these calculations
+  //  could be shortened. In particular, profiling shows that
+  //  frame.toCMframe takes a significant part of the running time
+
+  // Set up positions for each particle in their CM frame
+  RotBstMatrix frame;
+  frame.toCMframe(hadA.p(), hadB.p());
+
+  Vec4 vA = hadA.vProd();
+  Vec4 pA = hadA.p();
+  Vec4 vB = hadB.vProd();
+  Vec4 pB = hadB.p();
+
+  vA.rotbst(frame); vB.rotbst(frame);
+  pA.rotbst(frame); pB.rotbst(frame);
+
+  // Abort if impact parameter is too large
+  if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
+    return false;
+
+  // Check if particles have already passed each other
+  double t0 = max(vA.e(), vB.e());
+  double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
+  double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
+
+  if (zA >= zB)
+    return false;
+
+  // Calculate collision origin and transform to lab frame
+  double tCollision = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
+  Vec4 origin(0.5 * (vA.px() + vB.px()),
+              0.5 * (vA.py() + vB.py()),
+              zA + pA.pz() / pA.e() * (tCollision - t0),
+              tCollision);
+
+  frame.invert();
+  origin.rotbst(frame);
+
+  // @TODO If this check is necessary, it should be done at the beginning.
+  // We check it here to test whether it actually has some effect. If this
+  // never triggers, we can remove it later.
+  if (hadA.mother1() == hadB.mother1() 
+      && (hadA.status() >= 90 && hadA.status() <= 99))
+  {
+    infoPtr->errorMsg("Error in Rescattering::rescattering: "
+      "decay products from the same decay scattered off each other");
+  }
+
+  // Return 
+  originOut = origin;
+  return true;
 }
 
 } // end namespace Pythia8

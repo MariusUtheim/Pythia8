@@ -28,6 +28,8 @@ public:
   // @TODO calculate origin in rescatter call?
   void rescatter(int idA, int idB, Vec4 origin, Event& event);
 
+  bool calculateRescatterOrigin(int idA, int idB, Event& event, Vec4& originOut);
+
 private: 
 
   Info* infoPtr;
