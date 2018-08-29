@@ -313,6 +313,9 @@ bool HadronLevel::next( Event& event) {
 
 }
 
+//--------------------------------------------------------------------------
+
+// Calculate possible decays and rescatterings and add all to the queue.
 
 void HadronLevel::queueDecayScatter(Event& event, int iStart, 
   priority_queue<HadronLevel::PriorityNode>& queue)
@@ -322,13 +325,13 @@ void HadronLevel::queueDecayScatter(Event& event, int iStart,
   {
     Particle& hadA = event[iFirst];
 
-    if (!hadA.isFinal() || !hadA.isHadron())
-      continue;
-
     // @TODO Have the right upper bound here
-    if (doDecay && hadA.canDecay() && hadA.mayDecay()
+    if (doDecay && hadA.isFinal() && hadA.canDecay() && hadA.mayDecay()
     && (hadA.mWidth() > widthSepBE || hadA.id() == 311))
       queue.push(PriorityNode(iFirst, hadA.vDec()));
+
+    if (!hadA.isFinal() || !hadA.isHadron())
+      continue;
 
     for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
       Particle& hadB = event[iSecond];
