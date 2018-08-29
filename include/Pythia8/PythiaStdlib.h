@@ -22,6 +22,7 @@
 #include <deque>
 #include <set>
 #include <list>
+#include <queue>
 
 // Stdlib header file for dynamic library loading.
 #define dlsym __
@@ -67,6 +68,7 @@ using std::deque;
 using std::set;
 using std::multiset;
 using std::list;
+using std::priority_queue;
 
 // Input/output streams.
 using std::cin;

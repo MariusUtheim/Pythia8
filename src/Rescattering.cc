@@ -6,57 +6,38 @@
 #include "Pythia8/Pythia.h"
 #include "Pythia8/Rescattering.h"
 
-
+ 
 //--------------------------------------------------------------------------
 
 namespace Pythia8 {
 
 //==========================================================================
 
-// RescatteringVertex data structure
+// PriorityVertex data structure
 
 //--------------------------------------------------------------------------
 
-class RescatteringVertex {
+struct Rescattering::PriorityVertex {
 public:
 // @TODO
-  RescatteringVertex(int iDecayIn, Vec4 originIn)
+  PriorityVertex(int iDecayIn, Vec4 originIn)
     : iFirst(iDecayIn), iSecond(0), origin(originIn) {}
-  RescatteringVertex(int iFirstIn, int iSecondIn, Vec4 originIn)
+  PriorityVertex(int iFirstIn, int iSecondIn, Vec4 originIn)
     : iFirst(iFirstIn), iSecond(iSecondIn), origin(originIn) {}
   
   bool isDecay() { return iSecond == 0; }
+
+  // Priority comparison; the one with lowest time has highest priority!
+  bool operator<(const PriorityVertex& r) const
+  { return origin.e() > r.origin.e(); }
 
   int iFirst, iSecond;
   Vec4 origin;
 };
 
-//--------------------------------------------------------------------------
-
-// Comparer to be used by priority queue to order vertices chronologically.
-
-struct RescatteringEventComparer {
-  bool operator()(const RescatteringVertex& lhs, 
-                  const RescatteringVertex& rhs) {
-    return lhs.origin.e() > rhs.origin.e();
-  }
-};
-
 //==========================================================================
 
 // The Rescattering class
-
-//--------------------------------------------------------------------------
-
-bool Rescattering::calculateDecay(Particle& hadIn, Vec4& originOut) {
-  // @TODO: Also check maximum lifetime
-  if (!hadIn.canDecay() || !hadIn.mayDecay() 
-      )//|| hadIn.tau() > tau0Max)
-    return false;
-
-  originOut = hadIn.vDec();
-  return true;
-}
 
 //--------------------------------------------------------------------------
 
@@ -73,60 +54,7 @@ bool Rescattering::produceDecayProducts(int iDec, Event& event) {
   return true;
 }
 
-//--------------------------------------------------------------------------
 
-bool Rescattering::calculateInteraction(int idA, int idB, 
-  Event& event, Vec4& originOut) {
-
-  // Abort if the two particles come from the same decay
-  // @TODO: Test what happens if this gets turned off
-  if (event[idA].mother1() == event[idB].mother1()
-      && (event[idA].status() >= 90 && event[idA].status() <= 99))
-    return false;
-
-  // Get cross section from data
-  // @TODO: double sigma = crossSectionDataPtr->sigma(hadA.id(), hadB.id());
-  // if (sigma == 0) return false;
-  double sigma = 40;
-
-  // Set up positions for each particle in their CM frame
-  RotBstMatrix frame;
-  frame.toCMframe(event[idA].p(), event[idB].p());
-
-  Vec4 vA = event[idA].vProd();
-  Vec4 pA = event[idA].p();
-  Vec4 vB = event[idB].vProd();
-  Vec4 pB = event[idB].p();
-
-  vA.rotbst(frame); vB.rotbst(frame);
-  pA.rotbst(frame); pB.rotbst(frame);
-
-  // Abort if impact parameter is too large
-  if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
-    return false;
-
-  // Check if particles have already passed each other
-  double t0 = max(vA.e(), vB.e());
-  double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
-  double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
-
-  if (zA >= zB)
-    return false;
-
-  // Calculate collision origin and transform to lab frame
-  double tCollision = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
-  Vec4 origin(0.5 * (vA.px() + vB.px()),
-              0.5 * (vA.py() + vB.py()),
-              zA + pA.pz() / pA.e() * (tCollision - t0),
-              tCollision);
-
-  frame.invert();
-  origin.rotbst(frame);
-
-  // Return event candidate
-  originOut = origin;
-  return true;
-}
 
 //--------------------------------------------------------------------------
 
@@ -153,7 +81,7 @@ static void phaseSpace2(Rndm* rndmPtr, Vec4 pTotIn, double mA, double mB,
   p1Out.bst(pTotIn);
   p2Out = Vec4(-px, -py, -pz, eB);
   p2Out.bst(pTotIn);
-
+ 
   double err = (p1Out + p2Out - pTotIn).pAbs() 
                 / (p1Out + p2Out + pTotIn).pAbs();
   if (isnan(err) || isinf(err) || err > 1.0e-9)
@@ -242,42 +170,89 @@ void Rescattering::produceScatteringProducts(int idA, int idB,
 
 //-------------------------------------------------------------------------- 
 
-bool Rescattering::canScatter(Particle& particle)
+void Rescattering::calcDecaysRescatters(Event& event, int iStart,
+                            priority_queue<PriorityVertex>& queue)
 {
-  return particle.isFinal() && particle.isHadron()
-      && particle.vProd().pAbs() < radiusMax;
-}
+  // @TODO Stress test and optimise if needed
+  for (int iFirst = iStart; iFirst < event.size(); ++iFirst) {
+    Particle& hadA = event[iFirst];
 
-//-------------------------------------------------------------------------- 
+    if (!hadA.isFinal() || !hadA.isHadron() 
+        || hadA.vProd().pAbs() >= radiusMax)
+      continue;
+
+    if (doDecays && hadA.canDecay() && hadA.mayDecay())
+      queue.push(PriorityVertex(iFirst, hadA.vDec()));
+
+    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
+      Particle& hadB = event[iSecond];
+      if (!hadB.isFinal() || !hadB.isHadron() 
+          || hadB.vProd().pAbs() >= radiusMax)
+        continue;
+      
+      // Continue if the two particles come from the same decay
+      // @TODO: Test what happens if this gets turned off
+      if (hadA.mother1() == hadB.mother1() 
+          && (hadA.status() >= 90 && hadA.status() <= 99))
+        continue;
+
+      // Get cross section from data
+      // @TODO: actually get cross section from somewhere
+      double sigma = 40;
+
+      // @TODO: Ideally, we just care about the invariant closest distance and
+      //  the time of closest approach at this point. All these calculations
+      //  could be shortened. In particular, profiling shows that
+      //  frame.toCMframe takes a significant part of the running time
+
+      // Set up positions for each particle in their CM frame
+      RotBstMatrix frame;
+      frame.toCMframe(hadA.p(), hadB.p());
+
+      Vec4 vA = hadA.vProd();
+      Vec4 pA = hadA.p();
+      Vec4 vB = hadB.vProd();
+      Vec4 pB = hadB.p();
+
+      vA.rotbst(frame); vB.rotbst(frame);
+      pA.rotbst(frame); pB.rotbst(frame);
+
+      // Abort if impact parameter is too large
+      if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
+        continue;
+
+      // Check if particles have already passed each other
+      double t0 = max(vA.e(), vB.e());
+      double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
+      double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
+
+      if (zA >= zB)
+        continue;
+
+      // Calculate collision origin and transform to lab frame
+      double tCollision = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
+      Vec4 origin(0.5 * (vA.px() + vB.px()),
+                  0.5 * (vA.py() + vB.py()),
+                  zA + pA.pz() / pA.e() * (tCollision - t0),
+                  tCollision);
+
+      frame.invert();
+      origin.rotbst(frame);
+
+      // Return event candidate
+      queue.push(PriorityVertex(iFirst, iSecond, origin));
+    }
+  }
+}
 
 void Rescattering::next(Event& event) {
   
-  auto candidates = std::priority_queue<RescatteringVertex,
-                                        vector<RescatteringVertex>,
-                                        RescatteringEventComparer>();
+  priority_queue<PriorityVertex> candidates; 
 
-  // @TODO Stress test and optimise if needed
-  for (int iFirst = 0; iFirst < event.size(); ++iFirst) {
-    if (!canScatter(event[iFirst]))
-      continue;
-
-    Vec4 origin;
-
-    if (doDecays && calculateDecay(event[iFirst], origin)) {
-      candidates.push(RescatteringVertex(iFirst, origin));
-    }
-
-
-    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
-      if (!canScatter(event[iSecond]))
-        continue; 
-      if (calculateInteraction(iFirst, iSecond, event, origin))
-        candidates.push(RescatteringVertex(iFirst, iSecond, origin));
-    }
-  }
+  calcDecaysRescatters(event, 0, candidates);
 
   while (!candidates.empty()) {
-    RescatteringVertex ev = candidates.top();
+    PriorityVertex ev = candidates.top();
     candidates.pop();
 
     // Abort if either particle has already interacted elsewhere
@@ -295,24 +270,7 @@ void Rescattering::next(Event& event) {
 
     // Check for new interactions
     if (doSecondRescattering)
-    {
-      for (int iFirst = oldSize; iFirst < event.size(); ++iFirst) {
-        if (!canScatter(event[iFirst]))
-          continue;
-        
-        Vec4 origin;
-        if (doDecays && calculateDecay(event[iFirst], origin))
-          candidates.push(RescatteringVertex(iFirst, origin));
-
-        for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
-          if (!canScatter(event[iSecond]))
-            continue;
-
-          if (calculateInteraction(iFirst, iSecond, event, origin))
-            candidates.push(RescatteringVertex(iFirst, iSecond, origin));
-        }
-      }
-    }
+      calcDecaysRescatters(event, oldSize, candidates);
   }
 }
 

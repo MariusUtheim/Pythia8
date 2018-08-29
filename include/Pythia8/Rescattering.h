@@ -1,4 +1,3 @@
-
 #ifndef Pythia8_Rescattering_H
 #define Pythia8_Rescattering_H
 
@@ -47,6 +46,8 @@ public:
 
 private: 
 
+  struct PriorityVertex;
+
   Info* infoPtr;
 
   Settings* settingsPtr;
@@ -65,15 +66,14 @@ private:
 
   ResonanceDecays resonanceDecays;
  
-
-  bool calculateDecay(Particle& pIn, Vec4& originOut);
+  void calcDecaysRescatters(Event& event, int iStart,
+                            priority_queue<PriorityVertex>& queue);
+  
   bool calculateInteraction(int idA, int idB, Event& event, Vec4& originOut);
   
   bool produceDecayProducts(int iDec, Event& event);
 
   void produceScatteringProducts(int iP1, int iP2, Vec4& origin, Event& event);
-
-  bool canScatter(Particle& particle);
 
   bool doSecondRescattering, doDecays;
   double tau0Max, radiusMax;

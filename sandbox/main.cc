@@ -16,9 +16,13 @@ void fingerprint()
 {
   Pythia pythia("../share/Pythia8/xmldoc", false);
   pythia.readFile("mymain.cmnd");
-  //pythia.readString("Print:quiet = on");
+  pythia.readString("Print:quiet = on");
   pythia.init();
 
+  pythia.next();
+  cout << pythia.event[pythia.event.size() - 1].p();
+
+/*
   while (true)
   {
     if (!pythia.next()) continue;
@@ -28,7 +32,7 @@ void fingerprint()
         cout << pythia.event[pythia.event.size() - 1].p();
       return;}
   }
-
+*/
 }
 
 int main(int argc, const char *argv[]) {
