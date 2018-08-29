@@ -9,7 +9,18 @@ void singleEvent()
   pythia.init();
 
   pythia.next();
+}
 
+void manyEvents()
+{
+  Pythia pythia;
+  pythia.readFile("mymain.cmnd");
+  pythia.init();
+
+  int nEvent = pythia.mode("Main:numberOfEvents");
+  for (int iEvent = 0; iEvent < nEvent; ++iEvent)
+    pythia.next();
+  
 }
 
 void fingerprint()
@@ -20,24 +31,13 @@ void fingerprint()
   pythia.init();
 
   pythia.next();
+
   cout << pythia.event[pythia.event.size() - 1].p();
-
-/*
-  while (true)
-  {
-    if (!pythia.next()) continue;
-
-    for (int i = 0; i < pythia.event.size(); ++i)
-      if (pythia.event[i].id() == 553)  {
-        cout << pythia.event[pythia.event.size() - 1].p();
-      return;}
-  }
-*/
 }
 
 int main(int argc, const char *argv[]) {
 
-  fingerprint();
+  manyEvents();
 
   return 0;
 }
