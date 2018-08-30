@@ -257,8 +257,14 @@ bool HadronLevel::next( Event& event) {
     }
 
     // Second part: sequential decays of short-lived particles (incl. K0).
-    if (doRescatter)
-    {
+
+    // If rescattering is off, we don't care about the order of the decays
+    if (doDecay && !doRescatter) {
+      decaysProducedPartons = decays.decayAll(event, widthSepBE);
+    }
+    // If rescattering is on, decays/rescatterings must happen in order
+    else if (doRescatter) {
+      
       //@TODO: Pick the best underlying data structure (probably red-black tree)
       priority_queue<PriorityNode> candidates; 
 
@@ -275,26 +281,19 @@ bool HadronLevel::next( Event& event) {
 
         int oldSize = event.size();
 
-        // Produce products
-        if (node.isDecay())
-        {
+        // Perform the queued action
+        if (node.isDecay()) {
           decays.decay(node.iFirst, event);
           if (decays.moreToDo()) decaysProducedPartons = true;
         }
         else
-        {
           rescatterings.rescatter(node.iFirst, node.iSecond, node.origin, event);
-        }
 
-        // @TODO Check for new interactions
+        // Check for new interactions
+        // @TODO Allow decays of rescattered hadrons without allowing second rescatterings
         if (allowMultipleRescatterings)
           queueDecaysAndRescatterings(event, oldSize, candidates);
       }
-    }
-    // If rescattering is off, we don't care about the order of the decays
-    else if (doDecay) 
-    {
-      decaysProducedPartons = decays.decayAll(event, widthSepBE);
     }
 
     // Third part: include Bose-Einstein effects among current particles.
