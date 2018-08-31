@@ -13,7 +13,8 @@ void test_DeltapT_per_collision()
   vector<double> pTs(typeCodes.size());
 
   Pythia pythia;
-  pythia.readFile("tests/DeltapT_per_collision.cmnd");
+  pythia.readFile("tests/common.cmnd");
+  pythia.readString("Rescattering:allowMultipleRescatterings = off");
   pythia.init();
 
   int nEvent = pythia.mode("Main:numberOfEvents");
@@ -23,18 +24,19 @@ void test_DeltapT_per_collision()
     if (!pythia.next()) continue;
 
     Event& ev = pythia.event;
-    for (size_t iParticle = 0; iParticle < ev.size(); ++iParticle)
+
+    for (int iParticle = 0; iParticle < ev.size(); ++iParticle)
     {
-      Particle&p = ev[iParticle];
-      if (p.isFinal()
-        || !(ev[p.daughter1()].statusAbs() == 111 || ev[p.daughter1()].statusAbs() == 112)
-        || (ev[p.daughter1()].id() == ev[p.daughter2()].id())
-      ) continue;
+      Particle& p = ev[iParticle];
+      if (p.isFinal() || abs(p.y()) > 0.5
+      || ev[p.daughter1()].statusAbs() != 111
+      || ev[p.daughter1()].id() == ev[p.daughter2()].id())
+        continue;
       
       for (size_t i = 0; i < typeCodes.size(); ++i)
       {
-        if (p.id() != typeCodes[i])
-          continue;
+        if (p.id() != typeCodes[i]) continue;
+
         int daughterId = ev[p.daughter1()].id() == p.id()
                           ? p.daughter1() 
                           : p.daughter2();

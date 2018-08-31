@@ -11,7 +11,7 @@ static void readpTs(const Event& evIn, const vector<int> codesIn,
   for (size_t i = 0; i < evIn.size(); ++i)
   {
     const Particle& p = evIn[i];
-    if (!p.isHadron() || !p.isFinal())
+    if (!p.isHadron() || !p.isFinal() || abs(p.y()) > 0.5)
       continue;
 
     for (int i = 0; i < codesIn.size(); ++i)
@@ -36,8 +36,8 @@ void test_compareDeltapT()
 
 
   Pythia pythiaDef;
-  pythiaDef.readFile("tests/compareDeltapT.cmnd");
-  pythiaDef.readString("Rescattering:rescattering = off");
+  pythiaDef.readFile("tests/common.cmnd");
+  pythiaDef.readString("HadronLevel:Rescatter = off");
   pythiaDef.init();
   
   int nEvent = pythiaDef.mode("Main:numberOfEvents");
@@ -49,10 +49,8 @@ void test_compareDeltapT()
   }
 
   Pythia pythiaResc;
-  pythiaResc.readFile("tests/compareDeltapT.cmnd");
-  pythiaResc.readString("Rescattering:rescattering = on");
-  pythiaResc.readString("Rescattering:doSecondRescattering = on");
-  pythiaResc.readString("Rescattering:doDecays = off");
+  pythiaResc.readFile("tests/common.cmnd");
+  pythiaResc.readString("HadronLevel:Rescatter = on");
   pythiaResc.init();
   for (int iEvent = 0; iEvent < nEvent; ++iEvent)
   {

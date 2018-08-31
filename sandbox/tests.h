@@ -1,5 +1,6 @@
-#ifndef TESTS_H
-#define TESTS_H
+#ifndef MYTESTS_H
+#define MYTESTS_H
+
 #include "Pythia8/Pythia.h"
 
 using namespace Pythia8;
@@ -11,5 +12,6 @@ const vector<double> datapT =    { 0.47,  0.77, 1.01,  0.90, 1.07,  1.21,   1.15
 void test_DeltapT_per_collision();
 void test_compareDeltapT();
 void test_pT_distributions();
+
 
 #endif

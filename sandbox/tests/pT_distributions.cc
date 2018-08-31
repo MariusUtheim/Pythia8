@@ -10,7 +10,8 @@ void test_pT_distributions()
   vector<double> pTsDef(typeCodes.size()), pTsResc(typeCodes.size());
 
   Pythia pythiaDef;
-  pythiaDef.readFile("tests/pT_distributions.cmnd");
+  pythiaDef.readFile("tests/common.cmnd");
+  pythiaDef.readString("HadronLevel:Rescatter = off");
   pythiaDef.init();
 
   int nEvent = pythiaDef.mode("Main:numberOfEvents");
@@ -37,9 +38,8 @@ void test_pT_distributions()
   }
 
   Pythia pythiaResc;
-  pythiaResc.readFile("tests/pT_distributions.cmnd");
-  pythiaResc.readString("Rescattering:rescattering = on");
-  pythiaResc.readString("Rescattering:doSecondRescattering = on");
+  pythiaResc.readFile("tests/common.cmnd");
+  pythiaResc.readString("HadronLevel:Rescatter = on");
   pythiaResc.init();
 
   for (int iEvent = 0; iEvent < nEvent; ++iEvent)
@@ -50,7 +50,7 @@ void test_pT_distributions()
     for (size_t iParticle = 0; iParticle < ev.size(); ++iParticle)
     {
       Particle&p = ev[iParticle];
-      if (!p.isHadron() || !p.isFinal()) continue;
+      if (!p.isHadron() || !p.isFinal() ) continue;
 
       for (int i = 0; i < typeCodes.size(); ++i)
       {
