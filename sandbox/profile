@@ -1,0 +1,2 @@
+valgrind --tool=callgrind ./mymain
+# kcachegrind callgrind.out.<file number>

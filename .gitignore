@@ -47,3 +47,4 @@ sandbox/mymain.output
 sandbox/tests/*.csv
 sandbox/tests/*.ods
 *.yoda
+callgrind.*
