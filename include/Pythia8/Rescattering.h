@@ -16,35 +16,19 @@ public:
 
   Rescattering() {}
 
-  void init(Info* infoPtrIn, //@TODO Probably have some Settings& settingsIn
-    ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
-    CrossSectionData* crossSectionDataPtrIn, UserHooks* userHooksIn) 
-  {
-    infoPtr = infoPtrIn; rndmPtr = rndmPtrIn;
-    particleDataPtr = particleDataPtrIn;
-    crossSectionDataPtr = crossSectionDataPtrIn; userHooksPtr = userHooksIn;
-  }
+  void init(Info* infoPtrIn, Rndm* rndmPtrIn)
+  { infoPtr = infoPtrIn; rndmPtr = rndmPtrIn; }
 
   // @TODO calculate origin in rescatter call?
   void rescatter(int idA, int idB, Vec4 origin, Event& event);
 
-  bool calculateRescatterOrigin(int idA, int idB, Event& event, Vec4& originOut);
+  bool calcRescatterOrigin(int idA, int idB, Event& event, Vec4& originOut);
 
 private: 
 
   Info* infoPtr;
 
   Rndm* rndmPtr;
-
-  ParticleData* particleDataPtr;
-
-  CrossSectionData* crossSectionDataPtr;
-
-  UserHooks* userHooksPtr;
-
-  bool calculateInteraction(int idA, int idB, Event& event, Vec4& originOut);
-
-  void produceScatteringProducts(int iP1, int iP2, Vec4& origin, Event& event);
 
 };
 

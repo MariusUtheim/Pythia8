@@ -17,6 +17,7 @@ namespace Pythia8 {
 
 //--------------------------------------------------------------------------
 
+// Temporary function for sampling 2D phase space
 static void phaseSpace2(Rndm* rndmPtr, Vec4 pTotIn, double mA, double mB,
                         Vec4& p1Out, Vec4& p2Out) {
   
@@ -61,35 +62,6 @@ void Rescattering::rescatter(int idA, int idB,
   Particle& hadB = event[idB]; 
   int oldSize = event.size();
 
-  /* @TODO
-  // Pick the interaction channel
-  CrossSectionDataEntry* entry 
-    = crossSectionDataPtr->findCrossSection(hadA.id(), hadB.id());
-
-  if (entry == nullptr) 
-  {
-    // @TODO: Output error
-    return;
-  }
-  
-  InteractionChannel channel = entry->pickChannel();
-
-  int status = (hadA.status() == 111 || hadB.status() == 111) ? 112 : 111;
-
-  Vec4 mom1, mom2;
-  phaseSpace2(this->rndmPtr, hadA.p() + hadB.p(),
-              particleDataPtr->m0(channel.product(0)),
-              particleDataPtr->m0(channel.product(1)),
-              mom1, mom2);
-  
-  vector<Particle> newParticles;
-
-  newParticles.push_back(Particle(channel.product(0), status, idA, idB, 0, 0, 
-                                  0, 0, mom1, mom1.mCalc()));
-  newParticles.push_back(Particle(channel.product(1), status, idA, idB, 0, 0, 
-                                  0, 0, mom2, mom2.mCalc()));
-*/
-
   int status = (hadA.status() == 111 || hadA.status() == 112
              || hadB.status() == 111 || hadB.status() == 112) ? 112 : 111;
 
@@ -127,7 +99,7 @@ void Rescattering::rescatter(int idA, int idB,
   }
 }
 
-bool Rescattering::calculateRescatterOrigin(int idA, int idB, Event& event, 
+bool Rescattering::calcRescatterOrigin(int idA, int idB, Event& event, 
   Vec4& originOut)
 {
   Particle& hadA = event[idA];
@@ -137,10 +109,9 @@ bool Rescattering::calculateRescatterOrigin(int idA, int idB, Event& event,
   // @TODO: actually get cross section from somewhere
   double sigma = 40;
 
-  // @TODO: Ideally, we just care about the invariant closest distance and
-  //  the time of closest approach at this point. All these calculations
-  //  could be shortened. In particular, profiling shows that
-  //  frame.toCMframe takes a significant part of the running time
+  // @TODO: Profiling shows that frame.toCMframe is the most significant
+  // bottleneck in Pythia for high-multiplicity events. We should think about
+  // checks that can be made to 
 
   // Set up positions for each particle in their CM frame
   RotBstMatrix frame;
@@ -158,7 +129,7 @@ bool Rescattering::calculateRescatterOrigin(int idA, int idB, Event& event,
   if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
     return false;
 
-  // Check if particles have already passed each other
+  // Abort if particles have already passed each other
   double t0 = max(vA.e(), vB.e());
   double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
   double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
@@ -175,16 +146,6 @@ bool Rescattering::calculateRescatterOrigin(int idA, int idB, Event& event,
 
   frame.invert();
   origin.rotbst(frame);
-
-  // @TODO If this check is necessary, it should be done at the beginning.
-  // We check it here to test whether it actually has some effect. If this
-  // never triggers, we can remove it later.
-  if (hadA.mother1() == hadB.mother1() 
-      && (hadA.status() >= 90 && hadA.status() <= 99))
-  {
-    infoPtr->errorMsg("Error in Rescattering::rescattering: "
-      "decay products from the same decay scattered off each other");
-  }
 
   // Return 
   originOut = origin;

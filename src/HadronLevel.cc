@@ -76,8 +76,7 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   allowRH         = settings.flag("RHadrons:allow");
 
   // Allow decayed/rescattered particles to rescatter again
-  allowMultipleRescatterings
-                  = settings.flag("Rescattering:allowMultipleRescatterings");
+  scatterMultipleTimes = settings.flag("Rescattering:scatterMultipleTimes");
 
   // Particles that should decay or not before Bose-Einstein stage.
   widthSepBE      = settings.parm("BoseEinstein:widthSep");
@@ -116,8 +115,7 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   decays.init(infoPtr, settings, particleDataPtr, rndmPtr, couplingsPtr,
     timesDecPtr, &flavSel, decayHandlePtr, handledParticles);
 
-  rescatterings.init(infoPtr, particleDataPtr, rndmPtr,
-    nullptr /* @TODO Replace by CrossSectionData */, userHooksPtr);
+  rescatterings.init(infoPtr, rndmPtr);
 
   if (doRescatter && !settings.flag("Fragmentation:setVertices"))
   {
@@ -149,9 +147,39 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
 
 //--------------------------------------------------------------------------
 
+// Calculate possible decays and rescatterings and add all to the queue.
+
+void HadronLevel::queueDecResc(Event& event, int iStart, 
+  priority_queue<HadronLevel::PriorityNode>& queue)
+{
+  // @TODO Stress test and optimise if needed
+  for (int iFirst = iStart; iFirst < event.size(); ++iFirst) 
+  {
+    Particle& hadA = event[iFirst];
+
+    // @TODO Have the right upper mWidth bound here
+    if (doDecay && hadA.isFinal() && hadA.canDecay() && hadA.mayDecay()
+    && (hadA.mWidth() > widthSepBE || hadA.id() == 311))
+      queue.push(PriorityNode(iFirst, hadA.vDec()));
+
+    if (!hadA.isFinal() || !hadA.isHadron()) continue;
+
+    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
+      
+      if (!event[iSecond].isFinal() || !event[iSecond].isHadron()) continue;
+      
+      Vec4 origin;
+      if (rescatterings.calcRescatterOrigin(iFirst, iSecond, event, origin))
+        queue.push(PriorityNode(iFirst, iSecond, origin));
+    }
+  }
+}
+
+//--------------------------------------------------------------------------
+
 // Hadronize and decay the next parton-level.
 
-bool HadronLevel::next( Event& event) {
+bool HadronLevel::next(Event& event) {
 
   // Store current event size to mark Parton Level content.
   event.savePartonLevelSize();
@@ -174,10 +202,10 @@ bool HadronLevel::next( Event& event) {
   }
 
   // Possibility of hadronization inside decay, but then no BE second time.
-  bool decaysProducedPartons;
   bool doBoseEinsteinNow = doBoseEinstein;
+  bool decaysCausedHadronization;
   do {
-    decaysProducedPartons = false;
+    decaysCausedHadronization = false;
 
     // First part: string fragmentation.
     if (doHadronize) {
@@ -260,15 +288,14 @@ bool HadronLevel::next( Event& event) {
 
     // If rescattering is off, we don't care about the order of the decays
     if (doDecay && !doRescatter) {
-      decaysProducedPartons = decays.decayAll(event, widthSepBE);
+      decaysCausedHadronization = decays.decayAll(event, widthSepBE);
     }
     // If rescattering is on, decays/rescatterings must happen in order
     else if (doRescatter) {
       
-      //@TODO: Pick the best underlying data structure (probably red-black tree)
       priority_queue<PriorityNode> candidates; 
 
-      queueDecaysAndRescatterings(event, 0, candidates);
+      queueDecResc(event, 0, candidates);
 
       while (!candidates.empty()) {
         PriorityNode node = candidates.top();
@@ -284,15 +311,16 @@ bool HadronLevel::next( Event& event) {
         // Perform the queued action
         if (node.isDecay()) {
           decays.decay(node.iFirst, event);
-          if (decays.moreToDo()) decaysProducedPartons = true;
+          // @TODO If there is moreToDo, those things should also be handled in order?
+          if (decays.moreToDo()) decaysCausedHadronization = true;
         }
         else
           rescatterings.rescatter(node.iFirst, node.iSecond, node.origin, event);
 
         // Check for new interactions
         // @TODO Allow decays of rescattered hadrons without allowing second rescatterings
-        if (allowMultipleRescatterings)
-          queueDecaysAndRescatterings(event, oldSize, candidates);
+        if (scatterMultipleTimes)
+          queueDecResc(event, oldSize, candidates);
       }
     }
 
@@ -304,57 +332,16 @@ bool HadronLevel::next( Event& event) {
  
     // Fourth part: sequential decays also of long-lived particles.
     if (doDecay) {
-      decaysProducedPartons = decays.decayAll(event);
+      decaysCausedHadronization = decays.decayAll(event);
     }
 
   // @TODO If not done, the next time around, rescatterings are not in order
   // Normally done first time around, but sometimes not (e.g. Upsilon).
-  } while (decaysProducedPartons);
+  } while (decaysCausedHadronization);
 
   // Done.
   return true;
 
-}
-
-//--------------------------------------------------------------------------
-
-// Calculate possible decays and rescatterings and add all to the queue.
-
-void HadronLevel::queueDecaysAndRescatterings(Event& event, int iStart, 
-  priority_queue<HadronLevel::PriorityNode>& queue)
-{
-  // @TODO Stress test and optimise if needed
-  for (int iFirst = iStart; iFirst < event.size(); ++iFirst) 
-  {
-    Particle& hadA = event[iFirst];
-
-    // @TODO Have the right upper bound here
-    if (doDecay && hadA.isFinal() && hadA.canDecay() && hadA.mayDecay()
-    && (hadA.mWidth() > widthSepBE || hadA.id() == 311))
-      queue.push(PriorityNode(iFirst, hadA.vDec()));
-
-    if (!hadA.isFinal() || !hadA.isHadron())
-      continue;
-
-    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
-      Particle& hadB = event[iSecond];
-      if (!hadB.isFinal() || !hadB.isHadron())
-        continue;
-      
-      // Continue if the two particles come from the same decay
-      // @TODO: Test if this actually does something
-      /*if (hadA.mother1() == hadB.mother1() 
-          && (hadA.status() >= 90 && hadA.status() <= 99))
-      {
-        continue;
-      }
-*/
-      
-      Vec4 origin;
-      if (rescatterings.calculateRescatterOrigin(iFirst, iSecond, event, origin))
-        queue.push(PriorityNode(iFirst, iSecond, origin));
-    }
-  }
 }
 
 //--------------------------------------------------------------------------

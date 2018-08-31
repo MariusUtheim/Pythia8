@@ -165,7 +165,7 @@ Master switch for hadronization; on/off = true/false.
 Further options are found <aloc href="Fragmentation">here</aloc>. 
 </flag> 
  
-<flag name="HadronLevel:Rescatter" default="off"> 
+<flag name="HadronLevel:Rescatter" default="on"> 
 Master switch for hadron rescattering, following the hadronization; 
 on/off = true/false. 
 Further options are found <aloc href="HadronScattering">here</aloc>. 
