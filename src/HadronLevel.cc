@@ -24,8 +24,8 @@ const double HadronLevel::MTINY = 0.1;
 
 // Node for ordering scatterings and decays
 
-struct HadronLevel::PriorityNode {
-// @TODO
+class HadronLevel::PriorityNode {
+public:
   PriorityNode(int iDecayIn, Vec4 originIn)
     : iFirst(iDecayIn), iSecond(0), origin(originIn) {}
   PriorityNode(int iFirstIn, int iSecondIn, Vec4 originIn)
@@ -35,6 +35,7 @@ struct HadronLevel::PriorityNode {
 
   // Priority comparison to be used by priority_queue
   // Note that lower t means higher priority!
+  // @TODO: allow the user to pick the comparator
   bool operator<(const PriorityNode& r) const
   { return origin.e() > r.origin.e(); }
 
@@ -111,10 +112,11 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   ministringFrag.init(infoPtr, settings, particleDataPtr, rndmPtr,
     &flavSel, &pTSel, &zSel);
 
-  // Initialize particle decays and rescatterings.
+  // Initialize particle decays.
   decays.init(infoPtr, settings, particleDataPtr, rndmPtr, couplingsPtr,
     timesDecPtr, &flavSel, decayHandlePtr, handledParticles);
 
+  // Initialize rescatterings.
   rescatterings.init(infoPtr, rndmPtr);
 
   if (doRescatter && !settings.flag("Fragmentation:setVertices"))

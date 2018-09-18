@@ -102,6 +102,7 @@ private:
   ParticleDecays decays;
 
   // The generator class for rescatterings.
+  // @TODO: Decide on naming conventions for the settings
   Rescattering rescatterings;
   bool scatterMultipleTimes;
 
@@ -150,7 +151,7 @@ private:
 
   // Node for ordering scatterings and decays
   // @TODO Decide on name and where to put this in the code
-  struct PriorityNode;
+  class PriorityNode;
 
   // Calculate the time of each decay and scatter and add them to the queue
   void queueDecResc(Event& event, int iStart,
