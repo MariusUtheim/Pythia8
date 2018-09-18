@@ -67,28 +67,12 @@ public:
   // Perform a decay of a single particle.
   bool decay(int iDec, Event& event);
 
+  // Decay all particles with widths greater than or equal to minWidth
+  // Returns whether decay resulted in new partons to hadronize.
+  bool decayAll(Event& event, double minWidth = 0.);
+
   // Did decay result in new partons to hadronize?
   bool moreToDo() const {return hasPartons && keepPartons;}
-
-  // Decay all particles with widths larger than the specified value
-  bool decayAll(Event& event, double minWidth = -INFINITY) 
-  // @TODO implement in .cc
-  {
-    bool gotMoreToDo = false;
-    // Loop through all entries to find those that should decay.
-    for (int iDec = 0; iDec < event.size(); ++iDec)
-    {
-      Particle& decayer = event[iDec];
-      if (decayer.isFinal() && decayer.canDecay() && decayer.mayDecay()
-        && (decayer.mWidth() > minWidth || decayer.idAbs() == 311))
-      {
-        decay(iDec, event);
-        if (moreToDo()) gotMoreToDo = true;
-      }
-    }
-
-    return gotMoreToDo;
-  }
 
 private:
 
