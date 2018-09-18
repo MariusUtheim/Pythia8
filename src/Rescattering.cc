@@ -65,17 +65,16 @@ void Rescattering::rescatter(int idA, int idB,
   int status = (hadA.status() == 111 || hadA.status() == 112
              || hadB.status() == 111 || hadB.status() == 112) ? 112 : 111;
 
-  Vec4 mom1, mom2;
+  Vec4 pA, pB;
   phaseSpace2(this->rndmPtr, hadA.p() + hadB.p(),
-              hadA.m(), hadB.m(),
-              mom1, mom2);
+              hadA.m(), hadB.m(), pA, pB);
   
   vector<Particle> newParticles;
 
   newParticles.push_back(Particle(hadA.id(), status, idA, idB, 0, 0, 
-                                  0, 0, mom1, mom1.mCalc()));
+                                  0, 0, pA, pA.mCalc()));
   newParticles.push_back(Particle(hadB.id(), status, idA, idB, 0, 0, 
-                                  0, 0, mom2, mom2.mCalc()));
+                                  0, 0, pB, pB.mCalc()));
 
   // @TODO Some value copying going on here, but this is placeholder anyway
   for (auto particle : newParticles)
@@ -98,6 +97,8 @@ void Rescattering::rescatter(int idA, int idB,
     event[i].tau(t / gamma);
   }
 }
+
+//--------------------------------------------------------------------------
 
 bool Rescattering::calcRescatterOrigin(int idA, int idB, Event& event, 
   Vec4& originOut)
