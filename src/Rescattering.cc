@@ -55,33 +55,46 @@ static void phaseSpace2(Rndm* rndmPtr, Vec4 pTotIn, double mA, double mB,
 
 }
 
+static vector<Vec4> phaseSpace(Rndm* rndmPtr, Vec4 pTotIn, vector<double> msIn) {
+  Vec4 p1, p2;
+  phaseSpace2(rndmPtr, pTotIn, msIn[0], msIn[1], p1, p2);
+  return vector<Vec4> { p1, p2 };
+}
+
 void Rescattering::rescatter(int idA, int idB, 
   Vec4 origin, Event& event) {
 
   Particle& hadA = event[idA];
   Particle& hadB = event[idB]; 
-  int oldSize = event.size();
+/*
+  if (!crossSecPtr->isCrossSection(idA, idB)) {
+    infoPtr->errorMsg("Rescattering::rescatter: "
+      "Unable to find cross-section data");
+    return;
+  }
+*/
+  double eCM = (hadA.p() + hadB.p()).mCalc();
 
+  vector<int> products = crossSecPtr->pickProducts(hadA.id(), hadB.id(), eCM);
+  
+  int oldSize = event.size();
   int status = (hadA.status() == 111 || hadA.status() == 112
              || hadB.status() == 111 || hadB.status() == 112) ? 112 : 111;
 
-  Vec4 pA, pB;
-  phaseSpace2(this->rndmPtr, hadA.p() + hadB.p(),
-              hadA.m(), hadB.m(), pA, pB);
-  
-  vector<Particle> newParticles;
+  vector<double> masses(products.size());
+  for (int i = 0; i < products.size(); ++i)
+    masses[i] = particleDataPtr->m0(products[i]);
 
-  newParticles.push_back(Particle(hadA.id(), status, idA, idB, 0, 0, 
-                                  0, 0, pA, pA.mCalc()));
-  newParticles.push_back(Particle(hadB.id(), status, idA, idB, 0, 0, 
-                                  0, 0, pB, pB.mCalc()));
+  vector<Vec4> momenta = phaseSpace(rndmPtr, hadA.p() + hadB.p(), masses);
 
-  // @TODO Some value copying going on here, but this is placeholder anyway
-  for (auto particle : newParticles)
+  for (int i = 0; i < products.size(); ++i)
   {
-    particle.vProd(origin);
-    event.append(particle);
+    Particle newParticle(products[i], status, idA, idB, 0, 0,
+      0, 0, momenta[i], momenta[i].mCalc());
+    newParticle.vProd(origin);
+    event.append(newParticle);
   }
+
 
   // Update the interacting particles
   for (int i : { idA, idB }) {
@@ -106,13 +119,10 @@ bool Rescattering::calcRescatterOrigin(int idA, int idB, Event& event,
   Particle& hadA = event[idA];
   Particle& hadB = event[idB];
 
-  // Get cross section from data
-  // @TODO: actually get cross section from somewhere
-  double sigma = 40;
-
   // @TODO: Profiling shows that frame.toCMframe is the most significant
   // bottleneck in Pythia for high-multiplicity events. We should think about
-  // checks that can be made to 
+  // checks that can be made to abort early (e.g. particles moving away
+  // from each other in the lab frame)
 
   // Set up positions for each particle in their CM frame
   RotBstMatrix frame;
@@ -125,6 +135,9 @@ bool Rescattering::calcRescatterOrigin(int idA, int idB, Event& event,
 
   vA.rotbst(frame); vB.rotbst(frame);
   pA.rotbst(frame); pB.rotbst(frame);
+
+  double eCM = (pA + pB).mCalc();
+  double sigma = crossSecPtr->sigma(hadA.idAbs(), hadB.idAbs(), eCM);
 
   // Abort if impact parameter is too large
   if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)

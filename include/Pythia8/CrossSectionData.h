@@ -146,6 +146,16 @@ private:
 // This class holds a map of all CrossSectionDataEntries.
 
 class CrossSectionData {
+private:
+
+  // Query existence of an entry and return a const iterator.
+  // @TODO: Return a reference instead of pointer
+  CrossSectionDataEntry* _findCrossSection(int idAIn, int idBIn) {
+    pair<int, int> ids = pairify(idAIn, idBIn);
+    map<pair<int, int>, CrossSectionDataEntry>::iterator found = pdt.find(ids);
+    if (found == pdt.end()) return NULL;
+    return &(found->second);
+  }
 
 public:
 
@@ -181,6 +191,7 @@ public:
   void listChanged(bool changedRes = false) { list(true, changedRes); }
   void list(bool changedOnly = false, bool changedRes = true);
 
+
   // Add new entry.
   CrossSectionDataEntry& addCrossSection(int idAIn, int idBIn, double sigmaIn) {
     pair<int, int> ids = pairify(idAIn, idBIn);
@@ -190,22 +201,10 @@ public:
   }
 
   // Query existence of an entry.
-  bool isCrossSection(int idAIn, int idBIn) const { // @TODO Different function name?
-    pair<int, int> ids = pairify(idAIn, idBIn);
-    map<pair<int, int>, CrossSectionDataEntry>::const_iterator found // @TODO: auto?
-      = pdt.find(ids);
-    if (found == pdt.end()) return false;
-    else return true;
+  bool isCrossSection(int idAIn, int idBIn) { // @TODO Different function name?
+    return _findCrossSection(idAIn, idBIn) != nullptr;
   }
 
-  // Query existence of an entry and return a const iterator.
-  // @TODO: Return a reference instead of pointer
-  CrossSectionDataEntry* findCrossSection(int idAIn, int idBIn) {
-    pair<int, int> ids = pairify(idAIn, idBIn);
-    map<pair<int, int>, CrossSectionDataEntry>::iterator found = pdt.find(ids);
-    if (found == pdt.end()) return NULL;
-    return &(found->second);
-  }
 
   // Query existence of an entry and return a const iterator.
   // @TODO: Return a reference instead of pointer
@@ -217,19 +216,21 @@ public:
     return &(found->second);
   }
 
-  // Accessors
-  double sigma(int idA, int idB) const {
+  // Get data
+  double sigma(int idA, int idB, double eCM) const {
+    return 40.0;
     const CrossSectionDataEntry* entry = findCrossSection(idA, idB);
     if (entry) return entry->sigma(); 
     else return 0.0;
   }
 
-  void sigma(int idA, int idB, double sigmaIn) {
-    CrossSectionDataEntry *entry = findCrossSection(idA, idB);
-    if (entry) entry->sigma(sigmaIn);
+  vector<int> pickProducts(int idA, int idB, double eCM) {
+    return vector<int> { idA, idB };
   }
 
+
 private:
+
 
   // The individual particle need access to the full database.
   friend class CrossSectionDataEntry;
@@ -255,12 +256,10 @@ private:
   // All particle data stored in a map.
   map<pair<int, int>, CrossSectionDataEntry> pdt; // @TODO: name
 
-  // Pointer to current cross-section (e.g. when reading decay channels).
-  CrossSectionDataEntry* crossSectionPtr;
 
   // Flag that initialization has been performed; whether any failures.
   bool   isInit, readingFailedSave;
-
+  
   // Method for common setting of particle-specific info.
   void   initCommon();
 

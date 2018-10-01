@@ -88,6 +88,7 @@ Pythia::Pythia(string xmlDir, bool printBanner) {
     return;
   }
  
+  // Read in files with all cross-section data.
   crossSectionData.initPtr(&info, &settings, &rndm, couplingsPtr);
   isConstructed = crossSectionData.init(xmlPath + "CrossSectionData.xml");
   if (!isConstructed) {
@@ -1118,8 +1119,8 @@ bool Pythia::init() {
 
   // Send info/pointers to hadron level for initialization.
   // Note: forceHadronLevel() can come, so we must always initialize.
-  if ( !hadronLevel.init( &info, settings, &particleData, &rndm,
-    couplingsPtr, timesDecPtr, &rHadrons, decayHandlePtr,
+  if ( !hadronLevel.init( &info, settings, &particleData, &crossSectionData,
+    &rndm, couplingsPtr, timesDecPtr, &rHadrons, decayHandlePtr,
     handledParticles, userHooksPtr) ) {
     info.errorMsg("Abort from Pythia::init: "
       "hadronLevel initialization failed");
