@@ -1,9 +1,9 @@
 
-#include "Pythia8/Interpolater.h"
+#include "Pythia8/Interpolator.h"
 
-const Interpolater Interpolater::Zero = Interpolater();
+const Interpolator Interpolator::Zero = Interpolator();
 
-Interpolater::Interpolater(istream& stream) {
+Interpolator::Interpolator(istream& stream) {
   double x, y;
   while (stream >> x && stream >> y) {
     xs.push_back(x);
@@ -11,7 +11,7 @@ Interpolater::Interpolater(istream& stream) {
   }
 }
 
-Interpolater::Interpolater(string path) {
+Interpolator::Interpolator(string path) {
   ifstream stream(path);
   double x, y;
   while (stream >> x && stream >> y) {
@@ -20,7 +20,7 @@ Interpolater::Interpolater(string path) {
   }
 }
 
-double Interpolater::operator()(double x) const
+double Interpolator::operator()(double x) const
 {
   if (x < xs[0])
     return ys[0];
