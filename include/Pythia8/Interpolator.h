@@ -9,18 +9,22 @@ using namespace Pythia8;
 class Interpolator {
 public:
 
-  Interpolator(string path);
-  Interpolator(istream& stream);
+  Interpolator(double leftIn, double rightIn, vector<double> ysIn);
+  
+  double left() { return leftSave; }
+  double right() { return rightSave; }
+  
+  double dx() const { return (rightSave - leftSave) / ysSave.size(); } 
+  double x(int j) const { return leftSave + j * dx(); }
 
   double operator()(double x) const;
 
   static const Interpolator Zero;
 
 private:
-  
-  Interpolator() { xs = { 0. }; ys = { 0. }; }
 
-  vector<double> xs, ys;
+  double leftSave, rightSave;
+  vector<double> ysSave;
 
 };
 

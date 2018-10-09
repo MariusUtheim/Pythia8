@@ -1,36 +1,21 @@
 
 #include "Pythia8/Interpolator.h"
 
-const Interpolator Interpolator::Zero = Interpolator();
+const Interpolator Interpolator::Zero = Interpolator(0., 1., { 0. });
 
-Interpolator::Interpolator(istream& stream) {
-  double x, y;
-  while (stream >> x && stream >> y) {
-    xs.push_back(x);
-    ys.push_back(y);
+Interpolator::Interpolator(double leftIn, double rightIn, vector<double> ysIn)
+  : leftSave(leftIn), rightSave(rightIn), ysSave(ysIn) { }
+
+double Interpolator::operator()(double x) const {
+
+  double t = (x - leftSave) / (rightSave - leftSave);
+  if (t < 0)
+    return ysSave[0];
+  else if (t >= 1)
+    return ysSave[ysSave.size() - 1];
+  else {
+    int j = (int)(t * ysSave.size() - 1);
+    double s = (x - this->x(j)) / dx();
+    return (1 - s) * ysSave[j] + s * ysSave[j + 1];
   }
-}
-
-Interpolator::Interpolator(string path) {
-  ifstream stream(path);
-  double x, y;
-  while (stream >> x && stream >> y) {
-    xs.push_back(x);
-    ys.push_back(y);
-  }
-}
-
-double Interpolator::operator()(double x) const
-{
-  if (x < xs[0])
-    return ys[0];
-
-  for (int i = 0; i < xs.size() - 1; ++i) {
-    if (x >= xs[i] && x < xs[i + 1]) {
-      double t = (x - xs[i]) / (xs[i + 1] - xs[i]);
-      return (1 - t) * ys[i] + t * ys[i + 1];
-    }
-  }
-
-  return ys[xs.size() - 1];
 }
