@@ -3,6 +3,7 @@
 
 #include "Pythia8/Interpolator.h"
 #include "Pythia8/ParticleData.h"
+#include "Pythia8/ResonanceData.h"
 
 namespace Pythia8 {
 
@@ -10,25 +11,29 @@ class SigmaResonance {
 
 public:
 
-  SigmaResonance();
+  SigmaResonance() { };
+
+  void initPtr(Rndm* rndmPtrIn, ParticleData* particleDataPtrIn, 
+    ResonanceData* resonanceDataPtrIn) {
+    rndmPtr = rndmPtrIn; particleDataPtr = particleDataPtrIn;
+    resonanceDataPtr = resonanceDataPtrIn;
+  }
 
   double sigma(int idA, int idB, double eCM) const;
 
   vector<int> pickProducts(int idAIn, int idBIn, double eCM);
-
 
   const Interpolator& sigmaDistribution(int idA, int idB) const; 
   const Interpolator& sigmaDistribution(int idA, int idB, int idC, int idD) const;
 
 private:
 
+  Rndm* rndmPtr;
+
   ParticleData* particleDataPtr;
 
-  map<pair<int, int>, Interpolator&> sigmaTotals;
+  ResonanceData* resonanceDataPtr;
 
-  map<pair<int, int>, Interpolator&> brFactor;
-
-  pair<int, int> getResonanceClasses(int idA, int idB) const;
 
 };
 
