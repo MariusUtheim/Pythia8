@@ -1,0 +1,1194 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     38503,       1185]
+NotebookOptionsPosition[     38264,       1172]
+NotebookOutlinePosition[     38601,       1187]
+CellTagsIndexPosition[     38558,       1184]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ClearAll", "[", "m0", "]"}], ";", 
+  RowBox[{"ClearAll", "[", "\[CapitalGamma]0", "]"}], ";", 
+  RowBox[{"ClearAll", "[", "j", "]"}], ";", 
+  RowBox[{"ClearAll", "[", "decays", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"configuration", "=", "\"\<UrQMD 1.00\>\""}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"N", "\[IndentingNewLine]", "0.938"}], ",", 
+    RowBox[{"c", " ", "Nucleon", " ", 
+     RowBox[{"resonances", "\n", "     ", "@", "1.440"}]}], ",", "1.515", ",",
+     "1.550", ",", "1.645", ",", "1.675", ",", "1.680", ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"@", "1.730"}], ",", "1.710", ",", "1.720", ",", "1.850", ",", 
+    "1.950", ",", "2.000", ",", "2.150", ",", "\[IndentingNewLine]", 
+    RowBox[{"@", "2.220"}], ",", "2.250", ","}], "\[IndentingNewLine]", 
+   "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"0.", "d0"}], ",", 
+    RowBox[{"c", " ", "Nucleon", " ", 
+     RowBox[{"resonances", "\n", "     ", "@", "0.350"}]}], ",", "0.120", ",",
+     "0.140", ",", "0.160", ",", "0.140", ",", "0.120", ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"@", "0.120"}], ",", "0.140", ",", "0.150", ",", "0.500", ",", 
+    "0.550", ",", "0.350", ",", "0.500", ",", "\[IndentingNewLine]", 
+    RowBox[{"@", "0.550"}], ",", "0.470", ","}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Jres", " ", 
+     RowBox[{"(", "N", ")"}], "\[IndentingNewLine]", " ", "1"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"@", "1"}], ",", "3", ",", "1", ",", "1", ",", "5", ",", "5", ",",
+     "\[IndentingNewLine]", 
+    RowBox[{"@", "3"}], ",", "1", ",", "3", ",", "3", ",", "7", ",", "3", ",",
+     "7", ",", "\[IndentingNewLine]", 
+    RowBox[{"@", "9"}], ",", "9", ","}], " ", "*)"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"*", " ", "Nucleon", " ", "Resonances"}], " ", "**)"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N938", "]"}], "=", "0.938"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N938", "]"}], "=", "0."}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N938", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N938", "]"}], "=", 
+    RowBox[{"{", "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1440", "]"}], "=", "1.440"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1440", "]"}], "=", "0.200"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1440", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1440", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.7", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.05", ",", "1"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.25", ",", "1"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1520", "]"}], "=", "1.520"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1520", "]"}], "=", "0.125"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1520", "]"}], "=", 
+   RowBox[{"3", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1520", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.6", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.15", ",", "2"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.25", ",", "0"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1535", "]"}], "=", "1.535"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1535", "]"}], "=", "0.150"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1535", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1535", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.55", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "eta"}], "}"}], ",", "0.35", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.05", ",", "0"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.05", ",", "0"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1650", "]"}], "=", "1.650"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1650", "]"}], "=", "0.150"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1650", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1650", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.65", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "eta"}], "}"}], ",", "0.05", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.05", ",", "0"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.10", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.05", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"Lambda", ",", "Ka"}], "}"}], ",", "0.10", ",", "0"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1675", "]"}], "=", "1.675"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1675", "]"}], "=", "0.140"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1675", "]"}], "=", 
+   RowBox[{"5", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1675", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.45", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.55", ",", "2"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1680", "]"}], "=", "1.680"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1680", "]"}], "=", "0.120"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1680", "]"}], "=", 
+   RowBox[{"5", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1680", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.65", ",", "3"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.20", ",", "3"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.15", ",", "1"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1700", "]"}], "=", "1.700"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1700", "]"}], "=", "0.100"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1700", "]"}], "=", 
+   RowBox[{"3", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1700", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.10", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "eta"}], "}"}], ",", "0.05", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.05", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.45", ",", "2"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.35", ",", "0"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1710", "]"}], "=", "1.710"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1710", "]"}], "=", "0.110"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1710", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1710", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.15", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "eta"}], "}"}], ",", "0.20", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.05", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.20", ",", "1"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.20", ",", "1"}], "}"}], 
+      ",", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.10", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"Lambda", ",", "Ka"}], "}"}], ",", "0.10", ",", "1"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1720", "]"}], "=", "1.720"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1720", "]"}], "=", "0.150"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1720", "]"}], "=", 
+   RowBox[{"3", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1720", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.15", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.25", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.45", ",", "1"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.10", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"Lambda", ",", "Ka"}], "}"}], ",", "0.05", ",", "1"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1900", "]"}], "=", "1.870"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1900", "]"}], "=", "0.500"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1900", "]"}], "=", 
+   RowBox[{"3", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1900", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.35", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.55", ",", "1"}], 
+       "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.05", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.05", ",", "1"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N1990", "]"}], "=", "1.990"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N1990", "]"}], "=", "0.550"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N1990", "]"}], "=", 
+   RowBox[{"7", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N1990", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.05", ",", "3"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.15", ",", "3"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.25", ",", "3"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.30", ",", "3"}], "}"}], 
+      ",", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.15", ",", "3"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"Lambda", ",", "Ka"}], "}"}], ",", "0.10", ",", "3"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N2080", "]"}], "=", "2.040"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N2080", "]"}], "=", "0.250"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N2080", "]"}], "=", 
+   RowBox[{"3", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N2080", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.60", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "eta"}], "}"}], ",", "0.05", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.25", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.05", ",", "2"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.05", ",", "0"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N2190", "]"}], "=", "2.190"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N2190", "]"}], "=", "0.550"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N2190", "]"}], "=", 
+   RowBox[{"7", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N2190", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.35", ",", "4"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.30", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.15", ",", "4"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.15", ",", "2"}], "}"}], 
+      ",", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.05", ",", "4"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N2220", "]"}], "=", "2.220"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N2220", "]"}], "=", "0.550"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N2220", "]"}], "=", 
+   RowBox[{"9", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N2220", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.35", ",", "5"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.25", ",", "3"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.20", ",", "5"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.20", ",", "3"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "N2250", "]"}], "=", "2.250"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N2250", "]"}], "=", "0.470"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N2250", "]"}], "=", 
+   RowBox[{"9", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "N2250", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.30", ",", "4"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.25", ",", "4"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pipi"}], "}"}], ",", "0.20", ",", "4"}], "}"}],
+       ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.20", ",", "4"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.05", ",", "4"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Ns", "=", 
+    RowBox[{"{", 
+     RowBox[{
+     "N1440", ",", "N1520", ",", "N1535", ",", "N1650", ",", "N1675", ",", 
+      "N1680", ",", "N1700", ",", "N1710", ",", "N1720", ",", "N1900", ",", 
+      "N1990", ",", "N2080", ",", "N2190", ",", "N2220", ",", "N2250"}], 
+     "}"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"*", " ", "Delta", " ", "particles"}], " ", 
+   "**)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1232", "]"}], "=", "1.232"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1232", "]"}], "=", "0.115"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1232", "]"}], "=", 
+   RowBox[{"3", "/", "2"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1232", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"N938", ",", "pi"}], "}"}], ",", "1.", ",", "1"}], "}"}], 
+     "}"}]}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1600", "]"}], "=", "1.700"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1600", "]"}], "=", "0.200"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1600", "]"}], "=", 
+   RowBox[{"3", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1600", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.15", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.55", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.30", ",", "1"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1620", "]"}], "=", "1.675"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1620", "]"}], "=", "0.180"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1620", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1620", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.25", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.60", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.15", ",", "0"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1700", "]"}], "=", "1.750"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1700", "]"}], "=", "0.300"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1700", "]"}], "=", 
+   RowBox[{"3", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1700", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.20", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.10", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.55", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.15", ",", "2"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1900", "]"}], "=", "1.850"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1900", "]"}], "=", "0.240"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1900", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1900", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.30", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.15", ",", "0"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.30", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.25", ",", "0"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1905", "]"}], "=", "1.880"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1905", "]"}], "=", "0.280"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1905", "]"}], "=", 
+   RowBox[{"5", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1905", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.20", ",", "3"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.60", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.10", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.10", ",", "3"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1910", "]"}], "=", "1.900"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1910", "]"}], "=", "0.250"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1910", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1910", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.35", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.40", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.15", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.10", ",", "1"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1920", "]"}], "=", "1.920"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1920", "]"}], "=", "0.150"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1920", "]"}], "=", 
+   RowBox[{"3", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1920", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.15", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.30", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.30", ",", "1"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.25", ",", "1"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1930", "]"}], "=", "1.930"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1930", "]"}], "=", "0.250"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1930", "]"}], "=", 
+   RowBox[{"5", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1930", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.20", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.25", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.25", ",", "2"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.30", ",", "2"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "D1950", "]"}], "=", "1.950"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "D1950", "]"}], "=", "0.250"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "D1950", "]"}], "=", 
+   RowBox[{"7", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "D1950", "]"}], "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "pi"}], "}"}], ",", "0.45", ",", "3"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.15", ",", "3"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.20", ",", "3"}], "}"}], 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"N1440", ",", "pi"}], "}"}], ",", "0.20", ",", "3"}], 
+       "}"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Ds", "=", 
+    RowBox[{"{", 
+     RowBox[{
+     "D1232", ",", "D1600", ",", "D1620", ",", "D1700", ",", "D1900", ",", 
+      "D1905", ",", "D1910", ",", "D1920", ",", "D1930", ",", "D1950"}], 
+     "}"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"*", " ", "Mesons"}], " ", "**)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "pi", "]"}], "=", "0.138"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "pi", "]"}], "=", "0."}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "pi", "]"}], "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"m0", "[", "pipi", "]"}], "=", "0.274"}], ";", 
+   RowBox[{
+    RowBox[{"\[CapitalGamma]0", "[", "pipi", "]"}], "=", "0."}], ";", 
+   RowBox[{
+    RowBox[{"j", "[", "pipi", "]"}], "=", "0"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "gamma", "]"}], "=", "0."}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "gamma", "]"}], "=", "0."}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "gamma", "]"}], "=", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "eta", "]"}], "=", "0.547"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "eta", "]"}], "=", "0."}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "eta", "]"}], "=", "0"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "rho", "]"}], "=", "0.769"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "rho", "]"}], "=", "0.151"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "rho", "]"}], "=", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"decays", "[", "rho", "]"}], "=", 
+   RowBox[{"{", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"pi", ",", "pi"}], "}"}], ",", "1.", ",", "1"}], "}"}], " ", 
+    "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "Lambda", "]"}], "=", "1.116"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "Lambda", "]"}], "=", "0."}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "Lambda", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"m0", "[", "Ka", "]"}], "=", "0.498"}], ";", 
+   RowBox[{
+    RowBox[{"\[CapitalGamma]0", "[", "Ka", "]"}], "=", "0."}], ";", 
+   RowBox[{
+    RowBox[{"j", "[", "Ka", "]"}], "=", "0"}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "omega", "]"}], "=", "0.782"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "omega", "]"}], "=", "0.008"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "omega", "]"}], "=", "1"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"decays", "[", "omega", "]"}], "=", 
+    RowBox[{"{", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"pi", ",", "pipi"}], "}"}], ",", "0.89"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"pi", ",", "pi"}], "}"}], ",", "0.02"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"pi", ",", "gamma"}], "}"}], ",", "0.09"}], "}"}]}], 
+     "\[IndentingNewLine]", "}"}]}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"m0", "[", "sigma", "]"}], "=", "0.500"}], ";", 
+    RowBox[{
+     RowBox[{"\[CapitalGamma]0", "[", "sigma", "]"}], "=", "0.550"}], ";", 
+    " ", 
+    RowBox[{
+     RowBox[{"J0", "[", "sigma", "]"}], "=", "1"}], ";", 
+    RowBox[{"(*", " ", 
+     RowBox[{"AKA", " ", 
+      SubscriptBox["f", "0"], 
+      RowBox[{"(", "500", ")"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"decays", "[", "sigma", "]"}], "=", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"pi", ",", " ", "pi"}], "}"}], ",", " ", "1."}], "}"}], 
+      "\[IndentingNewLine]", "}"}]}], ";", "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"m0", "[", "Sigma", "]"}], "=", "1.190"}], ";", 
+    RowBox[{
+     RowBox[{"\[CapitalGamma]0", "[", "Sigma", "]"}], "=", "0."}], ";", 
+    RowBox[{
+     RowBox[{"J0", "[", "Sigma", "]"}], "=", 
+     RowBox[{"1", "/", "2"}]}], ";"}], "\n", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"decays", "[", "p_", "]"}], ":=", 
+   RowBox[{"Throw", "[", 
+    RowBox[{"\"\<No decays found for \>\"", "<>", 
+     RowBox[{"ToString", "[", "p", "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m0", "[", "p_", "]"}], ":=", 
+   RowBox[{"Throw", "[", 
+    RowBox[{"\"\<No nominal mass found for \>\"", "<>", 
+     RowBox[{"ToString", "[", "p", "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "p_", "]"}], ":=", 
+   RowBox[{"Throw", "[", 
+    RowBox[{"\"\<No nominal width found for \>\"", "<>", 
+     RowBox[{"ToString", "[", "p", "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"j", "[", "p_", "]"}], ":=", 
+   RowBox[{"Throw", "[", 
+    RowBox[{"\"\<No spin found for \>\"", "<>", 
+     RowBox[{"ToString", "[", "p", "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.74866872449282*^9, 3.7486687701570873`*^9}, {
+   3.7486693460651407`*^9, 3.7486693790894737`*^9}, {3.7486705218916483`*^9, 
+   3.748670568999483*^9}, {3.748675910623557*^9, 3.7486759917645397`*^9}, {
+   3.748676028965372*^9, 3.748676125601961*^9}, {3.748676157025378*^9, 
+   3.748676305062665*^9}, {3.748677478977149*^9, 3.748677493288601*^9}, 
+   3.7486781969337177`*^9, 3.7486782949962673`*^9, {3.7488515023718987`*^9, 
+   3.7488515086433983`*^9}, {3.748851624545596*^9, 3.748851631713707*^9}, {
+   3.7488517128809233`*^9, 3.748851733023325*^9}, {3.748852573928241*^9, 
+   3.7488526182229357`*^9}, {3.7488528438509817`*^9, 3.748852846066845*^9}, {
+   3.748853821002274*^9, 3.748853822313827*^9}, {3.748853887128664*^9, 
+   3.7488539533182297`*^9}, {3.748854003837447*^9, 3.7488540249488363`*^9}, {
+   3.748854946990247*^9, 3.748854958781227*^9}, {3.74885621684517*^9, 
+   3.748856253844841*^9}, {3.748856374196877*^9, 3.7488564461932917`*^9}, {
+   3.748856526920951*^9, 3.7488565344806013`*^9}, {3.748856713940279*^9, 
+   3.74885671486924*^9}, {3.7488597620857267`*^9, 3.7488598419146*^9}, {
+   3.748859883794971*^9, 3.74885988500998*^9}, {3.748859972976207*^9, 
+   3.748860245331666*^9}, {3.7488602986907682`*^9, 3.748860711442823*^9}, {
+   3.74886082826359*^9, 3.74886083565522*^9}, {3.748860904230275*^9, 
+   3.748860914069676*^9}, {3.748860962141*^9, 3.748861021444018*^9}, {
+   3.7488651903262043`*^9, 3.7488651953653307`*^9}, {3.748865606704996*^9, 
+   3.748865629644079*^9}, {3.748866162996395*^9, 3.748866163114958*^9}, {
+   3.748866198554991*^9, 3.748866224678624*^9}, {3.749185046894793*^9, 
+   3.7491851012212973`*^9}, {3.7491852691559677`*^9, 
+   3.7491852814899597`*^9}, {3.749185779408592*^9, 3.749185821975716*^9}, {
+   3.7491859224864893`*^9, 3.749185960445627*^9}, {3.749186538338866*^9, 
+   3.7491866354985523`*^9}, {3.749186742422274*^9, 3.749186920449329*^9}, {
+   3.749187103976528*^9, 3.749187171406426*^9}, {3.749187334348022*^9, 
+   3.749187636685658*^9}, {3.749187723124333*^9, 3.749187876129313*^9}, {
+   3.749187924168585*^9, 3.749188495359255*^9}, {3.74918901539573*^9, 
+   3.749189108749304*^9}, {3.7491891515935783`*^9, 3.749189194403368*^9}, {
+   3.749189234271904*^9, 3.7491893061105843`*^9}, {3.749189434507922*^9, 
+   3.749189474731225*^9}, 3.749189881677107*^9, {3.7491906727338552`*^9, 
+   3.7491908175453863`*^9}, 3.749190853178542*^9, 3.7491939393432627`*^9, 
+   3.749198144401928*^9, 3.749198205807128*^9, 3.749205092343422*^9, 
+   3.7492061417556267`*^9}]
+},
+WindowSize->{956, 1135},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"10.3 for Linux x86 (64-bit) (December 10, 2015)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 37702, 1150, 3498, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
