@@ -9718,27 +9718,27 @@ The meaning of the various properties and the format used are explained
 
 
 <!-- Delta++ Excitations -->
-<particle id="102222" name="Delta(1620)++" antiName="Deltabar(1620)--"
+<particle id="122222" name="Delta(1620)++" antiName="Deltabar(1620)--"
           spinType="2" chargeType="6" colType="0"
           m0="1.630" mWidth="0.140" mMin="1.0" mMax="4.5" />
 
-<particle id="102224" name="Delta(1700)++" antiName="Deltabar(1700)--"
+<particle id="122224" name="Delta(1700)++" antiName="Deltabar(1700)--"
           spinType="2" chargeType="6" colType="0" 
           m0="1.700" mWidth="0.300" mMin="1.0" mMax="7.0" />
 
-<particle id="202222" name="Delta(1910)++" antiName="Deltabar(1910)--"
+<particle id="222222" name="Delta(1910)++" antiName="Deltabar(1910)--"
           spinType="4" chargeType="6" colType="0"
           m0="1.900" mWidth="0.300" mMin="1.0" mMax="8.5" />
 
-<particle id="202224" name="Delta(1600)++" antiName="Deltabar(1600)--"
+<particle id="212224" name="Delta(1600)++" antiName="Deltabar(1600)--"
           spinType="4" chargeType="6" colType="0"
           m0="1.600" mWidth="0.320" mMin="1.0" mMax="6.0" />
 
-<particle id="212224" name="Delta(1920)++" antiName="Deltabar(1920)--"
+<particle id="222224" name="Delta(1920)++" antiName="Deltabar(1920)--"
           spinType="4" chargeType="6" colType="0"
           m0="1.920" mWidth="0.260" mMin="1.0" mMax="8.5" />
 
-<particle id="202226" name="Delta(1905)++" antiName="Deltabar(1905)--"
+<particle id="212226" name="Delta(1905)++" antiName="Deltabar(1905)--"
           spinType="4" chargeType="6" colType="0"
           m0="1.880" mWidth="0.330" mMin="1.0" mMax="9.0" />
 
@@ -9747,27 +9747,27 @@ The meaning of the various properties and the format used are explained
           m0="1.930" mWidth="0.285" mMin="1.0" mMax="8.5" />
 
 <!-- Delta+ Excitations -->
-<particle id="102212" name="Delta(1620)+" antiName="Deltabar(1620)-"
+<particle id="122212" name="Delta(1620)+" antiName="Deltabar(1620)-"
           spinType="2" chargeType="3" colType="0"
           m0="1.630" mWidth="0.140" mMin="1.0" mMax="4.5" />
 
-<particle id="102214" name="Delta(1700)+" antiName="Deltabar(1700)-"
+<particle id="122214" name="Delta(1700)+" antiName="Deltabar(1700)-"
           spinType="2" chargeType="3" colType="0" 
           m0="1.700" mWidth="0.300" mMin="1.0" mMax="7.0" />
 
-<particle id="202212" name="Delta(1910)+" antiName="Deltabar(1910)-"
+<particle id="222212" name="Delta(1910)+" antiName="Deltabar(1910)-"
           spinType="4" chargeType="3" colType="0"
           m0="1.900" mWidth="0.300" mMin="1.0" mMax="8.5" />
 
-<particle id="202214" name="Delta(1600)+" antiName="Deltabar(1600)-"
+<particle id="212214" name="Delta(1600)+" antiName="Deltabar(1600)-"
           spinType="4" chargeType="3" colType="0"
           m0="1.600" mWidth="0.320" mMin="1.0" mMax="6.0" />
 
-<particle id="212214" name="Delta(1920)+" antiName="Deltabar(1920)-"
+<particle id="222214" name="Delta(1920)+" antiName="Deltabar(1920)-"
           spinType="4" chargeType="3" colType="0"
           m0="1.920" mWidth="0.260" mMin="1.0" mMax="8.5" />
 
-<particle id="202216" name="Delta(1905)+" antiName="Deltabar(1905)-"
+<particle id="212216" name="Delta(1905)+" antiName="Deltabar(1905)-"
           spinType="4" chargeType="3" colType="0"
           m0="1.880" mWidth="0.330" mMin="1.0" mMax="9.0" />
 
@@ -9776,27 +9776,27 @@ The meaning of the various properties and the format used are explained
           m0="1.930" mWidth="0.285" mMin="1.0" mMax="8.5" />
 
 <!-- Delta0 Excitations -->
-<particle id="102112" name="Delta(1620)0" antiName="Deltabar(1620)0"
+<particle id="122112" name="Delta(1620)0" antiName="Deltabar(1620)0"
           spinType="2" chargeType="0" colType="0"
           m0="1.630" mWidth="0.140" mMin="1.0" mMax="4.5" />
 
-<particle id="102114" name="Delta(1700)0" antiName="Deltabar(1700)0"
+<particle id="122114" name="Delta(1700)0" antiName="Deltabar(1700)0"
           spinType="2" chargeType="0" colType="0" 
           m0="1.700" mWidth="0.300" mMin="1.0" mMax="7.0" />
 
-<particle id="202112" name="Delta(1910)0" antiName="Deltabar(1910)0"
+<particle id="222112" name="Delta(1910)0" antiName="Deltabar(1910)0"
           spinType="4" chargeType="0" colType="0"
           m0="1.900" mWidth="0.300" mMin="1.0" mMax="8.5" />
 
-<particle id="202114" name="Delta(1600)0" antiName="Deltabar(1600)0"
+<particle id="212114" name="Delta(1600)0" antiName="Deltabar(1600)0"
           spinType="4" chargeType="0" colType="0"
           m0="1.600" mWidth="0.320" mMin="1.0" mMax="6.0" />
 
-<particle id="212114" name="Delta(1920)0" antiName="Deltabar(1920)0"
+<particle id="222114" name="Delta(1920)0" antiName="Deltabar(1920)0"
           spinType="4" chargeType="0" colType="0"
           m0="1.920" mWidth="0.260" mMin="1.0" mMax="8.5" />
 
-<particle id="202116" name="Delta(1905)0" antiName="Deltabar(1905)0"
+<particle id="212116" name="Delta(1905)0" antiName="Deltabar(1905)0"
           spinType="4" chargeType="0" colType="0"
           m0="1.880" mWidth="0.330" mMin="1.0" mMax="9.0" />
 
@@ -9805,27 +9805,27 @@ The meaning of the various properties and the format used are explained
           m0="1.930" mWidth="0.285" mMin="1.0" mMax="8.5" />
 
 <!-- Delta- Excitations -->
-<particle id="101112" name="Delta(1620)-" antiName="Deltabar(1620)+"
+<particle id="121112" name="Delta(1620)-" antiName="Deltabar(1620)+"
           spinType="2" chargeType="-3" colType="0"
           m0="1.630" mWidth="0.140" mMin="1.0" mMax="4.5" />
 
-<particle id="101114" name="Delta(1700)-" antiName="Deltabar(1700)+"
+<particle id="121114" name="Delta(1700)-" antiName="Deltabar(1700)+"
           spinType="2" chargeType="-3" colType="0" 
           m0="1.700" mWidth="0.300" mMin="1.0" mMax="7.0" />
 
-<particle id="201112" name="Delta(1910)-" antiName="Deltabar(1910)+"
+<particle id="221112" name="Delta(1910)-" antiName="Deltabar(1910)+"
           spinType="4" chargeType="-3" colType="0"
           m0="1.900" mWidth="0.300" mMin="1.0" mMax="8.5" />
 
-<particle id="201114" name="Delta(1600)-" antiName="Deltabar(1600)+"
+<particle id="211114" name="Delta(1600)-" antiName="Deltabar(1600)+"
           spinType="4" chargeType="-3" colType="0"
           m0="1.600" mWidth="0.320" mMin="1.0" mMax="6.0" />
 
-<particle id="211114" name="Delta(1920)-" antiName="Deltabar(1920)+"
+<particle id="221114" name="Delta(1920)-" antiName="Deltabar(1920)+"
           spinType="4" chargeType="-3" colType="0"
           m0="1.920" mWidth="0.260" mMin="1.0" mMax="8.5" />
 
-<particle id="201116" name="Delta(1905)-" antiName="Deltabar(1905)+"
+<particle id="211116" name="Delta(1905)-" antiName="Deltabar(1905)+"
           spinType="4" chargeType="-3" colType="0"
           m0="1.880" mWidth="0.330" mMin="1.0" mMax="9.0" />
 
