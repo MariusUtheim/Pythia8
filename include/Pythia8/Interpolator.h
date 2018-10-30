@@ -10,12 +10,13 @@ class Interpolator {
 public:
 
   Interpolator(double leftIn, double rightIn, vector<double> ysIn);
-  
+
   double left() { return leftSave; }
   double right() { return rightSave; }
   
-  double dx() const { return (rightSave - leftSave) / ysSave.size(); } 
+  double dx() const { return (rightSave - leftSave) / (ysSave.size() - 1); } 
   double x(int j) const { return leftSave + j * dx(); }
+  const vector<double>& data() const { return ysSave; }
 
   double operator()(double x) const;
 
@@ -23,8 +24,8 @@ public:
 
 private:
 
-  double leftSave, rightSave;
-  vector<double> ysSave;
+  const double leftSave, rightSave;
+  const vector<double> ysSave;
 
 };
 
