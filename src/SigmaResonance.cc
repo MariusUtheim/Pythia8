@@ -17,11 +17,11 @@ namespace Pythia8 {
 
 
 double SigmaResonance::sigma(int idA, int idB, double eCM) const {
-  auto& distribution = resonanceDataPtr->getTotalSigmaDistribution(idA, idB);
+  auto& distribution = resonanceDataPtr->getDiffractiveSigmaDistribution(idA, idB);
   return distribution(eCM);
 }
 
-vector<int> SigmaResonance::pickProducts(int idA, int idB, double eCM) {
+pair<int, int> SigmaResonance::pickProducts(int idA, int idB, double eCM) {
   
   auto candidates = resonanceDataPtr->getOutputsWithFrequencies(idA, idB, eCM);
 
@@ -32,10 +32,7 @@ vector<int> SigmaResonance::pickProducts(int idA, int idB, double eCM) {
 
   int chosenIndex = rndmPtr->pick(weights);
 
-  vector<int> products;
-  products.push_back(candidates[chosenIndex].first.first);
-  products.push_back(candidates[chosenIndex].first.second);
-  return products;
+  return candidates[chosenIndex].first;
 }
 
 

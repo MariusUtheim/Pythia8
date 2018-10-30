@@ -12,7 +12,7 @@ classes in order to shorten tables.
 <resonanceClass identifier="D" genera="D1232"/>
 <resonanceClass identifier="N*" genera="N1440 N1520 N1535 N1650 N1675 N1680 N1700 N1710 N1720"/>
 <resonanceClass identifier="D*" genera="D1600 D1620 D1700 D1905 D1910 D1920 D1950"/>
-
+<resonanceClass identifier="M*" genera="rho phi">
 
 <resonanceGenus identifier="N938" species="2112 2212"/>
 <resonanceGenus identifier="N1440" species="202112 202212"/>
@@ -26,14 +26,17 @@ classes in order to shorten tables.
 <resonanceGenus identifier="N1720" species="202114 202214"/>
 
 <resonanceGenus identifier="D1232" species="1114 2114 2214 2224"/>
-<resonanceGenus identifier="D1600" species="201114 202114 202214 202224"/>
-<resonanceGenus identifier="D1620" species="101112 102112 102212 102222"/>
-<resonanceGenus identifier="D1700" species="101114 102114 102214 102224"/>
-<resonanceGenus identifier="D1905" species="201116 202116 202216 202226"/>
-<resonanceGenus identifier="D1910" species="201112 202112 202212 202222"/>
-<resonanceGenus identifier="D1920" species="211114 212114 212214 212224"/>
+<resonanceGenus identifier="D1600" species="211114 212114 212214 212224"/>
+<resonanceGenus identifier="D1620" species="121112 122112 122212 122222"/>
+<resonanceGenus identifier="D1700" species="121114 122114 122214 122224"/>
+<resonanceGenus identifier="D1905" species="211116 212116 212216 212226"/>
+<resonanceGenus identifier="D1910" species="221112 222112 222212 222222"/>
+<resonanceGenus identifier="D1920" species="221114 222114 222214 222224"/>
 <resonanceGenus identifier="D1950" species="201118 202118 202218 202228"/>
 
+<resonanceGenus identifier="pi" species="211 111"/>
+<resonanceGenus identifier="rho" species="213 113"/>
+<resonanceGenus identifier="phi" species="333"/>
 
 <scatter in="N N" outs="N D  D D  N N*  N D*  D N*  D D*"/>
 

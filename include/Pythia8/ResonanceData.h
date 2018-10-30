@@ -2,6 +2,7 @@
 #define Resonance_Data_H
 
 #include "Pythia8/Interpolator.h"
+#include "Pythia8/MassDependentWidth.h"
 #include "Pythia8/Pythia.h"
 
 namespace Pythia8 {
@@ -14,7 +15,11 @@ typedef string ResGenus;
 class ResonanceData {
 public:
 
-  ResonanceData() {}
+  ResonanceData() {
+    ifstream stream("ParticleWidths.xml");
+    particleWidthPtr = new MassDependentWidth;
+    particleWidthPtr->readXML(stream);
+  }
 
   void initPtr(ParticleData* particleDataPtrIn) {
     particleDataPtr = particleDataPtrIn;
@@ -23,35 +28,30 @@ public:
   bool readXML(istream& inStream);
 
 
-  double getTotalSigma(int idA, int idB, double eCM) const {
-    auto cls = classify(idA, idB);
-    auto ptr = totalSigmaDistribution.find(cls);
-    if (ptr == totalSigmaDistribution.end())
-      return 0.;
-    else
-      return ptr->second(eCM);
-  }
+  const Interpolator& getDiffractiveSigmaDistribution(int idA, int idB) const;
+
+  double getDiffractiveSigma(int idA, int idB, double eCM) const;
+
+  double getBR(int idR, int idA, int idB) const;
+
+  int getIsospin(int species) const;
+
+  double getClebschGordan(int, int , int , int , int , int ) const ;
+// @TODO Probably take Particles instead of just ids
+  double getResonanceSigma(int idA, int idB, double eCM) const;
 
   vector<pair<pair<int, int>, double>> getOutputsWithFrequencies(int idA, int idB, double eCM) const {
+    
     auto outs = getPossibleOutputs(idA, idB);
-
     vector<pair<pair<int, int>, double>> outsWithFreq(outs.size());
 
-    for (int i = 0; i < (int)outs.size(); ++i) {
-      auto gens = genify(outs[i].first, outs[i].second);
-      outsWithFreq[i] = pair<pair<int, int>, double>(outs[i], partialSigmaDistribution.at(gens)(eCM));
+    for (int iR = 0; iR < (int)outs.size(); ++iR) {
+      auto gens = genify(outs[iR].first, outs[iR].second);
+      double weight = partialSigmaDistribution.at(gens)(eCM);
+      outsWithFreq[iR] = pair<pair<int, int>, double>(outs[iR], weight);
     }
 
     return outsWithFreq;
-  }
-
-  const Interpolator& getTotalSigmaDistribution(int idA, int idB) const {
-    auto cls = classify(idA, idB);
-    auto ptr = totalSigmaDistribution.find(cls);
-    if (ptr == totalSigmaDistribution.end())
-      return Interpolator::Zero;
-    else
-      return ptr->second;
   }
 
   vector<pair<int, int>> getPossibleOutputs(int idA, int idB) const;
@@ -63,6 +63,8 @@ public:
 private:
 
   ParticleData* particleDataPtr;
+
+  MassDependentWidth* particleWidthPtr;
 
   ResClass classify(int id) const {
     return genusToClass.at(speciesToGenus.at(abs(id)));
@@ -94,6 +96,8 @@ private:
   map<int, ResGenus> speciesToGenus;
   map<ResClass, vector<ResGenus>> classToGenera;
   map<ResGenus, vector<int>> genusToParticles;
+
+  map<ResGenus, int> isospinType;
 
   vector<int> classToSpecies(ResClass cls) const {
     auto genera = classToGenera.at(cls);

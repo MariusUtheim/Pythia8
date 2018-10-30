@@ -21,7 +21,7 @@ public:
 
   double sigma(int idA, int idB, double eCM) const;
 
-  vector<int> pickProducts(int idAIn, int idBIn, double eCM);
+  pair<int, int> pickProducts(int idAIn, int idBIn, double eCM);
 
   const Interpolator& sigmaDistribution(int idA, int idB) const; 
   const Interpolator& sigmaDistribution(int idA, int idB, int idC, int idD) const;
