@@ -74,6 +74,22 @@ bool MassDependentWidth::readXML(istream& stream) {
 
       this->massDependentWidths.emplace(particleGenus, Interpolator(left, right, data));
     }
+    else if (word1 == "<br") {
+      completeTag(stream, line);
+
+      string particleGenus = attributeValue(line, "genus");
+      string products = attributeValue(line, "products");
+      pair<string, string> key(particleGenus, products);
+            
+      istringstream dataStr(attributeValue(line, "data"));
+      vector<double> data;
+      double currentData;
+      while (dataStr >> currentData)
+        data.push_back(currentData);
+      
+      auto& in = massDependentWidths.at(particleGenus);
+      this->branchingRatios.emplace(key, Interpolator(in.left(), in.right(), data));
+    }
   }
 
   return true;
@@ -89,8 +105,20 @@ double MassDependentWidth::mass(string particleGenus, double eCM) const {
     return entry->second(eCM);
 }
 
+double MassDependentWidth::branchingRatio(string particleGenus, string products, double eCM) const {
+  auto entry = branchingRatios.find(pair<string, string>(particleGenus, products));
+  if (entry == branchingRatios.end())
+    return 0.;
+  else
+    return entry->second(eCM);
+}
+
 const Interpolator& MassDependentWidth::getDistribution(string particleGenus) const {
   return massDependentWidths.at(particleGenus);
+}
+
+const Interpolator& MassDependentWidth::getBranchingRatios(string particleGenus, string products) const {
+  return branchingRatios.at(pair<string, string>(particleGenus, products));
 }
 
 }

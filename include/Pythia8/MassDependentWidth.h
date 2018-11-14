@@ -15,12 +15,19 @@ public:
 
   double mass(string particle, double eCM) const;
 
+  double branchingRatio(string particle, string products, double eCM) const;
+
   const Interpolator& getDistribution(string particle) const;
+
+  const Interpolator& getBranchingRatios(string particle, string brs) const;
+
+  vector<string> getProducts(string particle) const;
 
 private:
 
   map<string, Interpolator> massDependentWidths;
 
+  map<pair<string, string>, Interpolator> branchingRatios;
 };
 
 }

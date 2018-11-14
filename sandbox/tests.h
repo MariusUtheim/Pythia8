@@ -12,6 +12,6 @@ const vector<double> datapT =    { 0.47,  0.77, 1.01,  0.90, 1.07,  1.21,   1.15
 void test_DeltapT_per_collision();
 void test_compareDeltapT();
 void test_pT_distributions();
-
+void test_ClebschGordan();
 
 #endif

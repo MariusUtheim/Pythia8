@@ -218,6 +218,7 @@ public:
 
   // Get data
   double sigma(int idA, int idB, double eCM) const {
+    if (eCM == 0) return 0.; // @TODO suppressing warning...
     return 40.0;
     const CrossSectionDataEntry* entry = findCrossSection(idA, idB);
     if (entry) return entry->sigma(); 
@@ -225,6 +226,7 @@ public:
   }
 
   vector<int> pickProducts(int idA, int idB, double eCM) {
+    if (eCM == 0) return { }; // @TODO suppressing warning...
     return vector<int> { idA, idB };
   }
 

@@ -27,38 +27,41 @@ public:
 
   bool readXML(istream& inStream);
 
+  double getStrangeness(int id) const;
+
+  double getTotalSigma(int idA, int idB, double eCM) const;
+
 
   const Interpolator& getDiffractiveSigmaDistribution(int idA, int idB) const;
 
   double getDiffractiveSigma(int idA, int idB, double eCM) const;
 
-  double getBR(int idR, int idA, int idB) const;
+
+  double getBR(int idR, int idA, int idB, double eCM) const;
 
   int getIsospin(int species) const;
 
-  double getClebschGordan(int, int , int , int , int , int ) const ;
-// @TODO Probably take Particles instead of just ids
+  int getIso3(int species) const;
+
+  double getClebschGordan2(int, int , int , int , int , int ) const ;
+
   double getResonanceSigma(int idA, int idB, double eCM) const;
 
-  vector<pair<pair<int, int>, double>> getOutputsWithFrequencies(int idA, int idB, double eCM) const {
-    
-    auto outs = getPossibleOutputs(idA, idB);
-    vector<pair<pair<int, int>, double>> outsWithFreq(outs.size());
+  double getStrangenessFactor(int id) const;
 
-    for (int iR = 0; iR < (int)outs.size(); ++iR) {
-      auto gens = genify(outs[iR].first, outs[iR].second);
-      double weight = partialSigmaDistribution.at(gens)(eCM);
-      outsWithFreq[iR] = pair<pair<int, int>, double>(outs[iR], weight);
-    }
+  double getAnnihilationSigma(int idA, int idB, double eCM) const;
 
-    return outsWithFreq;
-  }
+  double getElasticSigma(int idA, int idB, double eCM) const;
 
-  vector<pair<int, int>> getPossibleOutputs(int idA, int idB) const;
+
+  vector<pair<pair<int, int>, double>> getOutputsWithFrequencies(int idA, int idB, double eCM) const;
+
+  vector<pair<int, int>> getDiffractiveOutputs(int idA, int idB) const;
+
 
   void print() const;
 
-  void sanityCheck();
+  bool sanityCheck();
 
 private:
 
@@ -71,7 +74,11 @@ private:
   }
 
   ResGenus genify(int id) const {
-    return speciesToGenus.at(abs(id));
+    auto ptr = speciesToGenus.find(abs(id));
+    if (ptr == speciesToGenus.end())
+      return (cout << "Genus not found for particle species " << id << endl), "";
+    else
+      return ptr->second;
   }
 
   pair<ResClass, ResClass> classify(int idA, int idB) const {
