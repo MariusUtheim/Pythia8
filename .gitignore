@@ -52,3 +52,5 @@ callgrind.*
 # Mathematica output
 Mathematica/*.mx
 Mathematica/*.png
+Mathematica/*.xml
+Mathematica/*.dat
