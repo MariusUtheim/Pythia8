@@ -239,8 +239,6 @@ vector<pair<int, int>> ResonanceData::getDiffractiveOutputs(int idA, int idB) co
 
   for (auto outputClass : outputClasses) {
 
-    //cout << clsA << " " << clsB << " --> " << outputClass.first << " " << outputClass.second << endl;
-
     auto parCs = classToSpecies(outputClass.first), 
          parDs = classToSpecies(outputClass.second);
 
@@ -250,10 +248,6 @@ vector<pair<int, int>> ResonanceData::getDiffractiveOutputs(int idA, int idB) co
           if (particleDataPtr->chargeType(pC) + particleDataPtr->chargeType(pD) == totalCharge) {
             possibleOutputs.push_back(pair<int, int>(pC, pD));
 
-            //cout << setw(9) << left << particleDataPtr->name(pC) << setw(14) << particleDataPtr->name(pD);
-            //auto gens = genify(pC, pD);
-            //double weight = partialSigmaDistribution.at(gens)(5.);
-            //cout << weight << endl;
           }
     }
     else if (idA < 0 && idB < 0) {
@@ -313,12 +307,6 @@ double ResonanceData::getAnnihilationSigma(int idA, int idB, double eCM) const {
   double s = eCM * eCM;
   double sigmaNN = sigma0N * s0/s * (A2 * s0 / (pow2(s - s0) + A2 * s0) + B);
 
-  cout << " --- Annihilation between " << particleDataPtr->name(idA) << " and " << particleDataPtr->name(idB) << " --- " << endl
-       << "sigmaNN = " << sigmaNN << endl
-       << "xsA = " << xsA << endl
-       << "xsB = " << xsB << endl
-       << endl;
-  
   // @TODO separate into annihilation, diffractive and elastic
 
   return sigmaNN * (1. - 0.4 * xsA) * (1. - 0.4 * xsB);
@@ -469,14 +457,14 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
                  : vector<string>();
     for (auto cls : classes)
     for (auto genus : classToGenera.at(cls)) {
-      for (auto species :  genusToParticles.at(genus))
+      for (auto species : genusToParticles.at(genus)) {
+        if (idA < 0) 
+          species = -species;
         if (particleDataPtr->chargeType(species) == totalCharge) 
           resonanceCandidates.push_back(species); // break; 
+      }
     }
   }
-
-
-  cout << " === Colliding " << particleDataPtr->name(idA) << " with " << particleDataPtr->name(idB) << " @ " << eCM << " GeV === " << endl << endl;
 
   for (auto idR : resonanceCandidates) {
     double br = getBR(idR, idA, idB, eCM);
@@ -485,7 +473,7 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
       continue;
     }
 
-    double gammaRes2 = pow2(particleWidthPtr->mass(speciesToGenus.at(idR), eCM));
+    double gammaRes2 = pow2(particleWidthPtr->mass(speciesToGenus.at(abs(idR)), eCM));
 
 
     int iA = getIsospin(idA);
@@ -508,14 +496,6 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
     if (gens.first == gens.second && idA != idB)
       contribution *= 2;
 
-    cout << "Contribution from " << particleDataPtr->name(idR) << ": " << contribution << endl
-          << " Clebsch-Gordan = <" << iA << " " << i3A << " , " << iB << " " << i3B << " | " << iR << " " << i3R << " >^2 = " << cg2 << endl
-          << " (2S_R + 1) = " << nJRes << endl
-          << " Branching ratio " << br << endl
-          << " Gamma^2 = " << gammaRes2 << endl
-          << " E_CM - m0 = " << eCM - m0 << endl
-          << endl;
-
     sigmaRes += contribution;
   }
 
@@ -524,7 +504,7 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
 
   // @TODO define constant 0.38937966 = GeV^-2 to mb
   double preFactor = 0.38937966 * M_PI / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB) * pCMS2);
-  cout << "Prefactor = " << preFactor << endl;
+//  cout << "Prefactor = " << preFactor << endl;
   sigmaRes *= preFactor;
 
   if (sigmaRes > 0 && particleDataPtr->isMeson(idA))

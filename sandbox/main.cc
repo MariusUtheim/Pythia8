@@ -57,7 +57,7 @@ int Test::count = 10;
 
 int main(int argc, const char *argv[]) {
 
-  Pythia pythia(false);
+  Pythia pythia("../share/Pythia8/xmldoc", false);
 
   ParticleData& particleData = pythia.particleData;
 
@@ -71,32 +71,17 @@ int main(int argc, const char *argv[]) {
 
   resonanceData.print();
 
-  int inA = -321, inB = 2212;
+  int inA = -2212, inB = 2212;
   
-  //cout << resonanceData.getIso3(13112) << endl;
+  Hist sigmaRes("sigma(resonance)", 200, 0., 2.5);
+  double dx = (2.5 - 0.) / 200;
 
-  //cout << resonanceData.getResonanceSigma(inA, inB, 1.8) << endl;
-  
-  
-  Hist sigmaRes("sigma(resonance)", 200, 1., 2.5);
-  double dx = (2.5 - 1.) / 200;
-
-  for (double eCM = 1. + dx / 2; eCM < 2.5; eCM += dx) 
-    sigmaRes.fill(eCM, resonanceData.getResonanceSigma(inA, inB, eCM));
+  for (double eCM = 0. + dx / 2; eCM < 2.5; eCM += dx) 
+    sigmaRes.fill(eCM, resonanceData.getTotalSigma(inA, inB, eCM));
 
   cout << sigmaRes;
 
   HistPlot plt("myplot");
   plt.plotFrame("outplot", sigmaRes, "Sigma", "$\\sqrt{s}$", "$\\sigma$", "-");
-  
 
-  /*
-  Hist sigmaAnn("Sigma(annihilation)", 100, 2., 20.);
-  double dx = (20. - 2.) / 100;
-
-  for (double eCM = 2. + dx / 2; eCM < 20.; eCM += dx) 
-    sigmaAnn.fill(eCM, resonanceData.getAnnihilationSigma(inA, inB, eCM));
-
-  cout << sigmaAnn;
-  */
 }
