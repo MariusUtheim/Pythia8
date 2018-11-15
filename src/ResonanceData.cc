@@ -204,8 +204,6 @@ double ResonanceData::getTotalSigma(int idA, int idB, double eCM) const {
   else
     sigmaTotal += getResonanceSigma(idA, idB, eCM);
 
-  sigmaTotal += getElasticSigma(idA, idB, eCM);
-
   return sigmaTotal;
 }
 
@@ -321,12 +319,9 @@ double ResonanceData::getAnnihilationSigma(int idA, int idB, double eCM) const {
        << "xsB = " << xsB << endl
        << endl;
   
+  // @TODO separate into annihilation, diffractive and elastic
 
   return sigmaNN * (1. - 0.4 * xsA) * (1. - 0.4 * xsB);
-}
-
-double ResonanceData::getElasticSigma(int idA, int idB, double eCM) const {
-  return 0. * idA * idB * eCM; // @TODO something
 }
 
 //--------------------------------------------------------------------------
