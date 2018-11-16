@@ -83,10 +83,10 @@ bool ResonanceData::readXML(istream& stream) {
       ResGenus currentGenus;
       while (generaStr >> currentGenus) {
         genera.push_back(currentGenus);
-        this->genusToClass.emplace(currentGenus, classIdentifier);
+        this->_genusToClass.emplace(currentGenus, classIdentifier);
       }
       
-      this->classToGenera.emplace(classIdentifier, genera);
+      this->_classToGenera.emplace(classIdentifier, genera);
 
     }
     else if (word1 == "<resonanceGenus") {
@@ -99,31 +99,31 @@ bool ResonanceData::readXML(istream& stream) {
       int currentSpecies;
       while (speciesStr >> currentSpecies) {
         species.push_back(currentSpecies);
-        this->speciesToGenus.emplace(currentSpecies, genusIdentifier);
+        this->_speciesToGenus.emplace(currentSpecies, genusIdentifier);
       }
-      
-      this->genusToParticles.emplace(genusIdentifier, species);
+
+      this->_genusToSpecies.emplace(genusIdentifier, species);
 
       int strangeness = getStrangeness(species[0]);
       if (particleDataPtr->isMeson(species[0])) {
         if (strangeness == 0)
-          this->isospinType.emplace(genusIdentifier, 2 * (species.size() - 1));
+          this->_isospinType.emplace(genusIdentifier, 2 * (species.size() - 1));
         else if (strangeness == 1)
-          this->isospinType.emplace(genusIdentifier, 1);
+          this->_isospinType.emplace(genusIdentifier, 1);
         else if (strangeness == 2)
-          this->isospinType.emplace(genusIdentifier, 0);
+          this->_isospinType.emplace(genusIdentifier, 0);
         else
           throw " in ResonanceData::readXML: Strangeness does not give a sensible value"; // @TODO: Remove when we're confident getStrangeness works well
       }
       else {
         if (strangeness == 0)
-          this->isospinType.emplace(genusIdentifier, species.size() - 1);
+          this->_isospinType.emplace(genusIdentifier, species.size() - 1);
         else if (strangeness == 1)
-          this->isospinType.emplace(genusIdentifier, species.size() == 1 ? 0 : 2);
+          this->_isospinType.emplace(genusIdentifier, species.size() == 1 ? 0 : 2);
         else if (strangeness == 2)
-          this->isospinType.emplace(genusIdentifier, 2);
+          this->_isospinType.emplace(genusIdentifier, 2);
         else if (strangeness == 3)
-          this->isospinType.emplace(genusIdentifier, 0);
+          this->_isospinType.emplace(genusIdentifier, 0);
         else
           throw " in ResonanceData::readXML: Strangeness does not give a sensible value"; // @TODO: Remove when we're confident getStrangeness works well
       }
@@ -229,8 +229,8 @@ double ResonanceData::getDiffractiveSigma(int idA, int idB, double eCM) const {
 }
 
 vector<pair<int, int>> ResonanceData::getDiffractiveOutputs(int idA, int idB) const {
-  ResClass clsA = classify(idA), clsB = classify(idB);
-  auto cls = classify(idA, idB);
+  ResClass clsA = speciesToClass(idA), clsB = speciesToClass(idB);
+  auto cls = pair<ResClass, ResClass>(clsA, clsB);
 
   int totalCharge = particleDataPtr->chargeType(idA) + particleDataPtr->chargeType(idB);
   auto& outputClasses = scatterChannels.at(cls);
@@ -316,21 +316,21 @@ double ResonanceData::getAnnihilationSigma(int idA, int idB, double eCM) const {
 
 
 double ResonanceData::getBR(int idR, int idA, int idB, double eCM) const {
-  ResGenus resR = speciesToGenus.at(abs(idR)),
-    resA = speciesToGenus.at(abs(idA)), resB = speciesToGenus.at(abs(idB));
+  ResGenus resR = speciesToGenus(idR),
+    resA = speciesToGenus(idA), resB = speciesToGenus(idB);
   
   double br = particleWidthPtr->branchingRatio(resR, resA + " " + resB, eCM);
   return br;
 }
 
 int ResonanceData::getIsospin(int species) const {
-  auto genus = speciesToGenus.at(abs(species));
-  return isospinType.at(genus);
+  auto genus = speciesToGenus(species);
+  return isospinType(genus);
 }
 
 int ResonanceData::getIso3(int species) const {
   int totalSpin = getIsospin(species);
-  int charge = particleDataPtr->chargeType(abs(species)) / 2;
+  int charge = particleDataPtr->chargeType(abs(species)) / 3;
   int sign = species > 0 ? 1 : -1;
   return sign * 
        ( totalSpin == 0 ? 0
@@ -344,19 +344,19 @@ double ResonanceData::getClebschGordan2(int j1, int m1, int j2, int m2, int j, i
   // @TODO: Maybe don't give such aggressive warning messages. For now these are kept in as
   //        tests, as in the current code, they should never be hit, but maybe allow it in the future
   if (j1 < 0 || j2 < 0 || j < 0)
-  { cout << "ResonanceData::getClebschGordan: Got negative isospins" << endl; return 0.; }
+  { cout << "ResonanceData::getClebschGordan: Got negative isospins" << endl; return NAN; }
   if (j1 > 3 || j2 > 3)
-  { cout << "ResonanceData::getClebschGordan: Got isospin greater than 3/2; case is unhandled" << endl; return 0.; }
+  { cout << "ResonanceData::getClebschGordan: Got isospin greater than 3/2; case is unhandled" << endl; return NAN; }
   if (m1 < -j1 || m1 > j1 || m2 < -j2 || m2 > j2 || m < -j || m > j)
-  { cout << "ResonanceData::getClebschGordan: component 3 out of range" << endl; return 0.; }
+  { cout << "ResonanceData::getClebschGordan: component 3 out of range" << endl; return NAN; }
   if ((j1 + j2 - j) % 2 != 0)
-  { cout << "ResonanceData::getClebschGordan: parity is not conserved" << endl; return 0.; }
+  { cout << "ResonanceData::getClebschGordan: integer/half-integerness is not conserved" << endl; return NAN; }
   if (m != m1 + m2)
-  { cout << "ResonanceData::getClebschGordan: component 3 not conserved" << endl; return 0.; }
+  { cout << "ResonanceData::getClebschGordan: component 3 not conserved" << endl; return NAN; }
   if (j < abs(j1 - j2) || j > j1 + j2)
-  { cout << "ResonanceData::getClebschGordan: outgoing isospin out of range" << endl; return 0.; }
+  { cout << "ResonanceData::getClebschGordan: outgoing isospin out of range" << endl; return NAN; }
   if ((j1 + m1) % 2 != 0 || (j2 + m2) % 2 != 0 || (j + m) % 2 != 0)
-  { cout << "ResonanceData::getClebschGordan: integer-spin particle has half-spin component 3, or vice versa" << endl; return 0.; }
+  { cout << "ResonanceData::getClebschGordan: integer-spin particle has half-spin component 3, or vice versa" << endl; return NAN; }
 
   // Cover all boundary cases
   if (j1 + j2 == j && abs(m1 + m2) == j)
@@ -443,8 +443,8 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
   double sigmaRes = 0;
 
   if (particleDataPtr->isMeson(idA)) {
-    for (auto genus : classToGenera.at("M*")) {
-      for (auto species :  genusToParticles.at(genus))
+    for (auto genus : classToGenera("M*")) {
+      for (auto species :  genusToSpecies(genus))
         if (particleDataPtr->chargeType(species) == totalCharge) 
           resonanceCandidates.push_back(species); // break; 
     }
@@ -456,8 +456,8 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
                  : strangeness == 2 ? vector<string>({ "S2" })
                  : vector<string>();
     for (auto cls : classes)
-    for (auto genus : classToGenera.at(cls)) {
-      for (auto species : genusToParticles.at(genus)) {
+    for (auto genus : classToGenera(cls)) {
+      for (auto species : genusToSpecies(genus)) {
         if (idA < 0) 
           species = -species;
         if (particleDataPtr->chargeType(species) == totalCharge) 
@@ -468,13 +468,10 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
 
   for (auto idR : resonanceCandidates) {
     double br = getBR(idR, idA, idB, eCM);
-    if (br == 0.) {
-      cout << "Zero BR for " << speciesToGenus.at(abs(idR)) << endl << endl;
+    if (br == 0.)
       continue;
-    }
 
-    double gammaRes2 = pow2(particleWidthPtr->mass(speciesToGenus.at(abs(idR)), eCM));
-
+    double gammaRes2 = pow2(particleWidthPtr->mass(speciesToGenus(idR), eCM));
 
     int iA = getIsospin(idA);
     int i3A = getIso3(idA);
@@ -484,9 +481,13 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
     
     int iR = getIsospin(idR);
     int i3R = getIso3(idR);
-    
+
     double cg2 = getClebschGordan2(iA, i3A, iB, i3B, iR, i3R);
 
+    if (isnan(cg2)) {
+      cout << " for " << idA << "+" << idB << " --> " << idR << endl
+           << "     < " << iA << " " << i3A << " , " << iB << " " << i3B << " | " << iR << " " << i3R << " > " << endl;
+    }
 
     int nJRes = particleDataPtr->spinType(idR);
     double m0 = particleDataPtr->m0(idR);
@@ -520,7 +521,7 @@ void ResonanceData::print() const {
 
   cout << "== Classes ==" << endl;
 
-  for (auto cls : classToGenera) {
+  for (auto cls : _classToGenera) {
     cout << cls.first << " = { ";
     for (auto gen : cls.second)
       cout << gen << " ";
@@ -528,7 +529,7 @@ void ResonanceData::print() const {
   }
 
   cout << endl << "== Genera ==" << endl;
-  for (auto gen : genusToParticles) {
+  for (auto gen : _genusToSpecies) {
     cout << gen.first << "(" << getIsospin(gen.second[0]) << ") = { ";
     for (auto spc : gen.second)
       cout << spc << " ";
@@ -536,11 +537,11 @@ void ResonanceData::print() const {
   }
 
   cout << endl << "== Particles in each class ==" << endl;
-  for (auto cls : classToGenera) {
+  for (auto cls : _classToGenera) {
     cout << cls.first << " = { ";
 
     for (auto gen : cls.second)
-      for (auto spc : genusToParticles.at(gen))
+      for (auto spc : _genusToSpecies.at(gen))
         cout << spc << " ";
     cout << "}" << endl;
   }
@@ -551,16 +552,16 @@ void ResonanceData::print() const {
 bool ResonanceData::sanityCheck() {
   bool everythingWorks = true;
 
-  for (auto cls : classToGenera) {
+  for (auto cls : _classToGenera) {
     for (auto gen : cls.second) {
-      if (genusToParticles.find(gen) == genusToParticles.end()) {
+      if (_genusToSpecies.find(gen) == _genusToSpecies.end()) {
         cout << " ERROR: genus " << gen << " of class " << cls.first << " is missing" << endl;
         everythingWorks = false;
       }
     }
   }
 
-  for (auto gen : genusToParticles) {
+  for (auto gen : _genusToSpecies) {
     for (auto spc : gen.second) {
       if (!particleDataPtr->isParticle(spc)) {
         cout << " ERROR: particle species " << spc << " of genus " << gen.first << " does not exist" << endl;
@@ -568,13 +569,13 @@ bool ResonanceData::sanityCheck() {
       }
     }
 
-    if (genusToClass.find(gen.first) == genusToClass.end()) {
+    if (_genusToClass.find(gen.first) == _genusToClass.end()) {
       cout << " WARNING: genus " << gen.first << " does not belong to any class" << endl;
     }
   }
 
-  for (auto clsA : classToGenera) 
-  for (auto clsB : classToGenera) {
+  for (auto clsA : _classToGenera) 
+  for (auto clsB : _classToGenera) {
     pair<ResClass, ResClass> clsPair(clsA.first, clsB.first);
     if (totalSigmaDistribution.find(clsPair) != totalSigmaDistribution.end()) {
       if (scatterChannels.find(clsPair) == scatterChannels.end()) {
@@ -584,8 +585,8 @@ bool ResonanceData::sanityCheck() {
       else
       {
         for (auto chn : scatterChannels.at(clsPair))
-        for (auto genC : classToGenera.at(chn.first))
-        for (auto genD : classToGenera.at(chn.second)) {
+        for (auto genC : _classToGenera.at(chn.first))
+        for (auto genD : _classToGenera.at(chn.second)) {
           pair<ResGenus, ResGenus> genPair(genC, genD);
           if (partialSigmaDistribution.find(genPair) == partialSigmaDistribution.end()) {
             cout << " ERROR: Total sigma for " << clsPair.first << " " << clsPair.second << " is nonzero, but relative frequency for output " << genPair.first << " " << genPair.second << " not found" << endl;

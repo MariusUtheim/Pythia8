@@ -48,7 +48,7 @@ public:
 // Find settings. Initialize HadronLevel classes as required.
 
 bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
-  ParticleData* particleDataPtrIn, CrossSectionData* crossSectionDataPtrIn,
+  ParticleData* particleDataPtrIn, ResonanceData* resDataPtrIn,
   Rndm* rndmPtrIn, Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
   RHadrons* rHadronsPtrIn, DecayHandler* decayHandlePtr,
   vector<int> handledParticles, UserHooks* userHooksPtrIn) {
@@ -56,7 +56,7 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   // Save pointers.
   infoPtr         = infoPtrIn;
   particleDataPtr = particleDataPtrIn;
-  crossSecDataPtr = crossSectionDataPtrIn;
+  resDataPtr      = resDataPtrIn;
   rndmPtr         = rndmPtrIn;
   couplingsPtr    = couplingsPtrIn;
   rHadronsPtr     = rHadronsPtrIn;
@@ -118,7 +118,7 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
     timesDecPtr, &flavSel, decayHandlePtr, handledParticles);
 
   // Initialize rescatterings.
-  rescatterings.init(infoPtr, rndmPtr, particleDataPtr, crossSecDataPtr);
+  rescatterings.init(infoPtr, rndmPtr, particleDataPtr, resDataPtr);
 
   if (doRescatter && !settings.flag("Fragmentation:setVertices"))
   {

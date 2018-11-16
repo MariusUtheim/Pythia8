@@ -46,6 +46,9 @@
 #include "Pythia8/TimeShower.h"
 #include "Pythia8/UserHooks.h"
 
+#include "Pythia8/ResonanceData.h"
+#include "Pythia8/MassDependentWidth.h"
+
 namespace Pythia8 {
 
 //==========================================================================
@@ -239,8 +242,9 @@ public:
   // ParticleData: the particle data table/database.
   ParticleData   particleData;
 
-  // CrossSectionData: the interaction data table/database.
-  CrossSectionData crossSectionData;
+  // @TODO ResonanceData: the interaction data table/database.
+  ResonanceData resData;
+  MassDependentWidth massDependentWidths;
 
   // Random number generator.
   Rndm           rndm;

@@ -45,7 +45,7 @@ public:
 
   // Initialize HadronLevel classes as required.
   bool init(Info* infoPtrIn, Settings& settings,
-    ParticleData* particleDataPtrIn, CrossSectionData* crossSectionDataPtrIn,
+    ParticleData* particleDataPtrIn, ResonanceData* resDataPtrIn,
     Rndm* rndmPtrIn, Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
     RHadrons* rHadronsPtrIn, DecayHandler* decayHandlePtr,
     vector<int> handledParticles, UserHooks* userHooksPtrIn);
@@ -76,7 +76,7 @@ private:
   ParticleData* particleDataPtr;
 
   // @TODO name and comments
-  CrossSectionData* crossSecDataPtr;
+  ResonanceData* resDataPtr;
 
   // Pointer to the random number generator.
   Rndm*         rndmPtr;

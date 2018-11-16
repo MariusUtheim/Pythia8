@@ -89,8 +89,10 @@ Pythia::Pythia(string xmlDir, bool printBanner) {
   }
  
   // Read in files with all cross-section data.
-  crossSectionData.initPtr(&info, &settings, &rndm, couplingsPtr);
-  isConstructed = crossSectionData.init(xmlPath + "CrossSectionData.xml");
+  resData.initPtr(&particleData, &massDependentWidths);
+  isConstructed =
+      massDependentWidths.init(xmlPath + "ParticleWidths.xml")
+   && resData.init(xmlPath + "ResonanceData.xml");
   if (!isConstructed) {
     info.errorMsg("Abort from Pythia::Pythia: cross-section data unavailable");
     return;
@@ -141,7 +143,7 @@ Pythia::Pythia(Settings& settingsIn, ParticleData& particleDataIn,
     return;
   }
 
-  ///TODO: What to do about crossSectionData
+  // @TODO something with particle widths
 
   // Write the Pythia banner to output.
   if (printBanner) banner();
@@ -184,7 +186,7 @@ Pythia::Pythia( istream& settingsStrings, istream& particleDataStrings,
     return;
   }
 
-  ///TODO: What to do about crossSectionData
+  // @TODO something with particle widths
 
   // Write the Pythia banner to output.
   if (printBanner) banner();
@@ -636,11 +638,6 @@ bool Pythia::init() {
   }
   if (particleData.readingFailed()) {
     info.errorMsg("Abort from Pythia::init: some user particle data "
-      "did not make sense");
-    return false;
-  }
-  if (crossSectionData.readingFailed()) {
-    info.errorMsg("Abort from Pythia::init: some user cross-section data "
       "did not make sense");
     return false;
   }
@@ -1119,7 +1116,7 @@ bool Pythia::init() {
 
   // Send info/pointers to hadron level for initialization.
   // Note: forceHadronLevel() can come, so we must always initialize.
-  if ( !hadronLevel.init( &info, settings, &particleData, &crossSectionData,
+  if ( !hadronLevel.init( &info, settings, &particleData, &resData,
     &rndm, couplingsPtr, timesDecPtr, &rHadrons, decayHandlePtr,
     handledParticles, userHooksPtr) ) {
     info.errorMsg("Abort from Pythia::init: "

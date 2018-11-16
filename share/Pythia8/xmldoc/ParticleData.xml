@@ -3489,8 +3489,8 @@ The meaning of the various properties and the format used are explained
  
 <particle id="2212" name="p+" antiName="pbar-" spinType="2" chargeType="3" colType="0" 
           m0="0.93827"> 
-</particle> 
- 
+</particle>
+
 <particle id="2214" name="Delta+" antiName="Deltabar-" spinType="4" chargeType="3" colType="0" 
           m0="1.23200" mWidth="0.11700" mMin="1.08000" mMax="1.60000"> 
  <channel onMode="1" bRatio="0.6630208" products="2212 111"/> 

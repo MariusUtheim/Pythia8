@@ -2,7 +2,6 @@
 #include <functional>
 #include <initializer_list>
 #include <queue>
-#include "Pythia8/CrossSectionData.h"
 #include "Pythia8/Pythia.h"
 #include "Pythia8/Rescattering.h"
 
@@ -75,8 +74,10 @@ void Rescattering::rescatter(int idA, int idB,
 */
   double eCM = (hadA.p() + hadB.p()).mCalc();
 
-  vector<int> products = crossSecPtr->pickProducts(hadA.id(), hadB.id(), eCM);
-  
+  vector<int> products ;//= crossSecPtr->pickProducts(hadA.id(), hadB.id(), eCM);
+  products.push_back(idA);
+  products.push_back(idB);
+
   int oldSize = event.size();
   int status = (hadA.status() == 111 || hadA.status() == 112
              || hadB.status() == 111 || hadB.status() == 112) ? 112 : 111;
@@ -137,7 +138,7 @@ bool Rescattering::calcRescatterOrigin(int idA, int idB, Event& event,
   pA.rotbst(frame); pB.rotbst(frame);
 
   double eCM = (pA + pB).mCalc();
-  double sigma = crossSecPtr->sigma(hadA.idAbs(), hadB.idAbs(), eCM);
+  double sigma = resDataPtr->getTotalSigma(hadA.idAbs(), hadB.idAbs(), eCM);
 
   // Abort if impact parameter is too large
   if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)

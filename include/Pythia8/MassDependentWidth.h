@@ -2,7 +2,6 @@
 #define Mass_Dependent_Width_H
 
 #include "Pythia8/PythiaStdlib.h"
-#include "Pythia8/MassDependentWidth.h"
 #include "Pythia8/Interpolator.h"
 
 namespace Pythia8 {
@@ -10,6 +9,12 @@ namespace Pythia8 {
 class MassDependentWidth {
 
 public:
+
+  bool init(string path) {
+    ifstream stream(path);
+    if (!stream.is_open()) return false;
+    return readXML(stream);
+  }
 
   bool readXML(istream& stream);
 
