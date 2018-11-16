@@ -65,6 +65,7 @@ void Rescattering::rescatter(int idA, int idB,
 
   Particle& hadA = event[idA];
   Particle& hadB = event[idB]; 
+
 /*
   if (!crossSecPtr->isCrossSection(idA, idB)) {
     infoPtr->errorMsg("Rescattering::rescatter: "
@@ -74,10 +75,8 @@ void Rescattering::rescatter(int idA, int idB,
 */
   double eCM = (hadA.p() + hadB.p()).mCalc();
 
-  vector<int> products ;//= crossSecPtr->pickProducts(hadA.id(), hadB.id(), eCM);
-  products.push_back(idA);
-  products.push_back(idB);
-
+  vector<int> products = { hadA.id(), hadB.id() };//= crossSecPtr->pickProducts(hadA.id(), hadB.id(), eCM);
+ 
   int oldSize = event.size();
   int status = (hadA.status() == 111 || hadA.status() == 112
              || hadB.status() == 111 || hadB.status() == 112) ? 112 : 111;

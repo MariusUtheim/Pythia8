@@ -39,6 +39,7 @@ classes in order to shorten tables.
 <resonanceGenus identifier="D1920" species="221114 222114 222214 222224"/>
 <resonanceGenus identifier="D1950" species="201118 202118 202218 202228"/>
 
+<resonanceGenus identifier="L1116" species="3122"/>
 <resonanceGenus identifier="L1405" species="13122"/> 
 <resonanceGenus identifier="L1520" species="3124"/> 
 <resonanceGenus identifier="L1600" species="23122"/> 
@@ -52,7 +53,7 @@ classes in order to shorten tables.
 <resonanceGenus identifier="L2100" species="3128"/> 
 <resonanceGenus identifier="L2110" species="23126"/> 
 
-<resonanceGenus identifier="S1190" species="3112 3212 3112"/>
+<resonanceGenus identifier="S1190" species="3112 3212 3222"/>
 <resonanceGenus identifier="S1385" species="3114 3214 3224"/>
 <resonanceGenus identifier="S1660" species="13112 13212 13222"/>
 <resonanceGenus identifier="S1670" species="13114 13214 13224"/>
@@ -73,7 +74,6 @@ classes in order to shorten tables.
 <resonanceGenus identifier="omega" species="223"/>
 <resonanceGenus identifier="f_0(980)" species="9010221"/>
 <resonanceGenus identifier="K" species="311 321"/>
-<resonanceGenus identifier="K_S0" species="310"/>
 <resonanceGenus identifier="K*" species="313 323">
 <resonanceGenus identifier="phi" species="333"/>
 <resonanceGenus identifier="K*_0(1430)" species="10311 10321"/>

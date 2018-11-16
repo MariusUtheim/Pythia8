@@ -428,6 +428,13 @@ double ResonanceData::getClebschGordan2(int j1, int m1, int j2, int m2, int j, i
 
 // @TODO Probably take Particles instead of just ids
 double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
+
+  // For K_S and K_L, take average of K and Kbar
+  if (idA == 310 || idA == 130)
+    return 0.5 * (getResonanceSigma(311, idB, eCM) + getResonanceSigma(-311, idB, eCM));
+  if (idB == 310 || idB == 130)
+    return 0.5 * (getResonanceSigma(idA, 311, eCM) + getResonanceSigma(idA, -311, eCM));
+
   // @TODO Deal with what happens when there is an antibaryon
   double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
   if (eCM < mA + mB) return 0.; // @TODO: This isn't needed if we take two input particles and calculate s
@@ -438,6 +445,7 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
   auto gens = genify(abs(idA), abs(idB));
 
   auto totalCharge = particleDataPtr->chargeType(idA) + particleDataPtr->chargeType(idB);
+  auto totalIso3 = getIso3(idA) + getIso3(idB);
   vector<int> resonanceCandidates;
 
   double sigmaRes = 0;
@@ -445,7 +453,8 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
   if (particleDataPtr->isMeson(idA)) {
     for (auto genus : classToGenera("M*")) {
       for (auto species :  genusToSpecies(genus))
-        if (particleDataPtr->chargeType(species) == totalCharge) 
+        if (particleDataPtr->chargeType(species) == totalCharge
+        &&  getIso3(species) == totalIso3) 
           resonanceCandidates.push_back(species); // break; 
     }
   }
@@ -460,7 +469,8 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
       for (auto species : genusToSpecies(genus)) {
         if (idA < 0) 
           species = -species;
-        if (particleDataPtr->chargeType(species) == totalCharge) 
+        if (particleDataPtr->chargeType(species) == totalCharge
+        &&  getIso3(species) == totalIso3)
           resonanceCandidates.push_back(species); // break; 
       }
     }
@@ -485,7 +495,7 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
     double cg2 = getClebschGordan2(iA, i3A, iB, i3B, iR, i3R);
 
     if (isnan(cg2)) {
-      cout << " for " << idA << "+" << idB << " --> " << idR << endl
+      cout << " for " << particleDataPtr->name(idA) << " + " << particleDataPtr->name(idB) << " --> " << particleDataPtr->name(idR) << endl
            << "     < " << iA << " " << i3A << " , " << iB << " " << i3B << " | " << iR << " " << i3R << " > " << endl;
     }
 
