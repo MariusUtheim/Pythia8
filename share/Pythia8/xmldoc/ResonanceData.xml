@@ -9,17 +9,14 @@ classes in order to shorten tables.
 <h3>Scattering classes</h3>
 
 <resonanceClass identifier="N" genera="N938"/>
-<resonanceClass identifier="D" genera="D1232"/>
-<resonanceClass identifier="N*" genera="N1440 N1520 N1535 N1650 N1675 N1680 N1700 N1710 N1720"/>
-<resonanceClass identifier="D*" genera="D1600 D1620 D1700 D1905 D1910 D1920 D1950"/>
-<resonanceClass identifier="S1" genera="L1405 L1520 L1600 L1670 L1690 L1800 L1810 L1820 L1830 L1890 L2100 L2110 S1385 S1660 S1670 S1750 S1775 S1915 S1940 S2030"/>
-<resonanceClass identifier="S2" genera="X1315 X1530 X1820">
-<resonanceClass identifier="M*" genera="rho omega f_0(980) K* phi 
-  K*_0(1430) a_0(980) f_0(1370) K_1(1270) a_1(1260) f_1(1285) f_1(1510)
-  K_2(1430) a_2 f_2 f'_2(1525) K_1(1400) b_1(1235) h_1(1170) h_1(1380)
-  K*(1680) rho(1450)"/>
-
 <resonanceGenus identifier="N938" species="2112 2212"/>
+
+
+<resonanceClass identifier="D" genera="D1232"/>
+<resonanceGenus identifier="D1232" species="1114 2114 2214 2224"/>
+
+
+<resonanceClass identifier="N*" genera="N1440 N1520 N1535 N1650 N1675 N1680 N1700 N1710 N1720"/>
 <resonanceGenus identifier="N1440" species="202112 202212"/>
 <resonanceGenus identifier="N1520" species="102114 102214"/>
 <resonanceGenus identifier="N1535" species="102112 102212"/>
@@ -30,7 +27,8 @@ classes in order to shorten tables.
 <resonanceGenus identifier="N1710" species="212112 212212"/>
 <resonanceGenus identifier="N1720" species="202114 202214"/>
 
-<resonanceGenus identifier="D1232" species="1114 2114 2214 2224"/>
+
+<resonanceClass identifier="D*" genera="D1600 D1620 D1700 D1905 D1910 D1920 D1950"/>
 <resonanceGenus identifier="D1600" species="211114 212114 212214 212224"/>
 <resonanceGenus identifier="D1620" species="121112 122112 122212 122222"/>
 <resonanceGenus identifier="D1700" species="121114 122114 122214 122224"/>
@@ -39,7 +37,13 @@ classes in order to shorten tables.
 <resonanceGenus identifier="D1920" species="221114 222114 222214 222224"/>
 <resonanceGenus identifier="D1950" species="201118 202118 202218 202228"/>
 
+
+<resonanceClass identifier="S1" genera="L1116 S1190"/>
 <resonanceGenus identifier="L1116" species="3122"/>
+<resonanceGenus identifier="S1190" species="3112 3212 3222"/>
+
+
+<resonanceClass identifier="S1*" genera="L1405 L1520 L1600 L1670 L1690 L1800 L1810 L1820 L1830 L1890 L2100 L2110 S1385 S1660 S1670 S1750 S1775 S1915 S1940 S2030"/>
 <resonanceGenus identifier="L1405" species="13122"/> 
 <resonanceGenus identifier="L1520" species="3124"/> 
 <resonanceGenus identifier="L1600" species="23122"/> 
@@ -52,8 +56,6 @@ classes in order to shorten tables.
 <resonanceGenus identifier="L1890" species="23124"/> 
 <resonanceGenus identifier="L2100" species="3128"/> 
 <resonanceGenus identifier="L2110" species="23126"/> 
-
-<resonanceGenus identifier="S1190" species="3112 3212 3222"/>
 <resonanceGenus identifier="S1385" species="3114 3214 3224"/>
 <resonanceGenus identifier="S1660" species="13112 13212 13222"/>
 <resonanceGenus identifier="S1670" species="13114 13214 13224"/>
@@ -63,13 +65,55 @@ classes in order to shorten tables.
 <resonanceGenus identifier="S1940" species="23114 23214 23224"/>
 <resonanceGenus identifier="S2030" species="3118 3218 3228"/>
 
+
+<resonanceClass identifier="S2" genera="X1315"/>
 <resonanceGenus identifier="X1315" species="3312 3322"/>
+
+
+<resonanceClass identifier="S2*" genera="X1530 X1820">
 <resonanceGenus identifier="X1530" species="3314 3324"/>
 <resonanceGenus identifier="X1820" species="13314 13324"/>
 
+
+<resonanceClass identifier="S3" genera="Omega"/>
+<resonanceGenus identifier="Omega" species="3334"/>
+
+
+<resonanceClass identifier="SC" genera="Sc2450 Sc2520 Lc2290 Lc2625 Xc2470 Xc2580 Xc2650 Oc2695 Oc2765"/>
+<resonanceGenus identifier="Sc2450" species="4112 4212 4222"/>
+<resonanceGenus identifier="Sc2520" species="4114 4214 4224"/>
+<resonanceGenus identifier="Lc2290" species="4122"/>
+<resonanceGenus identifier="Lc2625" species="4124"/>
+<resonanceGenus identifier="Xc2470" species="4132 4232"/>
+<resonanceGenus identifier="Xc2580" species="4312 4322"/>
+<resonanceGenus identifier="Xc2650" species="4314 4324"/>
+<resonanceGenus identifier="Oc2695" species="4332"/>
+<resonanceGenus identifier="Oc2765" species="4334"/>
+
+
+<resonanceClass identifier="CC" genera="Xcc3600 Xcc3650 Occ3787 Occ3825"/>
+<resonanceGenus identifier="Xcc3600" species="4412 4422"/>
+<resonanceGenus identifier="Xcc3650" species="4414 4424"/>
+<resonanceGenus identifier="Occ3787" species="4432"/>
+<resonanceGenus identifier="Occ3825" species="4434"/>
+
+
+<resonanceClass identifier="C3" genera="Occc4915"/>
+<resonanceGenus identifier="Occc4915" species="4444"/>
+
+<!-- include beautiful baryons -->
+
+
+<resonanceClass identifier="M" genera="pi eta eta'">
 <resonanceGenus identifier="pi" species="211 111"/>
 <resonanceGenus identifier="eta" species="221"/>
 <resonanceGenus identifier="eta'" species="331"/>
+
+
+<resonanceClass identifier="M*" genera="rho omega f_0(980) K* phi 
+  K*_0(1430) a_0(980) f_0(1370) K_1(1270) a_1(1260) f_1(1285) f_1(1510)
+  K_2(1430) a_2 f_2 f'_2(1525) K_1(1400) b_1(1235) h_1(1170) h_1(1380)
+  K*(1680) rho(1450)"/>
 <resonanceGenus identifier="rho" species="213 113"/>
 <resonanceGenus identifier="omega" species="223"/>
 <resonanceGenus identifier="f_0(980)" species="9010221"/>
@@ -93,6 +137,32 @@ classes in order to shorten tables.
 <resonanceGenus identifier="h_1(1380)" species="10333"/>
 <resonanceGenus identifier="K*(1680)" species="30313 30323"/>
 <resonanceGenus identifier="rho(1450)" species="100113 100213"/>
+
+
+<resonanceClass identifier="M+" genera="D D* D*2 Ds D*s D*2s chi_0c eta_c J/psi chi_2c B B* B*2 Bs B*s B*2s Bc B*c B*2c eta_b Y chi_2b" />
+<resonanceGenus identifier="D" species="411 421"/>
+<resonanceGenus identifier="D*" species="413 423"/>
+<resonanceGenus identifier="D*2" species="415 425"/>
+<resonanceGenus identifier="Ds" species="431"/>
+<resonanceGenus identifier="D*s" species="433"/>
+<resonanceGenus identifier="D*2s" species="435"/>
+<resonanceGenus identifier="chi_0c" species="10441"/>
+<resonanceGenus identifier="eta_c" species="441"/>
+<resonanceGenus identifier="J/psi" species="443"/>
+<resonanceGenus identifier="chi_2c" species="445"/>
+<resonanceGenus identifier="B" species="511 521"/>
+<resonanceGenus identifier="B*" species="513 523"/>
+<resonanceGenus identifier="B*2" species="515 525"/>
+<resonanceGenus identifier="Bs" species="531"/>
+<resonanceGenus identifier="B*s" species="533"/>
+<resonanceGenus identifier="B*2s" species="535"/>
+<resonanceGenus identifier="Bc" species="541"/>
+<resonanceGenus identifier="B*c" species="543"/>
+<resonanceGenus identifier="B*2c" species="545"/>
+<resonanceGenus identifier="eta_b" species="551"/>
+<resonanceGenus identifier="Y" species="553"/>
+<resonanceGenus identifier="chi_2b" species="555"/>
+
 
 
 <scatter in="N N" outs="N D  D D  N N*  N D*  D N*  D D*"/>
