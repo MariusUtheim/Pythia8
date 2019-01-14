@@ -38,6 +38,17 @@ void fingerprint()
   cout << pythia.event[pythia.event.size() - 1].p();
 }
 
+static Hist plotFunction(string title, double xMin, double xMax, std::function<double(double)> f) {
+  double dx = (xMax - xMin) / 100;
+  Hist result(title, 100, xMin, xMax);
+  for (int i = 0; i < 100; ++i) {
+    double x = xMin + (i + 0.5) * dx;
+    result.fill(x, f(x));
+  }
+  cout << endl << endl;
+  return result;
+}
+
 class Test {
 public:
 
@@ -62,7 +73,7 @@ int main(int argc, const char *argv[]) {
   ParticleData& particleData = pythia.particleData;
 
   ResonanceData resonanceData;
-  resonanceData.initPtr(&pythia.particleData);
+  resonanceData.initPtr(&pythia.particleData, &pythia.massDependentWidths);
   ifstream stream("ResonanceData.xml");
   resonanceData.readXML(stream);
 
@@ -71,17 +82,13 @@ int main(int argc, const char *argv[]) {
 
   resonanceData.print();
 
-  int inA = -2212, inB = 2212;
-  
-  Hist sigmaRes("sigma(resonance)", 200, 0., 2.5);
-  double dx = (2.5 - 0.) / 200;
+//  int c = 0;
+//  Hist sigma("x", 101, -0.5, 100.5);
+//  for (int x = 0; x <= 100; x++)
+//    cout << (sigma.fill(x, x), x) << " " ;
 
-  for (double eCM = 0. + dx / 2; eCM < 2.5; eCM += dx) 
-    sigmaRes.fill(eCM, resonanceData.getTotalSigma(inA, inB, eCM));
-
-  cout << sigmaRes;
-
-  HistPlot plt("myplot");
-  plt.plotFrame("outplot", sigmaRes, "Sigma", "$\\sqrt{s}$", "$\\sigma$", "-");
-
+  Hist sigma = plotFunction("Sigma total", 1., 3., 
+    [resonanceData](double x) { return resonanceData.getElasticResonanceSigma(2212, -211, x); }
+  );
+  cout << sigma;
 }

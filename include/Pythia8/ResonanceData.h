@@ -1,6 +1,7 @@
 #ifndef Resonance_Data_H
 #define Resonance_Data_H
 
+#include "Pythia8/Event.h"
 #include "Pythia8/ParticleData.h"
 #include "Pythia8/Interpolator.h"
 #include "Pythia8/MassDependentWidth.h"
@@ -45,7 +46,11 @@ public:
 
   double getClebschGordan2(int, int , int , int , int , int ) const ;
 
+  vector<int> getResonanceCandidates(int idA, int idB) const;
+  double getPartialResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const;
+  double getPartialElasticResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const;
   double getResonanceSigma(int idA, int idB, double eCM) const;
+  double getElasticResonanceSigma(int idA, int idB, double eCM) const;
 
   double getStrangenessFactor(int id) const;
 
@@ -58,12 +63,19 @@ public:
 
   vector<pair<int, int>> getDiffractiveOutputs(int idA, int idB) const;
 
+  vector<Particle> pickProducts(int idA, int idB, double eCM) const;
+
+  void showPickProbabilities(int idA, int idB, double eCM) const;
 
   void print() const;
 
   bool sanityCheck();
 
 private:
+
+  double getTotalSigmaBB(int idA, int idB, double eCM) const;
+  double getTotalSigmaBBbar(int idB, int idBbar, double eCM) const;
+  double getTotalSigmaXM(int idX, int idM, double eCM) const;
 
   ParticleData* particleDataPtr;
 

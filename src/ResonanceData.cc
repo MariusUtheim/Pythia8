@@ -193,22 +193,35 @@ bool ResonanceData::readXML(istream& stream) {
 
 double ResonanceData::getTotalSigma(int idA, int idB, double eCM) const {
 
-  double sigmaTotal = 0;
-
   if (particleDataPtr->isBaryon(idA) && particleDataPtr->isBaryon(idB)) {
-    if (idA * idB < 0) 
-      sigmaTotal += getAnnihilationSigma(idA, idB, eCM);
+    if (idA * idB < 0) {
+      if (idA > 0)
+        return getTotalSigmaBBbar(idA, idB, eCM);
+      else
+        return getTotalSigmaBBbar(idB, idA, eCM);
+    }
     else
-      sigmaTotal += getDiffractiveSigma(idA, idB, eCM);
+      return getTotalSigmaBB(idA, idB, eCM);
   }
-  else
-    sigmaTotal += getResonanceSigma(idA, idB, eCM);
-
-  return sigmaTotal;
+  else {
+    if (particleDataPtr->isMeson(idB))
+      return getTotalSigmaXM(idA, idB, eCM);
+    else
+      return getTotalSigmaXM(idB, idA, eCM);
+  }
+  
+  return 0.;
 }
 
 
 //--------------------------------------------------------------------------
+
+// B+B section
+
+double ResonanceData::getTotalSigmaBB(int idA, int idB, double eCM) const {
+  cout << "ResonanceData::getTotalSigmaBB not implemented" << endl;
+  return 0.;
+}
 
 const Interpolator& ResonanceData::getDiffractiveSigmaDistribution(int idA, int idB) const {
   auto cls = classify(idA, idB);
@@ -286,6 +299,13 @@ vector<pair<pair<int, int>, double>> ResonanceData::getOutputsWithFrequencies(in
 
 //--------------------------------------------------------------------------
 
+// B+Bbar section
+
+double ResonanceData::getTotalSigmaBBbar(int idA, int idB, double eCM) const {
+  cout << "ResonanceData::getTotalSigmaBBbar not implemented" << endl;
+  return 0.;
+}
+
 double ResonanceData::getStrangenessFactor(int id) const {
   int strangeness = getStrangeness(id);
 
@@ -314,6 +334,66 @@ double ResonanceData::getAnnihilationSigma(int idA, int idB, double eCM) const {
 
 //--------------------------------------------------------------------------
 
+// X+M section
+
+static const vector<double> ppiminusInterpolData = 
+  { 20.3919, 35.1056, 53.4896, 67.8302, 61.3948, 47.1339, 36.1912, 
+    29.9881, 26.8335, 26.5702, 27.7574, 28.5599, 30.0137, 32.8038, 
+    37.3226, 44.0601, 45.7762, 42.1849, 37.6042, 35.9693, 38.7317, 
+    45.5506, 53.6462, 58.0236, 54.3861, 47.0179, 41.6299, 38.2877, 
+    36.5429, 36.1408, 36.1086, 36.3178, 36.1149, 35.7958, 35.3629, 
+    34.9317, 34.5016, 34.3947, 34.5755, 34.7563, 34.9371, 35.1311, 
+    35.3531, 35.575, 35.797, 35.9509, 35.7146, 35.4783, 35.2419, 35.0056, 
+    34.7693, 34.5329, 34.2954, 34.0514, 33.8073, 33.5632, 33.3192, 
+    33.0751, 32.831, 32.587, 32.381, 32.278, 32.1749, 32.0718, 31.9688, 
+    31.8657, 31.7626, 31.6595, 31.5565, 31.4534, 31.3503, 31.244, 
+    31.1329, 31.0218, 30.9108, 30.7997, 30.6887, 30.5776, 30.4666, 
+    30.3555, 30.2445, 30.1334, 30.0257, 29.9217, 29.8176, 29.7135, 
+    29.6095, 29.5054, 29.4014, 29.2973, 29.1932, 29.0978, 29.0211, 
+    28.9445, 28.8678, 28.7911, 28.7144, 28.6378, 28.5611, 28.4844, 
+    28.4077, 28.3311, 28.2806, 28.2432, 28.2058, 28.1684, 28.131, 
+    28.0936, 28.0562, 28.0188, 27.9814, 27.944, 27.9066, 27.8692, 
+    27.8318, 27.7944, 27.757, 27.7196, 27.6822, 27.6448, 27.6074 };
+
+static const Interpolator ppiminusInterpol(1.15, 3.89, ppiminusInterpolData);
+
+
+double ResonanceData::getTotalSigmaXM(int idX, int idM, double eCM) const {
+  if (idX == 2212 && idM == -211) {
+    if (eCM <= particleDataPtr->m0(2212) + particleDataPtr->m0(211))
+      return 0.;
+    else if (eCM <= 1.8)
+      return getResonanceSigma(idX, idM, eCM);
+    else if (eCM <= 3.5)
+      return ppiminusInterpol(eCM);
+    else
+      return 13.7 * pow(eCM, 0.158) + 35.9 * pow(eCM, -0.90);
+  }
+  else
+    return 0.;
+}
+
+void ResonanceData::showPickProbabilities(int idX, int idM, double eCM) const {
+  if (idX == 2212 && idM == -211) {
+    double total = getTotalSigmaXM(idX, idM, eCM);
+    
+    double resonant = getResonanceSigma(idX, idM, eCM);
+    
+    double mp = particleDataPtr->m0(2212), mpi = particleDataPtr->m0(211);
+    double pLab = sqrt((pow2(eCM) - pow2(mp + mpi)) * (pow2(eCM) - (mp - mpi)) / (2 * mp));
+    double elastic = 1.76 + 11.2 * pow(pLab, -0.64) + 0.043 * pow2(log(pLab))
+                   - getElasticResonanceSigma(idX, idM, eCM);
+
+    double string = total - resonant - elastic;
+
+    cout << setw(8) << "Total: " << total << endl
+         << setw(8) << "Res: " << resonant << endl
+         << setw(8) << "El: " << elastic << endl
+         << setw(8) << "Str: " << string << endl
+         << endl;
+  
+  }
+}
 
 double ResonanceData::getBR(int idR, int idA, int idB, double eCM) const {
   ResGenus resR = speciesToGenus(idR),
@@ -426,29 +506,13 @@ double ResonanceData::getClebschGordan2(int j1, int m1, int j2, int m2, int j, i
   }
 }
 
-// @TODO Probably take Particles instead of just ids
-double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
-
-  // For K_S and K_L, take average of K and Kbar
-  if (idA == 310 || idA == 130)
-    return 0.5 * (getResonanceSigma(311, idB, eCM) + getResonanceSigma(-311, idB, eCM));
-  if (idB == 310 || idB == 130)
-    return 0.5 * (getResonanceSigma(idA, 311, eCM) + getResonanceSigma(idA, -311, eCM));
-
-  // @TODO Deal with what happens when there is an antibaryon
-  double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
-  if (eCM < mA + mB) return 0.; // @TODO: This isn't needed if we take two input particles and calculate s
-
-  // Ensure baryon is always idA, if there is a baryon
-  if (particleDataPtr->isBaryon(idB) && particleDataPtr->isMeson(idA))
-    swap(idA, idB);
+vector<int> ResonanceData::getResonanceCandidates(int idA, int idB) const {
   auto gens = genify(abs(idA), abs(idB));
 
   auto totalCharge = particleDataPtr->chargeType(idA) + particleDataPtr->chargeType(idB);
   auto totalIso3 = getIso3(idA) + getIso3(idB);
-  vector<int> resonanceCandidates;
 
-  double sigmaRes = 0;
+  vector<int> resonanceCandidates;
 
   if (particleDataPtr->isMeson(idA)) {
     for (auto genus : classToGenera("M*")) {
@@ -476,38 +540,103 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
     }
   }
 
+  return resonanceCandidates;
+}
+
+double ResonanceData::getPartialResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const {
+  double br = getBR(idR, idA, idB, eCM);
+  if (br == 0.)
+    return 0.;
+
+  double gammaRes2 = pow2(particleWidthPtr->mass(speciesToGenus(idR), eCM));
+
+  int iA = getIsospin(idA);
+  int i3A = getIso3(idA);
+
+  int iB = getIsospin(idB);
+  int i3B = getIso3(idB);
+  
+  int iR = getIsospin(idR);
+  int i3R = getIso3(idR);
+
+  double cg2 = getClebschGordan2(iA, i3A, iB, i3B, iR, i3R);
+
+  if (isnan(cg2)) {
+    cout << " for " << particleDataPtr->name(idA) << " + " << particleDataPtr->name(idB) << " --> " << particleDataPtr->name(idR) << endl
+         << "     < " << iA << " " << i3A << " , " << iB << " " << i3B << " | " << iR << " " << i3R << " > " << endl;
+  }
+
+  int nJRes = particleDataPtr->spinType(idR);
+  double m0 = particleDataPtr->m0(idR);
+
+  double contribution = cg2 * nJRes * br * gammaRes2/(pow2(eCM - m0) + 0.25 * gammaRes2);
+
+  if (gensEqual && idA != idB)
+    contribution *= 2;
+
+  return contribution;
+}
+
+double ResonanceData::getPartialElasticResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const {
+  double br = getBR(idR, idA, idB, eCM);
+  if (br == 0.)
+    return 0.;
+
+  double gammaRes2 = pow2(particleWidthPtr->mass(speciesToGenus(idR), eCM));
+
+  int iA = getIsospin(idA);
+  int i3A = getIso3(idA);
+
+  int iB = getIsospin(idB);
+  int i3B = getIso3(idB);
+  
+  int iR = getIsospin(idR);
+  int i3R = getIso3(idR);
+
+  double cg2 = getClebschGordan2(iA, i3A, iB, i3B, iR, i3R);
+
+  if (isnan(cg2)) {
+    cout << " for " << particleDataPtr->name(idA) << " + " << particleDataPtr->name(idB) << " --> " << particleDataPtr->name(idR) << endl
+         << "     < " << iA << " " << i3A << " , " << iB << " " << i3B << " | " << iR << " " << i3R << " > " << endl;
+  }
+
+  int nJRes = particleDataPtr->spinType(idR);
+  double m0 = particleDataPtr->m0(idR);
+
+  double contribution = cg2 * nJRes * br * gammaRes2/(pow2(eCM - m0) + 0.25 * gammaRes2);
+
+  if (gensEqual && idA != idB)
+    contribution *= 2;
+
+  contribution *= br * cg2; // Elastic correction
+
+  return contribution;
+}
+
+// @TODO Probably take Particles instead of just ids
+double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
+
+  // For K_S and K_L, take average of K and Kbar
+  if (idA == 310 || idA == 130)
+    return 0.5 * (getResonanceSigma(311, idB, eCM) + getResonanceSigma(-311, idB, eCM));
+  if (idB == 310 || idB == 130)
+    return 0.5 * (getResonanceSigma(idA, 311, eCM) + getResonanceSigma(idA, -311, eCM));
+
+  // @TODO Deal with what happens when there is an antibaryon
+  double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
+  if (eCM < mA + mB) return 0.; // @TODO: This isn't needed if we take two input particles and calculate s
+
+  // Ensure baryon is always idA, if there is a baryon
+  if (particleDataPtr->isBaryon(idB) && particleDataPtr->isMeson(idA))
+    swap(idA, idB);
+
+
+  vector<int> resonanceCandidates = getResonanceCandidates(idA, idB);
+  bool gensEqual = speciesToGenus(abs(idA)) == speciesToGenus(abs(idB));
+
+  double sigmaRes = 0;
   for (auto idR : resonanceCandidates) {
-    double br = getBR(idR, idA, idB, eCM);
-    if (br == 0.)
-      continue;
-
-    double gammaRes2 = pow2(particleWidthPtr->mass(speciesToGenus(idR), eCM));
-
-    int iA = getIsospin(idA);
-    int i3A = getIso3(idA);
-
-    int iB = getIsospin(idB);
-    int i3B = getIso3(idB);
-    
-    int iR = getIsospin(idR);
-    int i3R = getIso3(idR);
-
-    double cg2 = getClebschGordan2(iA, i3A, iB, i3B, iR, i3R);
-
-    if (isnan(cg2)) {
-      cout << " for " << particleDataPtr->name(idA) << " + " << particleDataPtr->name(idB) << " --> " << particleDataPtr->name(idR) << endl
-           << "     < " << iA << " " << i3A << " , " << iB << " " << i3B << " | " << iR << " " << i3R << " > " << endl;
-    }
-
-    int nJRes = particleDataPtr->spinType(idR);
-    double m0 = particleDataPtr->m0(idR);
-
-    double contribution = cg2 * nJRes * br * gammaRes2/(pow2(eCM - m0) + 0.25 * gammaRes2);
-
-    if (gens.first == gens.second && idA != idB)
-      contribution *= 2;
-
-    sigmaRes += contribution;
+    sigmaRes += getPartialResonanceSigma(idA, idB, idR, gensEqual, eCM);
   }
 
   double s = eCM * eCM;
@@ -515,7 +644,6 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
 
   // @TODO define constant 0.38937966 = GeV^-2 to mb
   double preFactor = 0.38937966 * M_PI / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB) * pCMS2);
-//  cout << "Prefactor = " << preFactor << endl;
   sigmaRes *= preFactor;
 
   if (sigmaRes > 0 && particleDataPtr->isMeson(idA))
@@ -523,6 +651,46 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
 
   return sigmaRes;
 }
+
+double ResonanceData::getElasticResonanceSigma(int idA, int idB, double eCM) const {
+
+  // For K_S and K_L, take average of K and Kbar
+  if (idA == 310 || idA == 130)
+    return 0.5 * (getResonanceSigma(311, idB, eCM) + getResonanceSigma(-311, idB, eCM));
+  if (idB == 310 || idB == 130)
+    return 0.5 * (getResonanceSigma(idA, 311, eCM) + getResonanceSigma(idA, -311, eCM));
+
+  // @TODO Deal with what happens when there is an antibaryon
+  double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
+  if (eCM < mA + mB) return 0.; // @TODO: This isn't needed if we take two input particles and calculate s
+
+  // Ensure baryon is always idA, if there is a baryon
+  if (particleDataPtr->isBaryon(idB) && particleDataPtr->isMeson(idA))
+    swap(idA, idB);
+
+
+  vector<int> resonanceCandidates = getResonanceCandidates(idA, idB);
+  bool gensEqual = speciesToGenus(abs(idA)) == speciesToGenus(abs(idB));
+
+  double sigmaRes = 0;
+  for (auto idR : resonanceCandidates) {
+    sigmaRes += getPartialElasticResonanceSigma(idA, idB, idR, gensEqual, eCM);
+  }
+
+  double s = eCM * eCM;
+  double pCMS2 = (s - pow2(mA + mB)) * (s - pow2(mA - mB)) / (4 * s);
+
+  // @TODO define constant 0.38937966 = GeV^-2 to mb
+  double preFactor = 0.38937966 * M_PI / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB) * pCMS2);
+  sigmaRes *= preFactor;
+
+  if (sigmaRes > 0 && particleDataPtr->isMeson(idA))
+    sigmaRes += 5.;
+
+  return sigmaRes;
+}
+
+
 
 //--------------------------------------------------------------------------
 
