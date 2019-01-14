@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    127557,       3912]
-NotebookOptionsPosition[    127315,       3899]
-NotebookOutlinePosition[    127653,       3914]
-CellTagsIndexPosition[    127610,       3911]
+NotebookDataLength[    127786,       3917]
+NotebookOptionsPosition[    127544,       3904]
+NotebookOutlinePosition[    127882,       3919]
+CellTagsIndexPosition[    127839,       3916]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1547,10 +1547,13 @@ Cell[BoxData[{
    RowBox[{"{", 
     RowBox[{
     "D1232", ",", "D1600", ",", "D1620", ",", "D1700", ",", "D1900", ",", 
-     "D1905", ",", "D1910", ",", "D1920", ",", "D1930", ",", 
+     "D1905", ",", "D1910", ",", "D1920", ",", 
      RowBox[{"(*", 
-      RowBox[{"D1950", ","}], "*)"}], "D2200", ",", "D2420"}], "}"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+      RowBox[{"D1930", ","}], "*)"}], 
+     RowBox[{"(*", 
+      RowBox[{"D1950", ","}], "*)"}], "D2200"}], 
+    RowBox[{"(*", 
+     RowBox[{",", "D2420"}], "*)"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{
@@ -3895,10 +3898,12 @@ Cell[BoxData[{
    3.753082058225307*^9}, {3.753082453035698*^9, 3.753082467025818*^9}, {
    3.753082924416398*^9, 3.753082974769608*^9}, {3.75308724714808*^9, 
    3.753087260157291*^9}, {3.753104382232992*^9, 3.753104384022572*^9}, {
-   3.7531044549522057`*^9, 3.753104456571681*^9}}]
+   3.7531044549522057`*^9, 3.753104456571681*^9}, {3.754135928836664*^9, 
+   3.754135954521964*^9}, {3.754136998424705*^9, 3.754136999704217*^9}, {
+   3.7562000593939*^9, 3.756200061997307*^9}}]
 },
 WindowSize->{820, 1135},
-WindowMargins->{{Automatic, 93}, {Automatic, 0}},
+WindowMargins->{{Automatic, 85}, {Automatic, 0}},
 FrontEndVersion->"10.3 for Linux x86 (64-bit) (December 10, 2015)",
 StyleDefinitions->"Default.nb"
 ]
@@ -3913,7 +3918,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 126753, 3877, 17237, "Input"]
+Cell[558, 20, 126982, 3882, 17237, "Input"]
 }
 ]
 *)

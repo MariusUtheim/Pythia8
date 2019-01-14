@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    121462,       2843]
-NotebookOptionsPosition[    120225,       2802]
-NotebookOutlinePosition[    120563,       2817]
-CellTagsIndexPosition[    120520,       2814]
+NotebookDataLength[    122236,       2867]
+NotebookOptionsPosition[    120968,       2825]
+NotebookOutlinePosition[    121306,       2840]
+CellTagsIndexPosition[    121263,       2837]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1674,6 +1674,29 @@ Cell[BoxData[{
 
 Cell[BoxData[
  RowBox[{
+  RowBox[{"ptsTableppibar", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"p", ",", 
+       RowBox[{"Interpolation", "[", 
+        RowBox[{"tableTotalppibar", ",", 
+         RowBox[{"pLabInv", "[", 
+          RowBox[{
+           RowBox[{"m0", "@", "pi"}], ",", 
+           RowBox[{"m0", "@", "N938"}], ",", "p"}], "]"}], ",", 
+         RowBox[{"InterpolationOrder", "\[Rule]", "1"}]}], "]"}]}], "}"}], 
+     ",", 
+     RowBox[{"{", 
+      RowBox[{"p", ",", 
+       RowBox[{
+        RowBox[{"m0", "@", "pi"}], "+", 
+        RowBox[{"m0", "@", "N938"}]}], ",", "5.", ",", "0.01"}], "}"}]}], 
+    "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.756204040582539*^9, 3.75620405287177*^9}}],
+
+Cell[BoxData[
+ RowBox[{
   RowBox[{"ptsTotalppibar", "=", 
    RowBox[{"Monitor", "[", "\[IndentingNewLine]", 
     RowBox[{
@@ -2818,33 +2841,34 @@ CellTagsIndex->{}
 Notebook[{
 Cell[558, 20, 57570, 1523, 2783, "Input"],
 Cell[58131, 1545, 4842, 127, 385, "Input"],
-Cell[62976, 1674, 1074, 26, 99, "Input"],
+Cell[62976, 1674, 740, 21, 55, "Input"],
+Cell[63719, 1697, 1074, 26, 99, "Input"],
 Cell[CellGroupData[{
-Cell[64075, 1704, 1021, 25, 99, "Input"],
-Cell[65099, 1731, 695, 13, 23, "Message"],
-Cell[65797, 1746, 696, 13, 23, "Message"],
-Cell[66496, 1761, 696, 13, 23, "Message"],
-Cell[67195, 1776, 685, 14, 23, "Message"]
+Cell[64818, 1727, 1021, 25, 99, "Input"],
+Cell[65842, 1754, 695, 13, 23, "Message"],
+Cell[66540, 1769, 696, 13, 23, "Message"],
+Cell[67239, 1784, 696, 13, 23, "Message"],
+Cell[67938, 1799, 685, 14, 23, "Message"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[67917, 1795, 1194, 27, 99, "Input"],
-Cell[69114, 1824, 580, 11, 23, "Message"],
-Cell[69697, 1837, 578, 11, 23, "Message"],
-Cell[70278, 1850, 580, 11, 23, "Message"],
-Cell[70861, 1863, 567, 12, 23, "Message"]
+Cell[68660, 1818, 1194, 27, 99, "Input"],
+Cell[69857, 1847, 580, 11, 23, "Message"],
+Cell[70440, 1860, 578, 11, 23, "Message"],
+Cell[71021, 1873, 580, 11, 23, "Message"],
+Cell[71604, 1886, 567, 12, 23, "Message"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[71465, 1880, 970, 24, 99, "Input"],
-Cell[72438, 1906, 720, 13, 23, "Message"],
-Cell[73161, 1921, 718, 13, 23, "Message"],
-Cell[73882, 1936, 718, 13, 23, "Message"],
-Cell[74603, 1951, 707, 14, 23, "Message"]
+Cell[72208, 1903, 970, 24, 99, "Input"],
+Cell[73181, 1929, 720, 13, 23, "Message"],
+Cell[73904, 1944, 718, 13, 23, "Message"],
+Cell[74625, 1959, 718, 13, 23, "Message"],
+Cell[75346, 1974, 707, 14, 23, "Message"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[75347, 1970, 792, 19, 55, "Input"],
-Cell[76142, 1991, 43942, 804, 244, "Output"]
+Cell[76090, 1993, 792, 19, 55, "Input"],
+Cell[76885, 2014, 43942, 804, 244, "Output"]
 }, Open  ]],
-Cell[120099, 2798, 122, 2, 32, InheritFromParent]
+Cell[120842, 2821, 122, 2, 32, "Input"]
 }
 ]
 *)
