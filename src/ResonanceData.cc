@@ -193,6 +193,9 @@ bool ResonanceData::readXML(istream& stream) {
 
 double ResonanceData::getTotalSigma(int idA, int idB, double eCM) const {
 
+  if (eCM < particleDataPtr->m0(idA) + particleDataPtr->m0(idB))
+    return 0.;
+
   if (particleDataPtr->isBaryon(idA) && particleDataPtr->isBaryon(idB)) {
     if (idA * idB < 0) {
       if (idA > 0)
@@ -357,17 +360,22 @@ static const vector<double> ppiminusInterpolData =
 
 static const Interpolator ppiminusInterpol(1.15, 3.89, ppiminusInterpolData);
 
+static const vector<double> ppiplusInterpolData =
+ { 33.1408, 30.3605, 29.3346, 29.8405, 30.06, 30.1206, 29.917, 29.3581,
+   28.8239, 28.5466, 28.2694, 27.9941, 27.7218, 27.4494, 27.1523,
+   26.8496, 26.547, 26.3317, 26.1572, 25.9828, 25.8343 };
+static const Interpolator ppiplusInterpol(2.03, 3.50, ppiplusInterpolData);
 
 double ResonanceData::getTotalSigmaXM(int idX, int idM, double eCM) const {
   if (idX == 2212 && idM == -211) {
-    if (eCM <= particleDataPtr->m0(2212) + particleDataPtr->m0(211))
-      return 0.;
-    else if (eCM <= 1.8)
-      return getResonanceSigma(idX, idM, eCM);
-    else if (eCM <= 3.5)
-      return ppiminusInterpol(eCM);
-    else
-      return 13.7 * pow(eCM, 0.158) + 35.9 * pow(eCM, -0.90);
+    return eCM <= 1.8 ? getResonanceSigma(idX, idM, eCM)
+         : eCM <= 3.5 ? ppiminusInterpol(eCM)
+         :              13.7 * pow(eCM, 0.158) + 35.9 * pow(eCM, -0.90);
+  }
+  else if (idX == 2212 && idM == 211) {
+    return eCM <= 2.03 ? getResonanceSigma(idX, idM, eCM)
+         : eCM <= 3.50 ? ppiplusInterpol(eCM)
+         :              13.7 * pow(eCM, 0.158) + 35.9 * pow(eCM, -0.90);
   }
   else
     return 0.;
@@ -646,9 +654,6 @@ double ResonanceData::getResonanceSigma(int idA, int idB, double eCM) const {
   double preFactor = 0.38937966 * M_PI / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB) * pCMS2);
   sigmaRes *= preFactor;
 
-  if (sigmaRes > 0 && particleDataPtr->isMeson(idA))
-    sigmaRes += 5.;
-
   return sigmaRes;
 }
 
@@ -683,9 +688,6 @@ double ResonanceData::getElasticResonanceSigma(int idA, int idB, double eCM) con
   // @TODO define constant 0.38937966 = GeV^-2 to mb
   double preFactor = 0.38937966 * M_PI / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB) * pCMS2);
   sigmaRes *= preFactor;
-
-  if (sigmaRes > 0 && particleDataPtr->isMeson(idA))
-    sigmaRes += 5.;
 
   return sigmaRes;
 }
