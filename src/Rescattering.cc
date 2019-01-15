@@ -2,7 +2,7 @@
 #include <functional>
 #include <initializer_list>
 #include <queue>
-#include "Pythia8/Pythia.h"
+
 #include "Pythia8/Rescattering.h"
 
  

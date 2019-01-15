@@ -1,19 +1,17 @@
-#ifndef Resonance_Data_H
-#define Resonance_Data_H
+#ifndef Low_Energy_Data_H
+#define Low_Energy_Data_H
 
-#include "Pythia8/Event.h"
 #include "Pythia8/ParticleData.h"
 #include "Pythia8/Interpolator.h"
 #include "Pythia8/MassDependentWidth.h"
 
 namespace Pythia8 {
 
-
-// @TODO temporary - to help thinking about the architecture
 typedef string ResClass;
 typedef string ResGenus;
 
-class ResonanceData {
+
+class LowEnergyData {
 public:
 
   bool init(string path) {
@@ -27,18 +25,9 @@ public:
   }
 
   bool readXML(istream& inStream);
+  
 
   double getStrangeness(int id) const;
-
-  double getTotalSigma(int idA, int idB, double eCM) const;
-
-
-  const Interpolator& getDiffractiveSigmaDistribution(int idA, int idB) const;
-
-  double getDiffractiveSigma(int idA, int idB, double eCM) const;
-
-
-  double getBR(int idR, int idA, int idB, double eCM) const;
 
   int getIsospin(int species) const;
 
@@ -46,26 +35,19 @@ public:
 
   double getClebschGordan2(int, int , int , int , int , int ) const ;
 
-  vector<int> getResonanceCandidates(int idA, int idB) const;
-  double getPartialResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const;
-  double getPartialElasticResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const;
-  double getResonanceSigma(int idA, int idB, double eCM) const;
-  double getElasticResonanceSigma(int idA, int idB, double eCM) const;
-
   double getStrangenessFactor(int id) const;
 
-  double getAnnihilationSigma(int idA, int idB, double eCM) const;
+  double getBR(int iRes, int i1, int i2, double m0) const;
 
-  double getElasticSigma(int idA, int idB, double eCM) const;
+  // @TODO Possibly move to a file specific for resonance data?
+  vector<int> getResonanceCandidates(int idA, int idB) const;
 
+  double massDependentWidth(int id, double m) const;
 
-  vector<pair<pair<int, int>, double>> getOutputsWithFrequencies(int idA, int idB, double eCM) const;
-
-  vector<pair<int, int>> getDiffractiveOutputs(int idA, int idB) const;
-
-  vector<Particle> pickProducts(int idA, int idB, double eCM) const;
-
-  void showPickProbabilities(int idA, int idB, double eCM) const;
+  // @TODO Not have this
+  bool gensEqual(int idA, int idB) const {
+    return speciesToGenus(abs(idA)) == speciesToGenus(abs(idB));
+  }
 
   void print() const;
 
@@ -73,13 +55,16 @@ public:
 
 private:
 
-  double getTotalSigmaBB(int idA, int idB, double eCM) const;
-  double getTotalSigmaBBbar(int idB, int idBbar, double eCM) const;
-  double getTotalSigmaXM(int idX, int idM, double eCM) const;
-
   ParticleData* particleDataPtr;
 
   MassDependentWidth* particleWidthPtr;
+
+
+  map<pair<ResClass, ResClass>, vector<pair<ResClass, ResClass>>> scatterChannels;
+
+  map<pair<ResClass, ResClass>, Interpolator> totalSigmaDistribution;
+
+  map<pair<ResGenus, ResGenus>, Interpolator> partialSigmaDistribution;
 
 
   pair<ResClass, ResClass> classify(int idA, int idB) const {
@@ -94,11 +79,6 @@ private:
     return pair<ResGenus, ResGenus>(first, second);
   }
 
-  map<pair<ResClass, ResClass>, vector<pair<ResClass, ResClass>>> scatterChannels;
-
-  map<pair<ResClass, ResClass>, Interpolator> totalSigmaDistribution;
-
-  map<pair<ResGenus, ResGenus>, Interpolator> partialSigmaDistribution;
 
   map<ResGenus, ResClass> _genusToClass;
   ResClass genusToClass(ResGenus gen) const {

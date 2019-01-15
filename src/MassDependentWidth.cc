@@ -96,7 +96,7 @@ bool MassDependentWidth::readXML(istream& stream) {
 }
 
 
-double MassDependentWidth::mass(string particleGenus, double eCM) const {
+double MassDependentWidth::width(string particleGenus, double eCM) const {
   auto entry = massDependentWidths.find(particleGenus);
   if (entry == massDependentWidths.end())
     // @TODO Figure what to do when mass is missing

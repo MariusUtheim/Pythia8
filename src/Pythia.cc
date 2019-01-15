@@ -87,16 +87,18 @@ Pythia::Pythia(string xmlDir, bool printBanner) {
     info.errorMsg("Abort from Pythia::Pythia: particle data unavailable");
     return;
   }
- 
+
   // Read in files with all cross-section data.
-  resData.initPtr(&particleData, &massDependentWidths);
+  lowEnergyData.initPtr(&particleData, &massDependentWidths);
   isConstructed =
       massDependentWidths.init(xmlPath + "ParticleWidths.xml")
-   && resData.init(xmlPath + "ResonanceData.xml");
+   && lowEnergyData.init(xmlPath + "ResonanceData.xml");
   if (!isConstructed) {
     info.errorMsg("Abort from Pythia::Pythia: cross-section data unavailable");
     return;
   }
+  
+  lowEnergyController.initPtr(&particleData, &lowEnergyData);
 
   // Write the Pythia banner to output.
   if (printBanner) banner();
@@ -1116,7 +1118,7 @@ bool Pythia::init() {
 
   // Send info/pointers to hadron level for initialization.
   // Note: forceHadronLevel() can come, so we must always initialize.
-  if ( !hadronLevel.init( &info, settings, &particleData, &resData,
+  if ( !hadronLevel.init( &info, settings, &particleData, &lowEnergyController,
     &rndm, couplingsPtr, timesDecPtr, &rHadrons, decayHandlePtr,
     handledParticles, userHooksPtr) ) {
     info.errorMsg("Abort from Pythia::init: "

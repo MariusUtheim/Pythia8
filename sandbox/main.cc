@@ -2,8 +2,7 @@
 #include <iostream>
 #include "tests.h"
 #include "Pythia8/MassDependentWidth.h"
-#include "Pythia8/SigmaResonance.h"
-#include "Pythia8/ResonanceData.h"
+#include "Pythia8/LowEnergyController.h"
 
 void singleEvent()
 {
@@ -72,15 +71,17 @@ int main(int argc, const char *argv[]) {
 
   ParticleData& particleData = pythia.particleData;
 
-  ResonanceData resonanceData;
-  resonanceData.initPtr(&pythia.particleData, &pythia.massDependentWidths);
-  ifstream stream("ResonanceData.xml");
-  resonanceData.readXML(stream);
 
-  if (!resonanceData.sanityCheck())
+  LowEnergyData lowEnergyData = pythia.lowEnergyData;
+
+  if (!lowEnergyData.sanityCheck())
     return 1;
 
-  resonanceData.print();
+  lowEnergyData.print();
+
+//  resonanceData.initPtr(&pythia.particleData, &pythia.massDependentWidths);
+//  ifstream stream("ResonanceData.xml");
+//  resonanceData.readXML(stream);
 
 //  int c = 0;
 //  Hist sigma("x", 101, -0.5, 100.5);
@@ -88,7 +89,7 @@ int main(int argc, const char *argv[]) {
 //    cout << (sigma.fill(x, x), x) << " " ;
 
   Hist sigma = plotFunction("Sigma total", 1., 3., 
-    [resonanceData](double x) { return resonanceData.getElasticResonanceSigma(2212, -211, x); }
+    [&pythia](double x) { return pythia.lowEnergyController.getTotalSigma(2212, 211, x); }
   );
   cout << sigma;
 }

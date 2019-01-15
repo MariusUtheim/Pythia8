@@ -18,7 +18,7 @@ public:
 
   bool readXML(istream& stream);
 
-  double mass(string particle, double eCM) const;
+  double width(string particle, double eCM) const;
 
   double branchingRatio(string particle, string products, double eCM) const;
 

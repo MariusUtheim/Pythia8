@@ -46,7 +46,8 @@
 #include "Pythia8/TimeShower.h"
 #include "Pythia8/UserHooks.h"
 
-#include "Pythia8/ResonanceData.h"
+#include "LowEnergyController.h"
+#include "LowEnergyData.h"
 #include "Pythia8/MassDependentWidth.h"
 
 namespace Pythia8 {
@@ -243,7 +244,8 @@ public:
   ParticleData   particleData;
 
   // @TODO ResonanceData: the interaction data table/database.
-  ResonanceData resData;
+  LowEnergyController lowEnergyController;
+  LowEnergyData lowEnergyData;
   MassDependentWidth massDependentWidths;
 
   // Random number generator.
