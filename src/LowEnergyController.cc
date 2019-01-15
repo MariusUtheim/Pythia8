@@ -191,6 +191,27 @@ double LowEnergyController::getTotalSigmaXM(int idX, int idM, double eCM) const 
     return 0.;
 }
 
+const LowEnergyProcess& LowEnergyController::pickProcess(int idA, int idB, double eCM) {
+
+  if (particleDataPtr->isMeson(idB)) {
+    double sigmaTotal = getTotalSigmaXM(idA, idB, eCM);
+    double pRes = lowEnergyResonance.getResonanceSigma(idA, idB, eCM) / sigmaTotal;
+    double pEl = lowEnergyResonance.getElasticResonanceSigma(idA, idB, eCM) / sigmaTotal;
+    double pStr = 1 - pRes - pEl;
+
+    return lowEnergyResonance; // @TODO Temporary
+
+    switch (rndmPtr->pick({ pRes, pEl, pStr })) {
+      case 0: return lowEnergyResonance;
+      case 1: throw "Not implemented";// return lowEnergyElastic;
+      case 2: throw "Not implemented";// return lowEnergyString;
+      default: throw "Error in Pythia internal logic (LowEnergyController)"; // @TODO
+    }
+  }
+  else
+    throw "Not implemented";
+}
+
 
 //--------------------------------------------------------------------------
 

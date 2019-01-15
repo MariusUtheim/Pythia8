@@ -17,8 +17,9 @@ typedef string ResGenus;
 class LowEnergyController {
 public:
 
-  void initPtr(ParticleData* particleDataPtrIn, LowEnergyData* lowEnergyDataPtrIn)
+  void initPtr(Rndm* rndmPtrIn, ParticleData* particleDataPtrIn, LowEnergyData* lowEnergyDataPtrIn)
   {
+    rndmPtr = rndmPtrIn;
     particleDataPtr = particleDataPtrIn;
     lowEnergyResonance.initPtr(particleDataPtrIn, lowEnergyDataPtrIn);
   }
@@ -43,7 +44,7 @@ public:
 */
 
 
-  vector<Particle> pickProducts(int idA, int idB, double eCM) const;
+  const LowEnergyProcess& pickProcess(int idA, int idB, double eCM);
 
   void showPickProbabilities(int idA, int idB, double eCM) const;
 
@@ -54,6 +55,8 @@ private:
   double getTotalSigmaBBbar(int idB, int idBbar, double eCM) const;
   double getTotalSigmaXM(int idX, int idM, double eCM) const;
 
+  Rndm* rndmPtr; 
+  
   ParticleData* particleDataPtr;
 
   LowEnergyResonance lowEnergyResonance;

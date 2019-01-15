@@ -98,7 +98,7 @@ Pythia::Pythia(string xmlDir, bool printBanner) {
     return;
   }
   
-  lowEnergyController.initPtr(&particleData, &lowEnergyData);
+  lowEnergyController.initPtr(&rndm, &particleData, &lowEnergyData);
 
   // Write the Pythia banner to output.
   if (printBanner) banner();

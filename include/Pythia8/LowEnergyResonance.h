@@ -13,9 +13,7 @@ public:
   void initPtr(ParticleData* particleDataPtrIn, LowEnergyData* lowEnergyDataPtrIn)
   { particleDataPtr = particleDataPtrIn; lowEnergyDataPtr = lowEnergyDataPtrIn; }
 
-  double sigmaTotal(int i1, int i2, const Event& event) const { return 0.; }
-
-  bool collide(int i1, int i2, Event& event) { return false; }
+  bool collide(int i1, int i2, Event& event);
 
   
   double getPartialResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const;
