@@ -52,8 +52,17 @@ bool LowEnergyResonance::collide(int i1, int i2, Event& event) const {
   }
 
   // @TODO Decay the resonance
-  
-
+  auto brs = lowEnergyDataPtr->massDependentBRs(event[iNew].id(), eCM);
+  double threshold = rndmPtr->flat();
+  double cumulativeSum = 0.;
+  for (auto br : brs) {
+    cumulativeSum += br.second;
+    if (cumulativeSum >= threshold) {
+      for (int id : br.first)
+        event.append(id, 116, iNew, iNew, 0, 0, 0, 0, Vec4());
+      break;
+    }
+  }
 
   return true;
 }

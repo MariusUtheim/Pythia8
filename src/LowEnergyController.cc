@@ -37,6 +37,10 @@ double LowEnergyController::getTotalSigma(int idA, int idB, double eCM) const {
 // B+B section
 
 double LowEnergyController::getTotalSigmaBB(int idA, int idB, double eCM) const {
+
+  if (idA == 2212 && idB == 2212)
+    return lowEnergyDiffractive.getDiffractiveSigma(idA, idB, eCM);
+
   cout << "LowEnergyController::getTotalSigmaBB not implemented" << endl;
   return 0.;
 }
@@ -51,14 +55,7 @@ const Interpolator& LowEnergyController::getDiffractiveSigmaDistribution(int idA
     return ptr->second;
 }
 
-double LowEnergyController::getDiffractiveSigma(int idA, int idB, double eCM) const {
-  auto cls = classify(idA, idB);
-  auto ptr = totalSigmaDistribution.find(cls);
-  if (ptr == totalSigmaDistribution.end())
-    return 0.;
-  else
-    return ptr->second(eCM);
-}
+
 
 vector<pair<int, int>> LowEnergyController::getDiffractiveOutputs(int idA, int idB) const {
   ResClass clsA = speciesToClass(idA), clsB = speciesToClass(idB);
@@ -102,19 +99,6 @@ vector<pair<int, int>> LowEnergyController::getDiffractiveOutputs(int idA, int i
   return possibleOutputs;
 }
 
-vector<pair<pair<int, int>, double>> LowEnergyController::getOutputsWithFrequencies(int idA, int idB, double eCM) const {
-  
-  auto outs = getDiffractiveOutputs(idA, idB);
-  vector<pair<pair<int, int>, double>> outsWithFreq(outs.size());
-
-  for (int iR = 0; iR < (int)outs.size(); ++iR) {
-    auto gens = genify(outs[iR].first, outs[iR].second);
-    double weight = partialSigmaDistribution.at(gens)(eCM);
-    outsWithFreq[iR] = pair<pair<int, int>, double>(outs[iR], weight);
-  }
-
-  return outsWithFreq;
-}
 */
 
 //--------------------------------------------------------------------------
@@ -207,6 +191,9 @@ const LowEnergyProcess& LowEnergyController::pickProcess(int idA, int idB, doubl
       case 2: throw "Not implemented";// return lowEnergyString;
       default: throw "Error in Pythia internal logic (LowEnergyController)"; // @TODO
     }
+  }
+  else if (idA == 2212 && idB == 2212) {
+    return lowEnergyDiffractive;
   }
   else {
     cout << "NOT IMPLEMENTED:" << __LINE__ << endl;

@@ -2026,7 +2026,7 @@ bool Pythia::nextLowEnergy() {
 
   double mp = particleData.m0(2212), mpi = particleData.m0(211);
   event.append(2212, 0, 0, 0, Vec4(0, 0, 2, sqrt(4 + mp * mp)), mp);
-  event.append(-211, 0, 0, 0, Vec4(0, 0, -2, sqrt(4 + mpi * mpi)), mpi);
+  event.append(2212, 0, 0, 0, Vec4(0, 0, -2, sqrt(4 + mpi * mpi)), mpi);
 
   //for (auto beam : { beamA, beamB }) {
   //  event.append(beam.id(), 0, 0, 0, beam.p(), beam.m());
@@ -2038,8 +2038,8 @@ bool Pythia::nextLowEnergy() {
 
   process.collide(0, 1, event);
 
-  if (!hadronLevel.next(event))
-    return false;
+ // if (!hadronLevel.next(event))
+ //   return false;
 
   return true;
 }

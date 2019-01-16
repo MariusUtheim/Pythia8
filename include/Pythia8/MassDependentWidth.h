@@ -26,9 +26,11 @@ public:
 
   const Interpolator& getBranchingRatios(string particle, string brs) const;
 
-  vector<string> getProducts(string particle) const;
+  const vector<string>& getProducts(string particle) const;
 
 private:
+
+  map<string, vector<string>> productList;
 
   map<string, Interpolator> massDependentWidths;
 

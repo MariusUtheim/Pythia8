@@ -4,6 +4,7 @@
 #include "Pythia8/Event.h"
 #include "Pythia8/ParticleData.h"
 #include "Pythia8/Interpolator.h"
+#include "Pythia8/LowEnergyDiffractive.h"
 #include "Pythia8/LowEnergyResonance.h"
 #include "Pythia8/MassDependentWidth.h"
 
@@ -22,6 +23,7 @@ public:
     rndmPtr = rndmPtrIn;
     particleDataPtr = particleDataPtrIn;
     lowEnergyResonance.initPtr(rndmPtrIn, particleDataPtrIn, lowEnergyDataPtrIn);
+    lowEnergyDiffractive.initPtr(rndmPtrIn, particleDataPtrIn, lowEnergyDataPtrIn);
   }
 
 
@@ -29,13 +31,6 @@ public:
 
 /*
   const Interpolator& getDiffractiveSigmaDistribution(int idA, int idB) const;
-
-  double getDiffractiveSigma(int idA, int idB, double eCM) const;
-
-  vector<pair<pair<int, int>, double>> getOutputsWithFrequencies(int idA, int idB, double eCM) const;
-
-  vector<pair<int, int>> getDiffractiveOutputs(int idA, int idB) const;
-
 
   double getAnnihilationSigma(int idA, int idB, double eCM) const;
 
@@ -60,6 +55,7 @@ private:
   ParticleData* particleDataPtr;
 
   LowEnergyResonance lowEnergyResonance;
+  LowEnergyDiffractive lowEnergyDiffractive;
 };
 
 }

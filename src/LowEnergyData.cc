@@ -174,11 +174,110 @@ bool LowEnergyData::readXML(istream& stream) {
   return true;
 }
 
+double LowEnergyData::getDiffractiveSigma(int idA, int idB, double eCM) const {
+  auto cls = classify(idA, idB);
+  auto ptr = totalSigmaDistribution.find(cls);
+  if (ptr == totalSigmaDistribution.end())
+    return 0.;
+  else
+    return ptr->second(eCM);
+}
+
+
+vector<pair<int, int>> LowEnergyData::getDiffractiveOutputs(int idA, int idB) const {
+  ResClass clsA = speciesToClass(idA), clsB = speciesToClass(idB);
+  auto cls = pair<ResClass, ResClass>(clsA, clsB);
+
+  int totalCharge = particleDataPtr->chargeType(idA) + particleDataPtr->chargeType(idB);
+  auto& outputClasses = scatterChannels.at(cls);
+
+  vector<pair<int, int>> possibleOutputs;
+
+  for (auto outputClass : outputClasses) {
+
+    auto parCs = classToSpecies(outputClass.first), 
+         parDs = classToSpecies(outputClass.second);
+
+    if (idA > 0 && idB > 0) {
+      for (auto pC : parCs)
+        for (auto pD : parDs)
+          if (particleDataPtr->chargeType(pC) + particleDataPtr->chargeType(pD) == totalCharge) {
+            possibleOutputs.push_back(pair<int, int>(pC, pD));
+
+          }
+    }
+    else if (idA < 0 && idB < 0) {
+      for (auto pC : parCs)
+        for (auto pD : parDs)
+          if (particleDataPtr->chargeType(pC) + particleDataPtr->chargeType(pD) == totalCharge)
+            possibleOutputs.push_back(pair<int, int>(-pC, -pD));
+    }
+    else {
+      for (auto pC : parCs)
+        for (auto pD : parDs)
+          if (particleDataPtr->chargeType(pC) + particleDataPtr->chargeType(pD) == totalCharge) {
+            possibleOutputs.push_back(pair<int, int>(-pC, pD));
+            possibleOutputs.push_back(pair<int, int>(pC, -pD));
+          }
+    }
+
+  }
+  
+  return possibleOutputs;
+}
+
+vector<pair<pair<int, int>, double>> LowEnergyData::getOutputsWithFrequencies(int idA, int idB, double eCM) const {
+  
+  auto outs = getDiffractiveOutputs(idA, idB);
+  vector<pair<pair<int, int>, double>> outsWithFreq(outs.size());
+
+  for (int iR = 0; iR < (int)outs.size(); ++iR) {
+    auto gens = genify(outs[iR].first, outs[iR].second);
+    double weight = partialSigmaDistribution.at(gens)(eCM);
+    outsWithFreq[iR] = pair<pair<int, int>, double>(outs[iR], weight);
+  }
+
+  return outsWithFreq;
+}
+
 
 double LowEnergyData::massDependentWidth(int id, double m) const {
   auto gen = speciesToGenus(id);
   return particleWidthPtr->width(gen, m);
 }
+
+vector<pair<vector<int>, double>> LowEnergyData::massDependentBRs(int iRes, double m) const {
+  auto gen = speciesToGenus(iRes);
+  auto productss = particleWidthPtr->getProducts(gen);
+
+  double totalIso3 = getIso3(iRes);
+
+  double totalBR = 0.;
+  vector<pair<vector<int>, double>> results;
+
+  for (auto products : productss) {
+    vector<vector<int>> productSpecies;
+    int spacePos = products.find(' ');
+    ResGenus prodA = products.substr(0, spacePos), 
+             prodB = products.substr(spacePos + 1);
+
+    double br = particleWidthPtr->branchingRatio(gen, products, m);
+
+    for (int specA : genusToSpecies(prodA))
+    for (int specB : genusToSpecies(prodB)) {
+      if (getIso3(specA) + getIso3(specB) == totalIso3) {
+        results.push_back({ { specA, specB }, br });
+        totalBR += br;
+      }
+    }
+  }
+
+  for (auto& result : results)
+    result.second /= totalBR;
+
+  return results;
+}
+
 
 double LowEnergyData::getStrangeness(int id) const {
   // In baryon id xxxabcx, count number of occurrences of '3' in abc

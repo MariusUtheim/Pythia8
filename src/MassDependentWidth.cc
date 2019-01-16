@@ -72,6 +72,7 @@ bool MassDependentWidth::readXML(istream& stream) {
       while (dataStr >> currentData)
         data.push_back(currentData);
 
+      this->productList.emplace(particleGenus, vector<string>());
       this->massDependentWidths.emplace(particleGenus, Interpolator(left, right, data));
     }
     else if (word1 == "<br") {
@@ -80,7 +81,7 @@ bool MassDependentWidth::readXML(istream& stream) {
       string particleGenus = attributeValue(line, "genus");
       string products = attributeValue(line, "products");
       pair<string, string> key(particleGenus, products);
-            
+      
       istringstream dataStr(attributeValue(line, "data"));
       vector<double> data;
       double currentData;
@@ -88,6 +89,7 @@ bool MassDependentWidth::readXML(istream& stream) {
         data.push_back(currentData);
       
       auto& in = massDependentWidths.at(particleGenus);
+      this->productList.at(particleGenus).push_back(products);
       this->branchingRatios.emplace(key, Interpolator(in.left(), in.right(), data));
     }
   }
@@ -119,6 +121,10 @@ const Interpolator& MassDependentWidth::getDistribution(string particleGenus) co
 
 const Interpolator& MassDependentWidth::getBranchingRatios(string particleGenus, string products) const {
   return branchingRatios.at(pair<string, string>(particleGenus, products));
+}
+
+const vector<string>& MassDependentWidth::getProducts(string particle) const {
+  return productList.at(particle);
 }
 
 }

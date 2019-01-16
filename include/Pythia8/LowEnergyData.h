@@ -27,6 +27,11 @@ public:
   bool readXML(istream& inStream);
   
 
+  double getDiffractiveSigma(int idA, int idB, double eCM) const;
+  vector<pair<int, int>> getDiffractiveOutputs(int idA, int idB) const;
+  vector<pair<pair<int, int>, double>> getOutputsWithFrequencies(int idA, int idB, double eCM) const;
+
+
   double getStrangeness(int id) const;
 
   int getIsospin(int species) const;
@@ -43,6 +48,8 @@ public:
   vector<int> getResonanceCandidates(int idA, int idB) const;
 
   double massDependentWidth(int id, double m) const;
+
+  vector<pair<vector<int>, double>> massDependentBRs(int iRes, double m) const;
 
   // @TODO Not have this
   bool gensEqual(int idA, int idB) const {
