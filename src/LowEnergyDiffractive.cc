@@ -10,7 +10,6 @@ bool LowEnergyDiffractive::collide(int i1, int i2, Event& event) const {
     double threshold = rndmPtr->flat();
     double sum = 0.;
     for (auto output : outputs) {
-      cout << output.first.first << " + " << output.first.second << " : " << output.second << endl;
       sum += output.second;
       if (sum >= threshold) {
         for (int iNew : {output.first.first, output.first.second}) 
