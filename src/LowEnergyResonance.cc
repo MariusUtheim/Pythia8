@@ -31,6 +31,33 @@ void LowEnergyController::showPickProbabilities(int idX, int idM, double eCM) co
 }
 */
 
+bool LowEnergyResonance::collide(int i1, int i2, Event& event) const {
+  Particle& hA = event[i1];
+  Particle& hB = event[i2];
+  
+  double eCM = (hA.p() + hB.p()).mCalc();
+
+  vector<int> candidates = lowEnergyDataPtr->getResonanceCandidates(hA.id(), hB.id());
+  vector<double> probabilities(candidates.size());
+
+  for (size_t i = 0; i < candidates.size(); ++i)
+    probabilities[i] = getPartialResonanceSigma(hA.id(), hB.id(), candidates[i], false, eCM);
+  
+  int iNew = event.append(candidates[rndmPtr->pick(probabilities)],
+                          115, i1, i2, 0, 0, 0, 0, hA.p() + hB.p(), eCM);
+
+  for (int i : { i1, i2 }) {
+    event[i].daughters(iNew, iNew);
+    event[i].statusNeg();
+  }
+
+  // @TODO Decay the resonance
+  
+
+
+  return true;
+}
+
 
 double LowEnergyResonance::getPartialResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const {
   double br = lowEnergyDataPtr->getBR(idR, idA, idB, eCM);

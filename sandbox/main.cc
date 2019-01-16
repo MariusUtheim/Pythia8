@@ -68,28 +68,12 @@ int Test::count = 10;
 int main(int argc, const char *argv[]) {
 
   Pythia pythia("../share/Pythia8/xmldoc", false);
+  pythia.readFile("mymain.cmnd");
+  pythia.init();
 
-  ParticleData& particleData = pythia.particleData;
+  pythia.next();
+
+  pythia.event.list(false, false);
 
 
-  LowEnergyData lowEnergyData = pythia.lowEnergyData;
-
-  if (!lowEnergyData.sanityCheck())
-    return 1;
-
-  lowEnergyData.print();
-
-//  resonanceData.initPtr(&pythia.particleData, &pythia.massDependentWidths);
-//  ifstream stream("ResonanceData.xml");
-//  resonanceData.readXML(stream);
-
-//  int c = 0;
-//  Hist sigma("x", 101, -0.5, 100.5);
-//  for (int x = 0; x <= 100; x++)
-//    cout << (sigma.fill(x, x), x) << " " ;
-
-  Hist sigma = plotFunction("Sigma total", 1., 3., 
-    [&pythia](double x) { return pythia.lowEnergyController.getTotalSigma(2212, 211, x); }
-  );
-  cout << sigma;
 }

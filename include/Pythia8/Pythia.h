@@ -193,6 +193,8 @@ public:
   // Generate the next event.
   bool next();
 
+  bool nextLowEnergy();
+
   // Generate only a single timelike shower as in a decay.
   int forceTimeShower( int iBeg, int iEnd, double pTmax, int nBranchMax = 0)
     {  partonSystems.clear(); info.setScalup( 0, pTmax);

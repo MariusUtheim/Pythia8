@@ -1706,6 +1706,12 @@ bool Pythia::next() {
     return ok;
   }
 
+  // if ( doLowEnergy ) {
+
+  return nextLowEnergy();
+
+  //}
+
   // Regularly print how many events have been generated.
   int nPrevious = info.getCounter(3);
   if (nCount > 0 && nPrevious > 0 && nPrevious%nCount == 0)
@@ -2008,6 +2014,34 @@ bool Pythia::next() {
   info.addCounter(4);
   return true;
 
+}
+
+//--------------------------------------------------------------------------
+
+// Main routine to generate a low energy event
+
+bool Pythia::nextLowEnergy() {
+
+  event.clear();
+
+  double mp = particleData.m0(2212), mpi = particleData.m0(211);
+  event.append(2212, 0, 0, 0, Vec4(0, 0, 2, sqrt(4 + mp * mp)), mp);
+  event.append(-211, 0, 0, 0, Vec4(0, 0, -2, sqrt(4 + mpi * mpi)), mpi);
+
+  //for (auto beam : { beamA, beamB }) {
+  //  event.append(beam.id(), 0, 0, 0, beam.p(), beam.m());
+  //}
+
+  event.list(false, true);
+
+  const LowEnergyProcess& process = lowEnergyController.pickProcess(event[0].id(), event[1].id(), eCM);
+
+  process.collide(0, 1, event);
+
+  if (!hadronLevel.next(event))
+    return false;
+
+  return true;
 }
 
 //--------------------------------------------------------------------------

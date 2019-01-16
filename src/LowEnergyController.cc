@@ -208,8 +208,9 @@ const LowEnergyProcess& LowEnergyController::pickProcess(int idA, int idB, doubl
       default: throw "Error in Pythia internal logic (LowEnergyController)"; // @TODO
     }
   }
-  else
-    throw "Not implemented";
+  else {
+    cout << "NOT IMPLEMENTED:" << __LINE__ << endl;
+  }
 }
 
 

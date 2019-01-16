@@ -21,7 +21,7 @@ public:
   {
     rndmPtr = rndmPtrIn;
     particleDataPtr = particleDataPtrIn;
-    lowEnergyResonance.initPtr(particleDataPtrIn, lowEnergyDataPtrIn);
+    lowEnergyResonance.initPtr(rndmPtrIn, particleDataPtrIn, lowEnergyDataPtrIn);
   }
 
 

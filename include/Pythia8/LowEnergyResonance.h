@@ -10,10 +10,10 @@ namespace Pythia8 {
 class LowEnergyResonance: public LowEnergyProcess {
 public:
 
-  void initPtr(ParticleData* particleDataPtrIn, LowEnergyData* lowEnergyDataPtrIn)
-  { particleDataPtr = particleDataPtrIn; lowEnergyDataPtr = lowEnergyDataPtrIn; }
+  void initPtr(Rndm* rndmPtrIn, ParticleData* particleDataPtrIn, LowEnergyData* lowEnergyDataPtrIn)
+  { rndmPtr = rndmPtrIn; particleDataPtr = particleDataPtrIn; lowEnergyDataPtr = lowEnergyDataPtrIn; }
 
-  bool collide(int i1, int i2, Event& event);
+  bool collide(int i1, int i2, Event& event) const;
 
   
   double getPartialResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const;
@@ -26,6 +26,8 @@ public:
 
 
 private:
+
+  Rndm* rndmPtr;
 
   ParticleData* particleDataPtr;
 
