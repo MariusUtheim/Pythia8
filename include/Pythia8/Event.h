@@ -574,6 +574,10 @@ public:
   // Warning: particles should be OK, but some other information unreliable.
   Event& operator+=(const Event& addEvent);
 
+  vector<Pythia8::Particle>::iterator begin() {
+    return entry.begin();
+  }
+
 private:
 
   // The Particle class needs to access particle data.

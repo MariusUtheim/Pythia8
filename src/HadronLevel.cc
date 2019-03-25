@@ -107,8 +107,7 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
     hadronScatter.init(infoPtr, settings, rndmPtr, particleDataPtr);
 
   // Initialize low-energy hadron-hadron collisions.
-  lowEnergyHadHad.init(infoPtr, settings, particleDataPtr, rndmPtr,
-    &stringFrag, &ministringFrag);
+  lowEnergyHadHad.init(infoPtr, settings, particleDataPtr, rndmPtr);
 
   // Initialize Hidden-Valley fragmentation, if necessary.
   useHiddenValley = hiddenvalleyFrag.init(infoPtr, settings,

@@ -18,7 +18,10 @@ The main switch on/off switch for rescattering is
 <code>HadronLevel:HadronScatter</code>, which by the default is off, 
 since all models are rather simplistic and have to be used 
 with some caution. Currently there are three different options available: 
- 
+
+<flag name="HadronLevel:Rescatter" default="off">
+</flag>
+
 <modepick name="HadronScatter:mode" default="0" 
 min="0" max="2"> 
 The first two options are variations of the same model, whereas 

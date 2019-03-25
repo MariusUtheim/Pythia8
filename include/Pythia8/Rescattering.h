@@ -2,7 +2,7 @@
 #define Pythia8_Rescattering_H
 
 #include "Pythia8/Basics.h"
-#include "Pythia8/LowEnergyController.h"
+#include "Pythia8/LowEnergyHadHad.h"
 #include "Pythia8/Event.h"
 
 namespace Pythia8 {
@@ -14,7 +14,7 @@ public:
   Rescattering() {}
 
   void init(Info* infoPtrIn, Rndm* rndmPtrIn, ParticleData* particleDataPtrIn,
-    LowEnergyController* resDataPtrIn)
+    LowEnergyHadHad* resDataPtrIn)
   { infoPtr = infoPtrIn; rndmPtr = rndmPtrIn; 
   particleDataPtr = particleDataPtrIn; resDataPtr = resDataPtrIn; }
 
@@ -32,7 +32,7 @@ private:
   ParticleData* particleDataPtr;
 
   // @TODO Better name
-  LowEnergyController* resDataPtr;
+  LowEnergyHadHad* resDataPtr;
 };
 
 } // end namespace Pythia8

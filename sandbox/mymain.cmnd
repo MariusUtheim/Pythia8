@@ -1,4 +1,5 @@
 SoftQCD:nonDiffractive = on
+Beams:eCM = 1000
 
 Main:numberOfEvents = 10000
 

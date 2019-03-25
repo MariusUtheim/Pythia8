@@ -1,19 +1,12 @@
-// LowEnergyHadHad.cc is a part of the PYTHIA event generator.
-// Copyright (C) 2019 Torbjorn Sjostrand.
-// PYTHIA is licenced under the GNU GPL v2 or later, see COPYING for details.
-// Please respect the MCnet Guidelines, see GUIDELINES for details.
-
-// Function definitions (not found in the header) for the LowEnergyHadHad
-// class.
 
 #include "Pythia8/LowEnergyHadHad.h"
+
 
 namespace Pythia8 {
 
 //==========================================================================
 
-// LowEnergyHadHad class.
-// This class handles low-energy collisions between two hadrons.
+// The LowEnergyHadHad class.
 
 //--------------------------------------------------------------------------
 
@@ -37,25 +30,21 @@ const double LowEnergyHadHad::ALPHAPRIME = 0.25;
 // Initialize the LowEnergyHadHad class as required.
 
 bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
-  ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
-  StringFragmentation* stringFragPtrIn,
-  MiniStringFragmentation* ministringFragPtrIn) {
-
+  ParticleData* particleDataPtrIn, Rndm* rndmPtrIn) {
+ 
   // Save pointers.
-  infoPtr           = infoPtrIn;
-  particleDataPtr   = particleDataPtrIn;
-  rndmPtr           = rndmPtrIn;
-  stringFragPtr     = stringFragPtrIn;
-  ministringFragPtr = ministringFragPtrIn;
-
-  // Relative fraction of s quark production in strin breaks.
-  probStoUD       = settings.parm("StringFlav:probStoUD");
+  infoPtr         = infoPtrIn;
+  particleDataPtr = particleDataPtrIn;
+  rndmPtr         = rndmPtrIn;
 
   // Mixing for eta and eta'.
   double theta    = settings.parm("StringFlav:thetaPS");
-  double alpha    = (theta + 54.7) * M_PI / 180.;
+  double alpha    = (theta + 54.7) * M_PI / 180.; 
   fracEtass       = pow2(sin(alpha));
-  fracEtaPss      = 1. - fracEtass;
+  fracEtaPss      = 1. - fracEtass; 
+
+  // Transverse momentum spread.
+  sigmaQ          = settings.parm("StringPT:sigma") / sqrt(2.);
 
   // Longitudinal momentum sharing of valence quarks in hadrons.
   xPowMes         = settings.parm("BeamRemnants:valencePowerMeson");
@@ -63,24 +52,18 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
                           + settings.parm("BeamRemnants:valencePowerDinP") );
   xDiqEnhance     = settings.parm("BeamRemnants:valenceDiqEnhance");
 
-  // Transverse momentum spread.
-  sigmaQ          = settings.parm("StringPT:sigma") / sqrt(2.);
-
-  // Boundary mass between string and ministring handling.
-  mStringMin      = settings.parm("HadronLevel:mStringMin");
-
   // Initialize collision event record.
   leEvent.init( "(low energy event)", particleDataPtr);
 
   // Done.
   return true;
-
+ 
 }
 
 //--------------------------------------------------------------------------
 
 // Produce outgoing primary hadrons from collision of incoming pair.
-// type = 0: mix; = 1: nondiff; = 2 : el; = 3: SD (XB); = 4: SD (AX);
+// type = 0: mix; = 1: nondiff; = 2 : el; = 3: SD (XB); = 4: SD (AX); 
 //      = 5: DD; = 6: annihilation.
 
 bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
@@ -95,7 +78,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   int type = typeIn;
   if (typeIn == 0) {
     // To be done?? Requires access to partial cross sections.
-  }
+  } 
 
   //  Hadron type and meson/baryon distinction.
   id1       = event[i1].id();
@@ -112,7 +95,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   // Reset leEvent event record. Add incoming hadrons as beams in rest frame.
   leEvent.reset();
   leEvent.append( event[i1]);
-  leEvent.append( event[i2]);
+  leEvent.append( event[i2]); 
   leEvent[1].status( -12);
   leEvent[2].status( -12);
   RotBstMatrix MtoCM = toCMframe( leEvent[1].p(), leEvent[2].p());
@@ -128,24 +111,24 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   if (type == 6 && !annihilation()) return false;
 
   // Hadronize new strings and move products to standard event record.
-  if (!simpleHadronization( leEvent)) {
-    infoPtr->errorMsg( "Error in LowEnergyHadHad::collide: "
-      "no rescattering since hadronization failed");
-    return false;
-  }
-  for (int i = 3; i < leEvent.size(); ++i) if (leEvent[i].isFinal())
+//  if (!pythiaPtr->simpleHadronization( leEvent)) {
+//    infoPtr->errorMsg( "Error in LowEnergyHadHad::collide: "
+//      "no rescattering since hadronization failed");
+//    return false;
+//  }
+  for (int i = 3; i < leEvent.size(); ++i) if (leEvent[i].isFinal()) 
     event.append( leEvent[i]);
-
-  // Boost from collision rest frame to event frame.
+  
+  // Boost from collision rest frame to event frame. 
   // Set status and mothers. Offset vertex info to collision vertex.
   RotBstMatrix MfromCM = fromCMframe( event[i1].p(), event[i2].p());
   int mother1 = min(i1, i2);
   int mother2 = max(i1, i2);
   for (int i = sizeOld; i < event.size(); ++i) {
-    event[i].rotbst( MfromCM);
-    event[i].status( 110 + type);
+    event[i].rotbst( MfromCM); 
+    event[i].status( 110 + type); 
     event[i].mothers( mother2, mother1 );
-    event[i].vProdAdd( vtx);
+    event[i].vProdAdd( vtx); 
   }
 
   // Mark incoming colliding hadrons as decayed. Set their daughters.
@@ -158,7 +141,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
 
   // Done.
   return true;
-
+ 
 }
 
 //--------------------------------------------------------------------------
@@ -174,38 +157,38 @@ bool LowEnergyHadHad::nondiff() {
   do {
     do {
       if (++loop == MAXLOOP) {
-        infoPtr->errorMsg("Error in LowEnergyHadHad::nondiff: "
-          " failed to construct valid kinematics");
+        infoPtr->errorMsg("Error in LowEnergyHadHad::nondiff: " 
+          " failed to construct valid kinematics");  
         return false;
       }
-      double redStep = (loop < 10) ? 1. : exp( -MASSREDUCERATE * (loop - 9));
+      double redStep = (loop < 10) ? 1. : exp( -MASSREDUCERATE * (loop - 9)); 
 
       // Split up hadrons A  and B into q + qbar or q + qq for meson/baryon.
-      splitA( redStep);
-      splitB( redStep);
+      splitA( redStep); 
+      splitB( redStep); 
 
       // Assign relative sharing of longitudinal momentum.
-      z1     = splitZ( idc1, idac1, mTc1 / eCM, mTac1 / eCM);
-      z2     = splitZ( idc2, idac2, mTc2 / eCM, mTac2 / eCM);
+      z1     = splitZ( idc1, idac1, mTc1 / eCM, mTac1 / eCM); 
+      z2     = splitZ( idc2, idac2, mTc2 / eCM, mTac2 / eCM); 
       mT1    = sqrt( mTsc1 / z1 + mTsac1 / (1. - z1));
       mT2    = sqrt( mTsc2 / z2 + mTsac2 / (1. - z2));
 
     // Ensure that hadron beam remnants are not too massive.
     } while (mT1 + mT2 > eCM);
 
-    // Set up kinematics for outgoing beam remnants.
+    // Set up kinematics for outgoing beam remnants. 
     double e1    = 0.5 * (sCM + mT1 * mT1 - mT2 * mT2) / eCM;
     double pz1   = sqrtpos(e1 * e1 - mT1 * mT1);
     double epz1  = z1 * (e1 + pz1);
     double pzc1  = 0.5 * (epz1 - mTsc1 / epz1 );
-    double ec1   = 0.5 * (epz1 + mTsc1 / epz1 );
+    double ec1   = 0.5 * (epz1 + mTsc1 / epz1 ); 
     pc1.p(   px1,  py1,       pzc1,      ec1 );
-    pac1.p( -px1, -py1, pz1 - pzc1, e1 - ec1 );
-    double epz2  = z2 * (eCM - e1 + pz1);
+    pac1.p( -px1, -py1, pz1 - pzc1, e1 - ec1 );    
+    double epz2  = z2 * (eCM - e1 + pz1); 
     double pzc2  = -0.5 * (epz2 - mTsc2 / epz2 );
-    double ec2   =  0.5 * (epz2 + mTsc2 / epz2 );
+    double ec2   =  0.5 * (epz2 + mTsc2 / epz2 ); 
     pc2.p(   px2,  py2,        pzc2,            ec2 );
-    pac2.p( -px2, -py2, -pz1 - pzc2, eCM - e1 - ec2 );
+    pac2.p( -px2, -py2, -pz1 - pzc2, eCM - e1 - ec2 );  
 
     // Catch reconnected systems with too small masses.
     mAbove1 = (pc1 + pac2).mCalc() - mThreshold( idc1, idac2);
@@ -220,7 +203,7 @@ bool LowEnergyHadHad::nondiff() {
 
   // Done.
   return true;
-
+ 
 }
 
 //--------------------------------------------------------------------------
@@ -242,8 +225,8 @@ bool LowEnergyHadHad::eldiff( int type) {
   double mAmax = eCM - mBmin;
   double mBmax = eCM - mAmin;
   if (mAmin + mBmin > eCM) {
-    infoPtr->errorMsg("Error in LowEnergyHadHad::eldiff: "
-      " too low invariant mass for diffraction");
+    infoPtr->errorMsg("Error in LowEnergyHadHad::eldiff: " 
+      " too low invariant mass for diffraction");  
     return false;
   }
 
@@ -251,10 +234,10 @@ bool LowEnergyHadHad::eldiff( int type) {
   int  loop  = 0;
   bool failM = false;
   do {
-    failM = false;
+    failM = false; 
     if (++loop == MAXLOOP) {
-      infoPtr->errorMsg("Error in LowEnergyHadHad::eldiff: "
-        " failed to construct valid kinematics");
+      infoPtr->errorMsg("Error in LowEnergyHadHad::eldiff: " 
+        " failed to construct valid kinematics");  
       return false;
     }
     double redStep = (loop < 10) ? 1. : exp( -MASSREDUCERATE * (loop - 9));
@@ -262,7 +245,7 @@ bool LowEnergyHadHad::eldiff( int type) {
     // Split up hadron 1 (on side A) and assign excited A mass.
     // Should contain better low-mass description??
     if (excite1) {
-      splitA( redStep);
+      splitA( redStep); 
       mA     = mAmin * pow( mAmax / mAmin, rndmPtr->flat() );
       if (mTc1 + mTac1 > mA) failM = true;
     }
@@ -273,9 +256,9 @@ bool LowEnergyHadHad::eldiff( int type) {
       splitB( redStep);
       mB     = mBmin * pow( mBmax / mBmin, rndmPtr->flat() );
       if (mTc2 + mTac2 > mB) failM = true;
-    }
+    } 
 
-  // Ensure that pair of hadron masses not too large.
+  // Ensure that pair of hadron masses not too large. 
   if (mA + mB > eCM) failM = true;
   } while (failM);
 
@@ -283,21 +266,21 @@ bool LowEnergyHadHad::eldiff( int type) {
   double s1    = m1 * m1;
   double s2    = m2 * m2;
   double sA    = mA * mA;
-  double sB    = mB * mB;
+  double sB    = mB * mB; 
   double eA    = 0.5 * (sCM + sA - sB) / eCM;
   double pzA   = sqrtpos(eA * eA - sA);
   Vec4   pA( 0., 0.,  pzA,       eA);
-  Vec4   pB( 0., 0., -pzA, eCM - eA);
+  Vec4   pB( 0., 0., -pzA, eCM - eA); 
 
   // Internal kinematics on side A, boost to CM frame and store constituents.
-  if (excite1) {
-    double ec1   = 0.5 * (sA + mTsc1 - mTsac1) / mA;
+  if (excite1) { 
+    double ec1   = 0.5 * (sA + mTsc1 - mTsac1) / mA; 
     double pzc1  = sqrtpos(ec1 * ec1 - mTsc1);
     // Diquark always forward. Randomize for meson.
-    if ( abs(idac1) > 10 || (abs(idc1) < 10 && abs(idac1) < 10
-      && rndmPtr->flat() > 0.5) ) pzc1 = -pzc1;
-    Vec4 pc1(   px1,  py1,  pzc1,      ec1);
-    Vec4 pac1( -px1, -py1, -pzc1, mA - ec1);
+    if ( abs(idac1) > 10 || (abs(idc1) < 10 && abs(idac1) < 10 
+      && rndmPtr->flat() > 0.5) ) pzc1 = -pzc1;  
+    Vec4 pc1(   px1,  py1,  pzc1,      ec1);   
+    Vec4 pac1( -px1, -py1, -pzc1, mA - ec1);   
     pc1.bst(pA);
     pac1.bst(pA);
     leEvent.append(  idc1, 63, 1, 0, 0, 0, 101,   0,  pc1,  mc1);
@@ -311,14 +294,14 @@ bool LowEnergyHadHad::eldiff( int type) {
   }
 
   // Internal kinematics on side B, boost to CM frame and store constituents.
-  if (excite2) {
-    double ec2   = 0.5 * (sB + mTsc2 - mTsac2) / mB;
+  if (excite2) { 
+    double ec2   = 0.5 * (sB + mTsc2 - mTsac2) / mB; 
     double pzc2  = -sqrtpos(ec2 * ec2 - mTsc2);
     // Diquark always forward (on negative side). Randomize for meson.
-    if ( abs(idac2) > 10 || (abs(idc2) < 10 && abs(idac2) < 10
-      && rndmPtr->flat() > 0.5) ) pzc2 = -pzc2;
-    Vec4 pc2(   px2,  py2,  pzc2,      ec2);
-    Vec4 pac2( -px2, -py2, -pzc2, mB - ec2);
+    if ( abs(idac2) > 10 || (abs(idc2) < 10 && abs(idac2) < 10 
+      && rndmPtr->flat() > 0.5) ) pzc2 = -pzc2;  
+    Vec4 pc2(   px2,  py2,  pzc2,      ec2);   
+    Vec4 pac2( -px2, -py2, -pzc2, mB - ec2);   
     pc2.bst(pB);
     pac2.bst(pB);
     leEvent.append(  idc2, 63, 2, 0, 0, 0, 102,   0,  pc2,  mc2);
@@ -334,21 +317,21 @@ bool LowEnergyHadHad::eldiff( int type) {
   // Select t value and rotate outgoing particles accordingly.
   double lambda12 = pow2( sCM - s1 - s2) - 4. * s1 * s2;
   double lambdaAB = pow2( sCM - sA - sB) - 4. * sA * sB;
-  double tLow     = -0.5 * (sCM - (s1 + s2 + sA + sB) + (s1 - s2)
+  double tLow     = -0.5 * (sCM - (s1 + s2 + sA + sB) + (s1 - s2) 
     * (sA - sB) / sCM + sqrtpos(lambda12 *  lambdaAB) / sCM);
   double tUpp     = ( (sA - s1) * (sB - s2) + (s1 + sB - s2 - sA)
     * (s1 * sB - s2 * sA) / sCM ) / tLow;
   double bNow     = bSlope( type);
   double eBtLow   = exp( bNow * tLow);
   double eBtUpp   = exp( bNow * tUpp);
-  double tNow     = log( eBtLow + rndmPtr->flat() * (eBtUpp - eBtLow) ) / bNow;
+  double tNow     = log( eBtLow + rndmPtr->flat() * (eBtUpp - eBtLow) ) / bNow; 
   double theta    = acos( (2. * tNow - tLow - tUpp) / (tUpp - tLow) );
   double phi      = 2. * M_PI * rndmPtr->flat();
-  for (int i = 3; i < leEvent.size(); ++i) leEvent[i].rot( theta, phi);
+  for (int i = 3; i < leEvent.size(); ++i) leEvent[i].rot( theta, phi); 
 
   // Done.
   return true;
-
+    
 }
 
 //--------------------------------------------------------------------------
@@ -376,7 +359,7 @@ bool LowEnergyHadHad::annihilation() {
       idc2  = paircac.first;
       idac2 = paircac.second;
     }
-
+  
     // Store flavour content, with a diquark split further.
     if (idcAbs < 10) iqord.push_back( idcAbs );
     else {
@@ -391,12 +374,12 @@ bool LowEnergyHadHad::annihilation() {
   }
 
   // Find potential annihilating quark-antiquark pairs.
-  for (int i1 = 0; i1 < int(iqord.size()); ++i1)
-  for (int i2 = 0; i2 < int(iqbar.size()); ++i2)
+  for (int i1 = 0; i1 < int(iqord.size()); ++i1) 
+  for (int i2 = 0; i2 < int(iqbar.size()); ++i2) 
   if (iqbar[i2] == iqord[i1]) {
     iord.push_back(i1);
     ibar.push_back(i2);
-  }
+  } 
 
   // Return if no annihilation possible.
   if (iord.size() == 0) {
@@ -406,7 +389,7 @@ bool LowEnergyHadHad::annihilation() {
   }
 
   // Annihilate one quark-antiquark pair at random among options.
-  int iAnn = max( 0, min( int(iord.size()) - 1,
+  int iAnn = max( 0, min( int(iord.size()) - 1, 
     int(iord.size() * rndmPtr->flat()) ));
   iqord[iord[iAnn]] = iqord.back();
   iqord.pop_back();
@@ -414,21 +397,21 @@ bool LowEnergyHadHad::annihilation() {
   iqbar.pop_back();
 
   // Optionally allow baryon number annihilation - to be refined??
-  if (iqord.size() == 2 && iqbar.size() == 2 && rndmPtr->flat() > 0.5) {
+  if (iqord.size() == 2 && iqbar.size() == 2 && rndmPtr->flat() > 0.5) { 
     iord.clear();
     ibar.clear();
 
     // Find potential annihilating second quark-antiquark pairs.
-    for (int i1 = 0; i1 < 2; ++i1)
-    for (int i2 = 0; i2 < 2; ++i2)
+    for (int i1 = 0; i1 < 2; ++i1) 
+    for (int i2 = 0; i2 < 2; ++i2) 
     if (iqbar[i2] == iqord[i1]) {
       iord.push_back(i1);
       ibar.push_back(i2);
-    }
+    } 
 
     // Annihilate a second quark-antiquark pair if possible.
     if (iord.size() > 0) {
-      iAnn = max( 0, min( int(iord.size()) - 1,
+      iAnn = max( 0, min( int(iord.size()) - 1, 
         int(iord.size() * rndmPtr->flat()) ));
       iqord[iord[iAnn]] = iqord.back();
       iqord.pop_back();
@@ -436,16 +419,7 @@ bool LowEnergyHadHad::annihilation() {
       iqbar.pop_back();
     }
   }
-
-  // Optionally allow full annihilation of meson-meson or baryon-antibaryon,
-  // and creation of new flavour - to be refined?
-  if (iqord.size() == 1 && iqbar.size() == 1 && iqbar[0] == iqord[0]
-    && rndmPtr->flat() > 0.5) {
-    double rndmq = (2. + probStoUD) * rndmPtr->flat();
-    iqord[0] = (rndmq < 1.) ? 1 : ((rndmq < 2.) ? 2 : 3);
-    iqbar[0] = iqord[0];
-  }
-
+  
   // Recombine into diquarks where required; for now at random.
   int idcAnn  = 0;
   int idacAnn = 0;
@@ -455,38 +429,38 @@ bool LowEnergyHadHad::annihilation() {
   } else if (iqord.size() == 3 && iqbar.size() == 0) {
     int iPick = max( 0, min( 2, int(3. * rndmPtr->flat()) ));
     idcAnn  = iqord[iPick];
-    int iq4 = iqord[(iPick + 1)%3];
-    int iq5 = iqord[(iPick + 2)%3];
-    idacAnn = 1000 * max(iq4, iq5) + 100 * min( iq4, iq5)
+    int iq4 = iqord[(iPick + 1)%3];    
+    int iq5 = iqord[(iPick + 2)%3];    
+    idacAnn = 1000 * max(iq4, iq5) + 100 * min( iq4, iq5) 
             + ( (iq5 == iq4) ? 3 : 1 );
   } else if (iqord.size() == 0 && iqbar.size() == 3) {
     int iPick = max( 0, min( 2, int(3. * rndmPtr->flat()) ));
     idacAnn = -iqbar[iPick];
-    int iq4 = iqbar[(iPick + 1)%3];
-    int iq5 = iqbar[(iPick + 2)%3];
-    idcAnn  = -(1000 * max(iq4, iq5) + 100 * min( iq4, iq5)
+    int iq4 = iqbar[(iPick + 1)%3];    
+    int iq5 = iqbar[(iPick + 2)%3];    
+    idcAnn  = -(1000 * max(iq4, iq5) + 100 * min( iq4, iq5) 
             + ( (iq5 == iq4) ? 3 : 1 ));
   } else if (iqord.size() == 2 && iqbar.size() == 2) {
-    idcAnn  = 1000 * max(iqbar[0], iqbar[1]) + 100 * min( iqbar[0], iqbar[1])
+    idcAnn  = 1000 * max(iqbar[0], iqbar[1]) + 100 * min( iqbar[0], iqbar[1]) 
             + ( (iqbar[1] == iqbar[0]) ? 3 : 1 );
-    idacAnn = -(1000 * max(iqord[0], iqord[1]) + 100 * min( iqord[0], iqord[1])
+    idacAnn = -(1000 * max(iqord[0], iqord[1]) + 100 * min( iqord[0], iqord[1]) 
             + ( (iqord[1] == iqord[0]) ? 3 : 1 ));
   } else {
     infoPtr->errorMsg( "Error in LowEnergyHadHad::annihilation: "
-      "obtained unphysical flavour content");
+      "obtained unphysical flavour content"); 
     return false;
-  }
+  } 
 
   // Begin kinematics construction. Allow reduced quark masses.
   int    loop = 0;
   double mcAnn, macAnn, pxAnn, pyAnn, pTsAnn, mTscAnn, mTsacAnn;
   do {
     if (++loop == MAXLOOP) {
-      infoPtr->errorMsg("Error in LowEnergyHadHad::nondiff: "
-        " failed to construct valid kinematics");
+      infoPtr->errorMsg("Error in LowEnergyHadHad::nondiff: " 
+        " failed to construct valid kinematics");  
       return false;
     }
-    double redStep = (loop < 10) ? 1. : exp( -MASSREDUCERATE * (loop - 9));
+    double redStep = (loop < 10) ? 1. : exp( -MASSREDUCERATE * (loop - 9)); 
 
     // Find constituent masses and scale down if necessary.
     mcAnn  = redStep * particleDataPtr->m0( idcAnn);
@@ -495,7 +469,7 @@ bool LowEnergyHadHad::annihilation() {
     // Select Gaussian relative transverse momenta for constituents.
     pair<double, double> gauss2 = rndmPtr->gauss2();
     pxAnn  = redStep * sigmaQ * gauss2.first;
-    pyAnn  = redStep * sigmaQ * gauss2.second;
+    pyAnn  = redStep * sigmaQ * gauss2.second; 
     pTsAnn = pxAnn * pxAnn + pyAnn * pyAnn;
 
     // Construct transverse masses.
@@ -505,7 +479,7 @@ bool LowEnergyHadHad::annihilation() {
   // Ensure that hadron beam remnants are not too massive.
   } while (sqrt(mTscAnn) + sqrt(mTsacAnn) > eCM);
 
-  // Decide which side is which.
+  // Decide which side is which. 
   double sgnAnn = 1.;
   if (isBaryon1 && isBaryon2) {
     if (abs(idcAnn) > 10) sgnAnn = -1.;
@@ -518,70 +492,33 @@ bool LowEnergyHadHad::annihilation() {
     bool match12 = idcAnn == idc1 && idacAnn == idac2;
     bool match21 = idcAnn == idc2 && idacAnn == idac1;
     if (match12 && match21) sgnAnn = (rndmPtr->flat() > 0.5) ? 1. : -1.;
-    else if (match12)       sgnAnn = 1.;
-    else if (match21)       sgnAnn = -1.;
+    else if (match12)       sgnAnn = 1.; 
+    else if (match21)       sgnAnn = -1.; 
     else                    sgnAnn = (rndmPtr->flat() > 0.5) ? 1. : -1.;
-  }
+  }  
 
-  // Set up kinematics for outgoing beam remnants.
+  // Set up kinematics for outgoing beam remnants. 
   double ecAnn  = 0.5 * (sCM + mTscAnn - mTsacAnn) / eCM;
   double pzcAnn = sgnAnn * sqrtpos(ecAnn * ecAnn - mTscAnn);
   Vec4 pcAnn(   pxAnn,  pyAnn,  pzcAnn,       ecAnn );
-  Vec4 pacAnn( -pxAnn, -pyAnn, -pzcAnn, eCM - ecAnn );
-
+  Vec4 pacAnn( -pxAnn, -pyAnn, -pzcAnn, eCM - ecAnn );    
+   
   // Store new single string system.
   leEvent.append(  idcAnn, 63, 1, 2, 0, 0, 101,   0,  pcAnn,  mcAnn);
   leEvent.append( idacAnn, 63, 1, 2, 0, 0,   0, 101, pacAnn, macAnn);
 
   // Done.
   return true;
-
-}
-
-//--------------------------------------------------------------------------
-
-// Simple version of hadronization for low-energy hadronic collisions.
-// Only accepts simple q-qbar systems and hadrons.
-
-bool LowEnergyHadHad::simpleHadronization( Event& event, bool isDiff) {
-
-  // Find the complete colour singlet configuration of the event.
-  simpleColConfig.clear();
-  for (int i = 0; i < event.size(); ++i)
-  if (event[i].isQuark() || event[i].isDiquark()) {
-    vector<int> qqPair;
-    qqPair.push_back(   i);
-    qqPair.push_back( ++i);
-    simpleColConfig.simpleInsert( qqPair, event );
-  }
-
-  // Process all colour singlet (sub)systems.
-  for (int iSub = 0; iSub < simpleColConfig.size(); ++iSub) {
-
-    // String fragmentation of each colour singlet (sub)system.
-    if ( simpleColConfig[iSub].massExcess > mStringMin ) {
-      if (!stringFragPtr->fragment( iSub, simpleColConfig, event))
-        return false;
-
-    // Low-mass string treated separately. Tell if diffractive system.
-    } else {
-      if (!ministringFragPtr->fragment( iSub, simpleColConfig, event, isDiff))
-        return false;
-    }
-  }
-
-  // Done.
-  return true;
-
+    
 }
 
 //-------------------------------------------------------------------------
 
 // Split up hadron A into a colour-anticolour pair, with masses and pT values.
-
+  
 bool LowEnergyHadHad::splitA( double redMpT) {
 
-  // Split up flavour of hadron into a colour and an anticolour constituent.
+  // Split up flavour of hadron into a colour and an anticolour constituent. 
   pair< int, int>  paircac  = splitFlav( id1 );
   idc1   = paircac.first;
   idac1  = paircac.second;
@@ -597,27 +534,27 @@ bool LowEnergyHadHad::splitA( double redMpT) {
   // Select Gaussian relative transverse momenta for constituents.
   pair<double, double> gauss2 = rndmPtr->gauss2();
   px1    = redMpT * sigmaQ * gauss2.first;
-  py1    = redMpT * sigmaQ * gauss2.second;
+  py1    = redMpT * sigmaQ * gauss2.second; 
   pTs1   = px1 * px1 + py1 * py1;
 
   // Construct transverse masses.
   mTsc1  = pow2(mc1)  + pTs1;
   mTsac1 = pow2(mac1) + pTs1;
   mTc1   = sqrt(mTsc1);
-  mTac1  = sqrt(mTsac1);
+  mTac1  = sqrt(mTsac1); 
 
   // Done.
   return true;
-
+    
 }
 
 //-------------------------------------------------------------------------
 
 // Split up hadron B into a colour-anticolour pair, with masses and pT values.
-
+  
 bool LowEnergyHadHad::splitB( double redMpT) {
 
-  // Split up flavour of hadron into a colour and an anticolour constituent.
+  // Split up flavour of hadron into a colour and an anticolour constituent. 
   pair< int, int>  paircac  = splitFlav( id2 );
   idc2   = paircac.first;
   idac2  = paircac.second;
@@ -633,18 +570,18 @@ bool LowEnergyHadHad::splitB( double redMpT) {
   // Select Gaussian relative transverse momenta for constituents.
   pair<double, double> gauss2 = rndmPtr->gauss2();
   px2    = redMpT * sigmaQ * gauss2.first;
-  py2    = redMpT * sigmaQ * gauss2.second;
+  py2    = redMpT * sigmaQ * gauss2.second; 
   pTs2   = px2 * px2 + py2 * py2;
 
   // Construct transverse masses.
   mTsc2  = pow2(mc2)  + pTs2;
   mTsac2 = pow2(mac2) + pTs2;
   mTc2   = sqrt(mTsc2);
-  mTac2  = sqrt(mTsac2);
+  mTac2  = sqrt(mTsac2); 
 
   // Done.
   return true;
-
+    
 }
 
 //-------------------------------------------------------------------------
@@ -652,7 +589,7 @@ bool LowEnergyHadHad::splitB( double redMpT) {
 // Split up a hadron into a colour and an anticolour part, of q or qq kinds.
 
 pair< int, int> LowEnergyHadHad::splitFlav( int id) {
-
+   
   // Hadron flavour content.
   int idAbs = abs(id);
   int iq1   = (idAbs/1000)%10;
@@ -667,16 +604,16 @@ pair< int, int> LowEnergyHadHad::splitFlav( int id) {
       if (id > 0) return make_pair( iq2, -iq3);
       else        return make_pair( iq3, -iq2);
 
-    // K0S and K0L are mixes d sbar and dbar s.
+    // K0S and K0L are mixes d sbar and dbar s.   
     } else {
       if (rndmPtr->flat() < 0.5) return make_pair( 3, -1);
       else                       return make_pair( 1, -3);
     }
-
+      
   // Diagonal mesons: assume complete mixing ddbar and uubar.
   } else if (iq1 == 0) {
    if (iq2 < 3 || id == 331) {
-     iq4 = (rndmPtr->flat() < 0.5) ? 1 : 2;
+     iq4 = (rndmPtr->flat() < 0.5) ? 1 : 2; 
      // eta and eta' can also be s sbar.
      if (id == 221 && rndmPtr->flat() < fracEtass) iq4 = 3;
      if (id == 331 && rndmPtr->flat() < fracEtaPss) iq4 = 3;
@@ -695,11 +632,11 @@ pair< int, int> LowEnergyHadHad::splitFlav( int id) {
       else if (rr6 < 3.) { iq4 = iq2; iq5 = 1000 * iq1 + 100 * iq3 + 3;}
       else               { iq4 = iq2; iq5 = 1000 * iq1 + 100 * iq3 + 1;}
     // Three nonidentical quarks, Sigma- or Lambda-like.
-    } else {
-      int isp = (iq2 > iq3) ? 3 : 1;
-      if (iq3 > iq2) swap( iq2, iq3);
+    } else { 
+      int isp = (iq2 > iq3) ? 3 : 1;    
+      if (iq3 > iq2) swap( iq2, iq3);   
       double rr12 = 12. * rndmPtr->flat();
-      if      (rr12 < 4.) { iq4 = iq1; iq5 = 1000 * iq2 + 100 * iq3 + isp;}
+      if      (rr12 < 4.) { iq4 = iq1; iq5 = 1000 * iq2 + 100 * iq3 + isp;}   
       else if (rr12 < 5.) { iq4 = iq2; iq5 = 1000 * iq1 + 100 * iq3 + isp;}
       else if (rr12 < 6.) { iq4 = iq3; iq5 = 1000 * iq1 + 100 * iq2 + isp;}
       else if (rr12 < 9.) { iq4 = iq2; iq5 = 1000 * iq1 + 100 * iq3 + 4 - isp;}
@@ -707,15 +644,15 @@ pair< int, int> LowEnergyHadHad::splitFlav( int id) {
     }
     if (id > 0) return make_pair(  iq4,  iq5);
     else        return make_pair( -iq5, -iq4);
-
+    
   // Decuplet baryons.
   } else {
     double rr3 = 3. * rndmPtr->flat();
     if (rr3 < 1.)      { iq4 = iq1; iq5 = 1000 * iq2 + 100 * iq3 + 3;}
-    else if (rr3 < 2.) { iq4 = iq2; iq5 = 1000 * iq1 + 100 * iq3 + 3;}
-    else               { iq4 = iq3; iq5 = 1000 * iq1 + 100 * iq2 + 3;}
+    else if (rr3 < 2.) { iq4 = iq2; iq5 = 1000 * iq1 + 100 * iq3 + 3;} 
+    else               { iq4 = iq3; iq5 = 1000 * iq1 + 100 * iq2 + 3;} 
     if (id > 0) return make_pair(  iq4,  iq5);
-    else        return make_pair( -iq5, -iq4);
+    else        return make_pair( -iq5, -iq4); 
   }
 
   // Done. (Fake call to avoid unwarranted compiler warning.)
@@ -755,9 +692,9 @@ double LowEnergyHadHad::splitZ( int iq1, int iq2, double mRat1, double mRat2) {
     if (iq2Abs > 10) swap( x1, x2);
   }
 
-  // Return z value.
-  return x1 / (x1 + x2);
-
+  // Return z value.      
+  return x1 / (x1 + x2); 
+  
 }
 
 //-------------------------------------------------------------------------
@@ -778,14 +715,14 @@ double LowEnergyHadHad::mThreshold( int iq1, int iq2) {
     if (iq2Abs > iq1Abs) swap( iq1Abs, iq2Abs);
     if      (iq1Abs < 3)  mThr += 0.14;
     else if (iq1Abs == 3) mThr += (iq2Abs < 3) ? 0.50 : 1.00;
-    else if (iq1Abs == 4) mThr += (iq2Abs < 3) ? 1.90 : 2.00;
-    else if (iq1Abs == 5) mThr += (iq2Abs < 3) ? 5.30 : 5.38;
+    else if (iq1Abs == 4) mThr += (iq2Abs < 3) ? 1.90 : 2.00; 
+    else if (iq1Abs == 5) mThr += (iq2Abs < 3) ? 5.30 : 5.38; 
 
   // Baryonic state.
   } else if (iq2Abs < 10) {
     int iqo1 = (iq1Abs/1000)%10;
     int iqo2 = (iq1Abs/100)%10;
-    int iqo3 = iq2Abs;
+    int iqo3 = iq2Abs;    
     if (iqo3 > iqo2) swap( iqo2, iqo3);
     if (iqo2 > iqo1) swap( iqo1, iqo2);
     if      (iqo1 <  3) mThr += 0.95;
@@ -794,7 +731,7 @@ double LowEnergyHadHad::mThreshold( int iq1, int iq2) {
     else if (iqo1 == 5) mThr += (iqo2 < 3) ? 5.62 : ((iqo3 < 3) ? 5.80 : 6.08);
 
   // Baryon-antibaryon state.
-  } else {
+  } else { 
     int iqo1 = (iq1Abs/1000)%10;
     int iqo2 = (iq1Abs/100)%10;
     if      (iqo1 <  3) mThr += 0.95;
@@ -821,23 +758,160 @@ double LowEnergyHadHad::mThreshold( int iq1, int iq2) {
 double LowEnergyHadHad::bSlope( int type) {
 
   // Steeper slope for baryons than mesons.
-  // To do: charm and bottom should have smaller slopes.
+  // To do: charm and bottom should have smaller slopes. 
   double bA = (isBaryon1) ? 2.3 : 1.4;
   double bB = (isBaryon2) ? 2.3 : 1.4;
 
   // Elastic slope.
-  if (type == 2)
+  if (type == 2) 
     return 2. * bA + 2. * bB + 2. * ALPHAPRIME * log(ALPHAPRIME * sCM);
 
   // Single diffractive slope for XB and AX, respectively.
-  if (type == 3) return 2. * bB + 2. * ALPHAPRIME * log(sCM / (mA * mA));
-  if (type == 4) return 2. * bA + 2. * ALPHAPRIME * log(sCM / (mB * mB));
+  if (type == 3) return 2. * bB + 2. * ALPHAPRIME * log(sCM / (mA * mA));  
+  if (type == 4) return 2. * bA + 2. * ALPHAPRIME * log(sCM / (mB * mB));  
 
   // Double diffractive slope.
-  return 2. * ALPHAPRIME * log(exp(4.) + sCM / (ALPHAPRIME * pow2(mA * mB)) );
+  return 2. * ALPHAPRIME * log(exp(4.) + sCM / (ALPHAPRIME * pow2(mA * mB)) ); 
 
 }
 
 //==========================================================================
+/*
+int main() {
 
-} // end namespace Pythia8
+  // Number of events to generate. Max number of errors. 
+  int nEvent = 1000;
+  int nAbort = 5;
+  int nList  = 1;
+
+  // Minimum invariant mass excess for rescattering.
+  double mRescMin = 0.5;
+
+  // Set up inelastic nondiffractive LHC collisions.
+  Pythia pythia;
+  Event& event = pythia.event;
+  pythia.readString("SoftQCD:nonDiffractive = on");
+  pythia.readString("Next:numberShowEvent = 0");
+  pythia.init();
+
+  // Initialize LowEnergyHadHad class.
+  LowEnergyHadHad LEHH;
+  LEHH.init( &pythia.info, pythia.settings, &pythia.particleData,
+    &pythia.rndm); 
+
+  // Histograms.
+  Hist nResc( "Number of rescatterings in an event", 100, -0.5, 199.5); 
+  Hist mExc( "Mass excess in scattering", 100, 0., 50.); 
+  Hist nHad( "Number of final-state hadrons given mass excess", 100, 0., 50.); 
+  Hist mExcS( "Mass excess in successful scattering", 100, 0., 50.); 
+  Hist nHadS( "Number of final-state hadrons when successful", 100, 0., 50.); 
+  Hist mExc1( "Mass excess in nondiffractive", 100, 0., 50.); 
+  Hist nHad1( "Number of hadrons in nondiffractive", 100, 0., 50.); 
+  Hist mExc2( "Mass excess in elastic", 100, 0., 50.); 
+  Hist nHad2( "Number of hadrons in elastic", 100, 0., 50.); 
+  Hist mExc34( "Mass excess in single diffractive", 100, 0., 50.); 
+  Hist nHad34( "Number of hadrons in single diffractive", 100, 0., 50.); 
+  Hist mExc5( "Mass excess in double diffractive", 100, 0., 50.); 
+  Hist nHad5( "Number of hadrons in double diffractive", 100, 0., 50.); 
+  Hist mExc6( "Mass excess in annihilation", 100, 0., 50.); 
+  Hist nHad6( "Number of hadrons in annihilation", 100, 0., 50.); 
+
+  // Begin event loop.
+  int iAbort = 0;
+  for (int iEvent = 0; iEvent < nEvent; ++iEvent) {
+
+    // Generate events. Quit if many failures.
+    if (!pythia.next()) {
+      if (++iAbort < nAbort) continue;
+      cout << " Event generation aborted prematurely, owing to error!\n";
+      break;
+    }
+
+   // Find an original hadron pair with invariant mass above threshold.
+   int ncollide = 0;
+   int sizeOrig = event.size();
+   int sizeBef, sizeAdd;
+   if (iEvent < nList) cout << " original event size is " << sizeOrig << endl;
+   for (int i1 = 0; i1 < sizeOrig - 1; ++i1) 
+   if (event[i1].isFinal() && event[i1].isHadron()) {
+     for (int i2 = i1 + 1; i2 < sizeOrig; ++i2) 
+     if (event[i2].isFinal() && event[i2].isHadron()) {
+       double mExcess = (event[i1].p() + event[i2].p()).mCalc() 
+         - event[i1].m() - event[i2].m(); 
+       if (mExcess > mRescMin) {
+  
+         // Pick type of collision.
+         int type = 1. + 6. * pythia.rndm.flat();
+         //int type = 6;
+         if (iEvent < nList) cout << "\n collision between " << i1 << " and " 
+            << i2 << " is of type " << type << endl;
+
+         // Perform collision.
+         sizeBef = event.size();
+         LEHH.collide( i1, i2, type, event);
+         sizeAdd = event.size() - sizeBef;
+
+         // Statistics. 
+         if (iEvent < nList) LEHH.leEvent.list();
+         ++ncollide;
+         mExc.fill( mExcess);
+         nHad.fill( mExcess, sizeAdd);
+         if (sizeAdd > 0) { 
+           mExcS.fill( mExcess);
+           nHadS.fill( mExcess, sizeAdd);
+           if (type == 1) {
+             mExc1.fill( mExcess);
+             nHad1.fill( mExcess, sizeAdd);
+           } else if (type == 2) {
+             mExc2.fill( mExcess);
+             nHad2.fill( mExcess, sizeAdd);
+           } else if (type == 3 || type == 4) {
+             mExc34.fill( mExcess);
+             nHad34.fill( mExcess, sizeAdd);
+           } else if (type == 5) {
+             mExc5.fill( mExcess);
+             nHad5.fill( mExcess, sizeAdd);
+           } else if (type == 6) {
+             mExc6.fill( mExcess);
+             nHad6.fill( mExcess, sizeAdd);
+           }              
+         } 
+         break;
+       }
+     }
+   } 
+
+   // Check and printout.
+   Vec4 pSum;
+   for (int i = 1; i < event.size(); ++i) if (event[i].isFinal())
+     pSum += event[i].p();
+   Vec4 pRef = event[0].p();
+   double diff = abs(pSum.px() - pRef.px()) + abs(pSum.py() - pRef.py())
+               + abs(pSum.pz() - pRef.pz()) + abs(pSum.e() - pRef.e());
+   bool hasError = (diff > 0.1);
+   if (iEvent < nList || hasError) {
+     cout << " event contained " << ncollide << " collisions " << endl;
+     if (hasError) cout << " error, pSum = " << pSum;
+     event.list();
+   }
+   nResc.fill( ncollide);
+
+  // End event loop. Final statistics.
+  }
+  pythia.stat();
+  nHad /= mExc;
+  nHadS /= mExcS;
+  nHad1 /= mExc1;
+  nHad2 /= mExc2;
+  nHad34 /= mExc34;
+  nHad5 /= mExc5;
+  nHad6 /= mExc6;
+  cout << nResc << mExc << nHad << mExcS << nHadS << mExc1 << nHad1 
+       << mExc2 << nHad2 << mExc34 << nHad34 << mExc5 << nHad5 
+       << mExc6 << nHad6;
+
+  // Done.
+  return 0;
+}
+*/
+}

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "tests.h"
 #include "Pythia8/MassDependentWidth.h"
-#include "Pythia8/LowEnergyController.h"
+#include "Pythia8/LowEnergyHadHad.h"
 
 void singleEvent()
 {

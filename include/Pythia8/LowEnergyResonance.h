@@ -3,17 +3,16 @@
 
 #include "Pythia8/Event.h"
 #include "Pythia8/LowEnergyData.h"
-#include "Pythia8/LowEnergyProcess.h"
 
 namespace Pythia8 {
 
-class LowEnergyResonance: public LowEnergyProcess {
+class LowEnergyResonance {
 public:
 
   void initPtr(Rndm* rndmPtrIn, ParticleData* particleDataPtrIn, LowEnergyData* lowEnergyDataPtrIn)
   { rndmPtr = rndmPtrIn; particleDataPtr = particleDataPtrIn; lowEnergyDataPtr = lowEnergyDataPtrIn; }
 
-  bool collide(int i1, int i2, Event& event) const;
+  bool collide(int i1, int i2, Event& event);
 
   
   double getPartialResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const;

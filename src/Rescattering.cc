@@ -137,7 +137,7 @@ bool Rescattering::calcRescatterOrigin(int idA, int idB, Event& event,
   pA.rotbst(frame); pB.rotbst(frame);
 
   double eCM = (pA + pB).mCalc();
-  double sigma = resDataPtr->getTotalSigma(hadA.idAbs(), hadB.idAbs(), eCM);
+  double sigma = 40;//resDataPtr->getTotalSigma(hadA.idAbs(), hadB.idAbs(), eCM);
 
   // Abort if impact parameter is too large
   if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)

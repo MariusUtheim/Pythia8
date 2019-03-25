@@ -1,0 +1,26 @@
+
+Hist should use an underlying vector object, not vector pointer
+
+Add move constructor for Hist:
+  Hist(Hist&& h);
+  static Hist& operator=(Hist&& h);
+
+Add Hist::plotFunction
+  static Hist plotFunction(double left, double right, function<double, double> f, int nbins = 100)
+
+Make Event iterable by adding the following methods:
+  vector<Particle>::iterator begin() { return entry.begin(); }
+  vector<Particle>::iterator end()   { return entry.end();   }
+
+Don't include Pythia8/Pythia.h in HIUserHooks
+  When doing so, error messages become more obscure during compilation time,
+  because if another header included by Pythia.h (e.g. HadronLevel.h) has an 
+  error, then the compiler will fail when trying to compile HIUserHooks. If
+  however only the relevant files were included, then HIUserHooks would fail to
+  compile because of an error that is actually relevant for that class.
+  Furthermore, this slows down compliation time, since HIUserHooks always
+  needs to recompile.
+  (Also mention this in CODESTYLE)
+
+Declare methods and variables from PythiaStdlib as constexpr
+

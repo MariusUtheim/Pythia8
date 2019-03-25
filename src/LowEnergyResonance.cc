@@ -31,7 +31,7 @@ void LowEnergyController::showPickProbabilities(int idX, int idM, double eCM) co
 }
 */
 
-bool LowEnergyResonance::collide(int i1, int i2, Event& event) const {
+bool LowEnergyResonance::collide(int i1, int i2, Event& event) {
   Particle& hA = event[i1];
   Particle& hB = event[i2];
   
