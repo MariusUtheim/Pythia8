@@ -312,7 +312,8 @@ Some variants of this command are listed below.
 </li> 
 </ol> 
  
-<h3>Methods</h3> 
+<br/><hr/> 
+<h3>The public methods</h3> 
  
 The complete list of methods and arguments is as follows. Most of the 
 ones of interest to the user have already been mentioned above. 
@@ -399,7 +400,7 @@ but if true then all settings are output.
 <note>Note:</note> the method returns false if it fails. 
 </methodmore> 
  
-<method name="bool writeFileXML(ostream& os = cout)"> 
+<method name="bool Settings::writeFileXML(ostream& os = cout)"> 
 write out the information stored in xmldoc to be used later to 
 initialize Settings through an input stream. 
 </method> 
@@ -648,4 +649,4 @@ open brace { but no matching closing brace } has been found
  
 </chapter> 
  
-<!-- Copyright (C) 2018 Torbjorn Sjostrand --> 
+<!-- Copyright (C) 2019 Torbjorn Sjostrand --> 

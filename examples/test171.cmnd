@@ -1,0 +1,6 @@
+SoftQCD:inelastic = on
+#Tune:preferLHAPDF=2
+Tune:preferLHAPDF=0
+Tune:pp = 8
+Main:numberOfEvents = 500000
+#Main:numberOfEvents = 10000

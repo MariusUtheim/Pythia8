@@ -1,0 +1,22 @@
+! 1) Settings used in a main program.
+Main:numberOfEvents = 100        ! number of events to generate
+Main:timesAllowErrors = 3          ! abort run after this many flawed events
+
+Init:showChangedSettings = on      ! list changed settings
+Init:showAllSettings = off         ! list all settings
+Init:showChangedParticleData = on  ! list changed particle data
+Init:showAllParticleData = off     ! list all particle data
+Next:numberCount = 1000            ! print message every n events
+Next:numberShowInfo = 0            ! print event information n times
+Next:numberShowProcess = 0         ! print process record n times
+Next:numberShowEvent = 0           ! print event record n times
+
+LesHouches:setLifetime = 2         ! make pythia to calculate decay width of particles
+
+Beams:allowVertexSpread = on       ! smear the primary vertex
+Beams:sigmaVertexX = 0.5	   ! The width of a Gaussian distribution of the x location of the interaction vertex.
+Beams:sigmaVertexY = 0.5           ! The width of a Gaussian distribution of the y location of the interaction vertex.
+Beams:sigmaVertexZ = 50            ! The width of a Gaussian distribution of the z location of the interaction vertex.
+
+Beams:frameType = 4                ! read info from a LHEF
+Beams:LHEF = test232.lhe

@@ -729,20 +729,31 @@ The meaning of the various properties and the format used are explained
  <channel onMode="1" bRatio="0.025" products="53  53"/> 
 </particle> 
  
-<particle id="56" name="DM?1" antiName="DMbar?1" spinType="1" chargeType="0" colType="0" 
+<particle id="56" name="Sl (DM)" antiName="Slbar (DM)" spinType="1" chargeType="3" colType="0" 
           m0="100.00000"> 
+ <channel onMode="1" bRatio="1.00" products="11 52"/> 
+ <channel onMode="1" bRatio="0.00" products="13 52"/> 
+ <channel onMode="1" bRatio="0.00" products="15 52"/> 
 </particle> 
  
-<particle id="57" name="DM?2" antiName="DMbar?1" spinType="1" chargeType="0" colType="0" 
+<particle id="57" name="DM+" antiName="DM-" spinType="2" chargeType="3" colType="0" 
           m0="100.00000"> 
+  <channel onMode="1" bRatio="1.00" products="211 58"/> 
+  <channel onMode="1" bRatio="0.0" products="11 -12 52" /> 
+  <channel onMode="1" bRatio="0.0" products="13 -14 52" /> 
+  <channel onMode="1" bRatio="0.0" products="15 -16 52" /> 
+  <channel onMode="1" bRatio="0.0" products="-1 2 52" /> 
+  <channel onMode="1" bRatio="0.0" products="-3 4 52" /> 
 </particle> 
  
-<particle id="58" name="DM?3" antiName="DMbar?3" spinType="1" chargeType="0" colType="0" 
+<particle id="58" name="DM2" antiName="DMbar2" spinType="2" chargeType="0" colType="0" 
           m0="100.00000"> 
+ <channel onMode="1" bRatio="1.00" products="5 -5 52"/> 
 </particle> 
  
-<particle id="59" name="DM?4" antiName="DMbar?4" spinType="1" chargeType="0" colType="0" 
+<particle id="59" name="DM++" antiName="DM--" spinType="2" chargeType="6" colType="0" 
           m0="100.00000"> 
+  <channel onMode="1" bRatio="1.00" products="211 57"/> 
 </particle> 
  
 <particle id="60" name="DM?5" antiName="DMbar?5" spinType="1" chargeType="0" colType="0" 
@@ -3489,8 +3500,8 @@ The meaning of the various properties and the format used are explained
  
 <particle id="2212" name="p+" antiName="pbar-" spinType="2" chargeType="3" colType="0" 
           m0="0.93827"> 
-</particle>
-
+</particle> 
+ 
 <particle id="2214" name="Delta+" antiName="Deltabar-" spinType="4" chargeType="3" colType="0" 
           m0="1.23200" mWidth="0.11700" mMin="1.08000" mMax="1.60000"> 
  <channel onMode="1" bRatio="0.6630208" products="2212 111"/> 
@@ -9590,6 +9601,10 @@ The meaning of the various properties and the format used are explained
  <channel onMode="1" bRatio="1.0000000" products="200553 21"/> 
 </particle> 
  
+<particle id="1000010020" name="2H" antiName="2Hbar" 
+          spinType="1" chargeType="3" colType="0" m0="1.876"> 
+</particle> 
+ 
 <particle id="1000020040" name="4He" antiName="4Hebar" 
           spinType="1" chargeType="6" colType="0" m0="3.7284"> 
 </particle> 
@@ -9620,371 +9635,9 @@ The meaning of the various properties and the format used are explained
  
 <particle id="1000822080" name="208Pb" antiName="208Pbbar" 
           spinType="1" chargeType="246" colType="0" m0="193.72902"> 
+</particle> 
  
-
-<!-- Resonance particles -->
-<!-- Proton excitations -->
-<particle id="202212" name="p(1440)+" antiName="pbar(1440)-"
-          spinType="2" chargeType="3" colType="0" 
-          m0="1.430" mWidth="0.350" mMin="1.0", mMax="5.0">
-</particle>
-
-<particle id="102214" name="p(1520)+" antiName="pbar(1520)-"
-          spinType="4" chargeType="3" colType="0" 
-          m0="1.515" mWidth="0.115" mMin="1.0", mMax="5.0">
-</particle>
-
-<particle id="102212" name="p(1535)+" antiName="pbar(1535)-"
-          spinType="2" chargeType="3" colType="0"
-          m0="1.530" mWidth="0.150" mMin="1.0", mMax="5.0">
-</particle>
-
-<particle id="112212" name="p(1650)+" antiName="pbar(1650)-"
-          spinType="2" chargeType="3" colType="0" 
-          m0="1.650" mWidth="0.125" mMin="1.0", mMax="6.0">
-</particle>
-
-<particle id="102216" name="p(1675)+" antiName="pbar(1675)-"
-          spinType="6" chargeType="3" colType="0" 
-          m0="1.675" mWidth="0.150" mMin="1.0", mMax="6.0">
-</particle>
-
-<particle id="202216" name="p(1680)+" antiName="pbar(1680)-"
-          spinType="6" chargeType="3" colType="0" 
-          m0="1.685" mWidth="0.120" mMin="1.0", mMax="5.0">
-</particle> 
-
-<particle id="112214" name="p(1700)+" antiName="pbar(1700)-"
-          spinType="4" chargeType="3" colType="0" 
-          m0="1.720" mWidth="0.200" mMin="1.0", mMax="5.0">
-</particle> 
-
-<particle id="212212" name="p(1710)+" antiName="pbar(1710)-"
-          spinType="2" chargeType="3" colType="0" 
-          m0="1.710" mWidth="0.100" mMin="1.0", mMax="4.0">
-</particle> 
-
-<particle id="202214" name="p(1720)+" antiName="pbar(1720)-"
-          spinType="4" chargeType="3" colType="0" 
-          m0="1.720" mWidth="0.250" mMin="1.0", mMax="6.5">
-</particle> 
-
-
-<!-- Neutron Excitations -->
-<particle id="202112" name="n(1440)0" antiName="nbar(1440)0"
-          spinType="2" chargeType="0" colType="0" 
-          m0="1.430" mWidth="0.350" mMin="1.0", mMax="5.0">
-</particle> 
-
-<particle id="102114" name="n(1520)0" antiName="nbar(1520)0"
-          spinType="4" chargeType="0" colType="0" 
-          m0="1.515" mWidth="0.115" mMin="1.0", mMax="5.0">
-</particle> 
-
-<particle id="102112" name="n(1535)0" antiName="nbar(1535)0"
-          spinType="2" chargeType="0" colType="0"
-          m0="1.530" mWidth="0.150" mMin="1.0", mMax="5.0">
-</particle> 
-
-<particle id="112112" name="n(1650)0" antiName="nbar(1650)0"
-          spinType="2" chargeType="0" colType="0" 
-          m0="1.650" mWidth="0.125" mMin="1.0", mMax="6.0">
-</particle> 
-
-<particle id="102116" name="n(1675)0" antiName="nbar(1675)0"
-          spinType="6" chargeType="0" colType="0" 
-          m0="1.675" mWidth="0.150" mMin="1.0", mMax="6.0">
-</particle> 
-
-<particle id="202116" name="n(1680)0" antiName="nbar(1680)0"
-          spinType="6" chargeType="0" colType="0" 
-          m0="1.685" mWidth="0.120" mMin="1.0", mMax="5.0">
-</particle> 
-
-<particle id="112114" name="n(1700)0" antiName="nbar(1700)0"
-          spinType="4" chargeType="0" colType="0" 
-          m0="1.720" mWidth="0.200" mMin="1.0", mMax="5.0">
-</particle> 
-
-<particle id="212112" name="n(1710)0" antiName="nbar(1710)0"
-          spinType="2" chargeType="0" colType="0" 
-          m0="1.710" mWidth="0.100" mMin="1.0", mMax="4.0">
-</particle> 
-
-<particle id="202114" name="n(1720)0" antiName="nbar(1720)0"
-          spinType="4" chargeType="0" colType="0" 
-          m0="1.720" mWidth="0.250" mMin="1.0", mMax="6.5">
-</particle> 
-
-
-<!-- Delta++ Excitations -->
-<particle id="212224" name="Delta(1600)++" antiName="Delta(1600)bar--"
-          spinType="4" chargeType="6" colType="0"
-          m0="1.600" mWidth="0.320" mMin="1.0" mMax="6.0" />
-
-<particle id="122222" name="Delta(1620)++" antiName="Delta(1620)bar--"
-          spinType="2" chargeType="6" colType="0"
-          m0="1.630" mWidth="0.140" mMin="1.0" mMax="4.5" />
-
-<particle id="122224" name="Delta(1700)++" antiName="Delta(1700)bar--"
-          spinType="4" chargeType="6" colType="0" 
-          m0="1.700" mWidth="0.300" mMin="1.0" mMax="7.0" />
-
-<particle id="212226" name="Delta(1905)++" antiName="Delta(1905)bar--"
-          spinType="6" chargeType="6" colType="0"
-          m0="1.880" mWidth="0.330" mMin="1.0" mMax="9.0" />
-
-<particle id="222222" name="Delta(1910)++" antiName="Delta(1910)bar--"
-          spinType="2" chargeType="6" colType="0"
-          m0="1.900" mWidth="0.300" mMin="1.0" mMax="8.5" />
-
-<particle id="222224" name="Delta(1920)++" antiName="Delta(1920)bar--"
-          spinType="4" chargeType="6" colType="0"
-          m0="1.920" mWidth="0.260" mMin="1.0" mMax="8.5" />
-
-<particle id="202228" name="Delta(1950)++" antiName="Delta(1950)bar--"
-          spinType="8" chargeType="6" colType="0"
-          m0="1.930" mWidth="0.285" mMin="1.0" mMax="8.5" />
-
-<!-- Delta+ Excitations -->
-<particle id="212214" name="Delta(1600)+" antiName="Delta(1600)bar-"
-          spinType="4" chargeType="3" colType="0"
-          m0="1.600" mWidth="0.320" mMin="1.0" mMax="6.0" />
-
-<particle id="122212" name="Delta(1620)+" antiName="Delta(1620)bar-"
-          spinType="2" chargeType="3" colType="0"
-          m0="1.630" mWidth="0.140" mMin="1.0" mMax="4.5" />
-
-<particle id="122214" name="Delta(1700)+" antiName="Delta(1700)bar-"
-          spinType="4" chargeType="3" colType="0" 
-          m0="1.700" mWidth="0.300" mMin="1.0" mMax="7.0" />
-
-<particle id="212216" name="Delta(1905)+" antiName="Delta(1905)bar-"
-          spinType="6" chargeType="3" colType="0"
-          m0="1.880" mWidth="0.330" mMin="1.0" mMax="9.0" />
-
-<particle id="222212" name="Delta(1910)+" antiName="Delta(1910)bar-"
-          spinType="2" chargeType="3" colType="0"
-          m0="1.900" mWidth="0.300" mMin="1.0" mMax="8.5" />
-
-<particle id="222214" name="Delta(1920)+" antiName="Delta(1920)bar-"
-          spinType="4" chargeType="3" colType="0"
-          m0="1.920" mWidth="0.260" mMin="1.0" mMax="8.5" />
-
-<particle id="202218" name="Delta(1950)+" antiName="Delta(1950)bar-"
-          spinType="8" chargeType="3" colType="0"
-          m0="1.930" mWidth="0.285" mMin="1.0" mMax="8.5" />
-
-<!-- Delta0 Excitations -->
-<particle id="212114" name="Delta(1600)0" antiName="Delta(1600)bar0"
-          spinType="4" chargeType="0" colType="0"
-          m0="1.600" mWidth="0.320" mMin="1.0" mMax="6.0" />
-
-<particle id="122112" name="Delta(1620)0" antiName="Delta(1620)bar0"
-          spinType="2" chargeType="0" colType="0"
-          m0="1.630" mWidth="0.140" mMin="1.0" mMax="4.5" />
-
-<particle id="122114" name="Delta(1700)0" antiName="Delta(1700)bar0"
-          spinType="4" chargeType="0" colType="0" 
-          m0="1.750" mWidth="0.300" mMin="1.0" mMax="7.0" />
-
-<particle id="212116" name="Delta(1905)0" antiName="Delta(1905)bar0"
-          spinType="6" chargeType="0" colType="0"
-          m0="1.880" mWidth="0.330" mMin="1.0" mMax="9.0" />
-
-<particle id="222112" name="Delta(1910)0" antiName="Delta(1910)bar0"
-          spinType="2" chargeType="0" colType="0"
-          m0="1.900" mWidth="0.300" mMin="1.0" mMax="8.5" />
-
-<particle id="222114" name="Delta(1920)0" antiName="Delta(1920)bar0"
-          spinType="4" chargeType="0" colType="0"
-          m0="1.920" mWidth="0.260" mMin="1.0" mMax="8.5" />
-
-<particle id="202118" name="Delta(1950)0" antiName="Delta(1950)bar0"
-          spinType="8" chargeType="0" colType="0"
-          m0="1.930" mWidth="0.285" mMin="1.0" mMax="8.5" />
-
-<!-- Delta- Excitations -->
-<particle id="211114" name="Delta(1600)-" antiName="Delta(1600)bar+"
-          spinType="4" chargeType="-3" colType="0"
-          m0="1.600" mWidth="0.320" mMin="1.0" mMax="6.0" />
-
-<particle id="121112" name="Delta(1620)-" antiName="Delta(1620)bar+"
-          spinType="2" chargeType="-3" colType="0"
-          m0="1.630" mWidth="0.140" mMin="1.0" mMax="4.5" />
-
-<particle id="121114" name="Delta(1700)-" antiName="Delta(1700)bar+"
-          spinType="4" chargeType="-3" colType="0" 
-          m0="1.700" mWidth="0.300" mMin="1.0" mMax="7.0" />
-
-<particle id="211116" name="Delta(1905)-" antiName="Delta(1905)bar+"
-          spinType="6" chargeType="-3" colType="0"
-          m0="1.880" mWidth="0.330" mMin="1.0" mMax="9.0" />
-
-<particle id="221112" name="Delta(1910)-" antiName="Delta(1910)bar+"
-          spinType="2" chargeType="-3" colType="0"
-          m0="1.900" mWidth="0.300" mMin="1.0" mMax="8.5" />
-
-<particle id="221114" name="Delta(1920)-" antiName="Delta(1920)bar+"
-          spinType="4" chargeType="-3" colType="0"
-          m0="1.920" mWidth="0.260" mMin="1.0" mMax="8.5" />
-
-<particle id="201118" name="Delta(1950)-" antiName="Delta(1950)bar+"
-          spinType="8" chargeType="-3" colType="0"
-          m0="1.930" mWidth="0.285" mMin="1.0" mMax="8.5" />
-
-
-<!-- Lambda excitations (only Lambda0 exists) -->
-<!-- Lambda(1405) already implemented -->
-<!-- Lambda(1520) already implemented -->
-<!-- Lambda(1600) already implemented -->
-<!-- Lambda(1670) already implemented -->
-
-<particle id="13124" name="Lambda(1690)0" antiName="Lambda(1690)bar0"
-          spinType="4" chargeType="0" colType="0"
-          m0="1.690" mWidth="0.060" mMin="" mMax="" />
-
-<particle id="43122" name="Lambda(1800)0" antiName="Lambda(1800)bar0"
-          spinType="2" chargeType="0" colType="0"
-          m0="1.800" mWidth="0.300" mMin="" mMax="" />
-
-<particle id="53122" name="Lambda(1810)0" antiName="Lambda(1810)bar0"
-          spinType="2" chargeType="0" colType="0"
-          m0="1.810" mWidth="0.150" mMin="" mMax="" />
-
-<particle id="3126" name="Lambda(1820)0" antiName="Lambda(1820)bar0"
-          spinType="6" chargeType="0" colType="0"
-          m0="1.820" mWidth="0.080" mMin="" mMax="" />
-
-<particle id="13126" name="Lambda(1830)0" antiName="Lambda(1830)bar0"
-          spinType="6" chargeType="0" colType="0"
-          m0="1.830" mWidth="0.095" mMin="" mMax="" />
-
-<particle id="23124" name="Lambda(1890)0" antiName="Lambda(1890)bar0"
-          spinType="4" chargeType="0" colType="0"
-          m0="1.890" mWidth="0.100" mMin="" mMax="" />
-
-<particle id="3128" name="Lambda(2100)0" antiName="Lambda(2100)bar0"
-          spinType="8" chargeType="0" colType="0"
-          m0="2.100" mWidth="0.200" mMin="" mMax="" />
-
-<particle id="23126" name="Lambda(2110)0" antiName="Lambda(2110)bar0"
-          spinType="6" chargeType="0" colType="0"
-          m0="2.110" mWidth="0.200" mMin="" mMax="" />
-
-
-<!-- Sigma+ resonances -->
-<!-- Sigma*(1385) already implemented -->
-<particle id="13222" name="Sigma(1660)+" antiName="Sigma(1660)bar-"
-          spinType="2" chargeType="3" colType="0"
-          m0="1.660" mWidth="0.100" mMin="" mMax="" />
-
-<particle id="13224" name="Sigma(1670)+" antiName="Sigma(1670)bar-"
-          spinType="4" chargeType="3" colType="0"
-          m0="1.670" mWidth="0.060" mMin="" mMax="" />
-
-<particle id="23222" name="Sigma(1750)+" antiName="Sigma(1750)bar-"
-          spinType="2" chargeType="3" colType="0"
-          m0="1.750" mWidth="0.090" mMin="" mMax="" />
-
-<particle id="3226" name="Sigma(1775)+" antiName="Sigma(1775)bar-"
-          spinType="6" chargeType="3" colType="0"
-          m0="1.775" mWidth="0.120" mMin="" mMax="" />
-
-<particle id="13226" name="Sigma(1915)+" antiName="Sigma(1915)bar-"
-          spinType="6" chargeType="3" colType="0"
-          m0="1.915" mWidth="0.120" mMin="" mMax="" />
-
-<particle id="23224" name="Sigma(1940)+" antiName="Sigma(1940)bar-"
-          spinType="4" chargeType="3" colType="0"
-          m0="1.940" mWidth="0.220" mMin="" mMax="" />
-
-<particle id="3228" name="Sigma(2030)+" antiName="Sigma(2030)bar-"
-          spinType="8" chargeType="3" colType="0"
-          m0="2.030" mWidth="0.180" mMin="" mMax="" />
-
-<!-- Sigma0 resonances -->
-<particle id="13212" name="Sigma(1660)0" antiName="Sigma(1660)bar0"
-          spinType="2" chargeType="0" colType="0"
-          m0="1.660" mWidth="0.100" mMin="" mMax="" />
-
-<particle id="13214" name="Sigma(1670)0" antiName="Sigma(1670)bar0"
-          spinType="4" chargeType="0" colType="0"
-          m0="1.670" mWidth="0.060" mMin="" mMax="" />
-
-<particle id="23212" name="Sigma(1750)0" antiName="Sigma(1750)bar0"
-          spinType="2" chargeType="0" colType="0"
-          m0="1.750" mWidth="0.090" mMin="" mMax="" />
-
-<particle id="3216" name="Sigma(1775)0" antiName="Sigma(1775)bar0"
-          spinType="6" chargeType="0" colType="0"
-          m0="1.775" mWidth="0.120" mMin="" mMax="" />
-
-<particle id="13216" name="Sigma(1915)0" antiName="Sigma(1915)bar0"
-          spinType="6" chargeType="0" colType="0"
-          m0="1.915" mWidth="0.120" mMin="" mMax="" />
-
-<particle id="23214" name="Sigma(1940)0" antiName="Sigma(1940)bar0"
-          spinType="4" chargeType="0" colType="0"
-          m0="1.940" mWidth="0.220" mMin="" mMax="" />
-
-<particle id="3218" name="Sigma(2030)0" antiName="Sigma(2030)bar0"
-          spinType="8" chargeType="0" colType="0"
-          m0="2.030" mWidth="0.180" mMin="" mMax="" />
-
-<!-- Sigma- resonances -->
-<particle id="13112" name="Sigma(1660)-" antiName="Sigma(1660)bar+"
-          spinType="2" chargeType="-3" colType="0"
-          m0="1.660" mWidth="0.100" mMin="" mMax="" />
-
-<particle id="13114" name="Sigma(1670)-" antiName="Sigma(1670)bar+"
-          spinType="4" chargeType="-3" colType="0"
-          m0="1.670" mWidth="0.060" mMin="" mMax="" />
-
-<particle id="23112" name="Sigma(1750)-" antiName="Sigma(1750)bar+"
-          spinType="2" chargeType="-3" colType="0"
-          m0="1.750" mWidth="0.090" mMin="" mMax="" />
-
-<particle id="3116" name="Sigma(1775)-" antiName="Sigma(1775)bar+"
-          spinType="6" chargeType="-3" colType="0"
-          m0="1.775" mWidth="0.120" mMin="" mMax="" />
-
-<particle id="13116" name="Sigma(1915)-" antiName="Sigma(1915)bar+"
-          spinType="6" chargeType="-3" colType="0"
-          m0="1.915" mWidth="0.120" mMin="" mMax="" />
-
-<particle id="23114" name="Sigma(1940)-" antiName="Sigma(1940)bar+"
-          spinType="4" chargeType="-3" colType="0"
-          m0="1.940" mWidth="0.220" mMin="" mMax="" />
-
-<particle id="3118" name="Sigma(2030)-" antiName="Sigma(2030)bar+"
-          spinType="8" chargeType="-3" colType="0"
-          m0="2.030" mWidth="0.180" mMin="" mMax="" />
-
-
-<!-- Xi exitations -->
-<!-- Xi*(1530) already implemented -->
-<particle id="13314" name="Xi(1820)-" antiName="Xi(1820)bar+"
-          spinType="4" chargeType="-3" colType="0"
-          m0="1.823" mWidth="0.024" mMin="" mMax="" />
-
-<particle id="13324" name="Xi(1820)0" antiName="Xi(1820)bar0"
-          spinType="4" chargeType="0" colType="0"
-          m0="1.823" mWidth="0.024" mMin="" mMax="" />
-
-
-<!-- Further mesons -->
-
-<particle id="40223" name="f_1(1510)" spinType="3" chargeType="0" colType="0"
-          m0="1.518" mWidth="0.073" mMin="1.20000" mMax="1.80000">
-<channel onMode="1" bRatio="0.5000000" products="211 -211 331"/>
-<channel onMode="1" bRatio="0.2500000" products="311 -313"/>
-<channel onMode="1" bRatio="0.2500000" products="313 -311"/>
-</particle>
-
-<!-- missing omega(1420), phi(1850), rho(1700), omega(1662), phi(1900) -->
-
-
+ 
 </chapter> 
  
-<!-- Copyright (C) 2018 Torbjorn Sjostrand --> 
+<!-- Copyright (C) 2019 Torbjorn Sjostrand --> 

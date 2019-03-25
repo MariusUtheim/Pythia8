@@ -1,0 +1,38 @@
+! 1) Settings used in the main program.
+Main:numberOfEvents = 1000       ! number of events to generate
+Main:timesAllowErrors = 3          ! how many aborts before run stops
+
+! 2) Settings related to output in init(), next() and stat().
+Init:showChangedSettings = on      ! list changed settings
+!!Init:showAllSettings = on
+Init:showChangedParticleData = on  ! list changed particle data
+Next:numberCount = 1000            ! print message every n events
+Next:numberShowInfo = 0            ! print event information n times
+Next:numberShowProcess = 2         ! print process record n times
+Next:numberShowEvent = 0           ! print event record n times
+
+! 3) Beam parameter settings. Switch off QED ISR.
+Beams:idA = 11                   ! first beam, e- = 11
+Beams:idB = -11                  ! second beam, e+ = -11
+PDF:lepton = off
+
+! 4) Hard process : WW, W->qq', W->q''q''', at 170 GeV.
+Beams:eCM = 170               ! CM energy of collision
+WeakDoubleBoson:ffbar2WW = on
+
+! The CR models for ee collisions are 3 (SK1) and 4 (SK2).
+ColourReconnection:reconnect = on
+ColourReconnection:mode = 4
+! You need either earlyResDec or forceResonances on to see action.
+!Partonlevel:earlyResDec = on
+ColourReconnection:forceResonance = on
+!BeamRemnants:remnantMode = 1
+
+! W decay to light partons (not top).
+24:onMode = off
+24:onIfAny = 1 2 3 4 5
+
+! W+W- to semileptonic events
+!24:onMode = off
+!24:onPosIfAny = 1 2 3 4 5
+!24:onNegIfAny = 11 13

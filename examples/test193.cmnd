@@ -1,0 +1,62 @@
+
+# Number of events to generate.
+Main:numberOfEvents       = 10000
+
+# Use external PDF sets from LHAPDF for incoming hadrons.
+#PDF:useHard               = on
+#PDF:pSet                  = LHAPDF6:CT10nlo
+#PDF:pHardSet              = LHAPDF6:CT10nlo
+
+# No distribution for incoming leptons.
+PDF:lepton                = off
+PDF:lepton2gamma = off
+
+# Set reference value of alphaS(Mz).
+SpaceShower:alphaSvalue   = 0.118
+TimeShower:alphaSvalue    = 0.118
+
+# Set hard process.
+WeakBosonExchange:ff2ff(t:gmZ) = on
+Beams:idB                 = -13
+Beams:idA                 = 2212
+#Beams:idA                 = -11
+#Beams:idB                 = 2212
+Beams:frameType           = 2
+Beams:eA                  = 27.5
+Beams:eB                  = 10
+PhaseSpace:mHatMin        = 5
+PhaseSpace:pTHatMin       = 5
+
+# Set shower cut-off.
+SpaceShower:pTmin         = 1.732
+TimeShower:pTmin          = 1.732
+
+# Disallow 'power shower'.
+SpaceShower:pTmaxMatch    = 1
+TimeShower:pTmaxMatch     = 1
+
+TimeShower:QEDshowerByQ = off
+TimeShower:QEDshowerByL = off
+
+#1:m0 = 0.
+#2:m0 = 0.
+#3:m0 = 0.
+#4:m0 = 0.
+
+# Use NLO corrections to timelike evolution.
+#DireTimes:kernelOrder = 3
+# Use NLO corrections to spacelike evolution.
+#DireSpace:kernelOrder = 3
+
+# Vary renormalization scale used in shower.
+#Variations:doVariations = on
+#Variations:muRisrDown = 0.25
+#Variations:muRisrUp   = 4.0
+#Variations:muRfsrDown = 0.25
+#Variations:muRfsrUp   = 4.0
+
+# Print more events. Quark masses.
+Next:numberShowProcess = 1
+Next:numberShowEvent   = 10
+#1:m0 = 0.
+#2:m0 = 0.

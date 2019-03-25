@@ -1,0 +1,17 @@
+
+! Number of events generated
+Main:numberOfEvents       = 26
+
+! Shower options
+HadronLevel:all           = off
+PartonLevel:MPI           = off
+PartonLevel:FSR           = off
+#PartonLevel:ISR           = off
+BeamRemnants:primordialKT = off
+ColourReconnection:reconnect = off
+Next:numberShowLHA     = 0
+Next:numberShowProcess = 0
+Next:numberShowEvent   = 0
+
+Beams:frameType = 4
+Beams:LHEF = test111.lhe

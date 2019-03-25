@@ -1,0 +1,57 @@
+Beams:eCM = 13000.
+Higgs:useBSM = on
+HiggsBSM:gg2H2 = on
+35:m0 = 125.0
+35:mWidth = 0.00407
+35:doForceWidth = on
+35:onMode = off
+35:onIfMatch = 23 36 # h->Za
+23:onMode = off
+23:onIfAny = 11 13 15
+36:onMode = off # decay of the a
+36:onIfAny = 22  # decay of the yy
+36:m0 = 0.101
+36:mWidth = 0.001 # narrow width
+
+
+/*
+Beams:eCM = 13000.
+35:m0 = 275.0
+35:mWidth = 0.01
+35:addChannel = 1 1 100 25 25
+35:doForceWidth = on
+35:onMode = off
+35:onIfMatch = 25 25
+Higgs:clipWings = off
+25:m0 = 145.0
+25:mMin = 50.0
+25:mMax = 0.0
+25:onMode = off
+25:onIfAll = 24 -24
+24:onMode = off
+24:onIfAny = 11 13 15
+// Add the following
+HiggsBSM:gg2H2 = on
+Higgs:useBSM = on
+*/
+
+/*
+Beams:eCM = 13000.
+Higgs:useBSM = on
+HiggsBSM:gg2H2 = on
+Higgs:clipWings = off
+35:m0 = 275.0
+35:mWidth = 0.01
+35:doForceWidth = on
+35:oneChannel = 1 0.5 100 25 25
+35:addChannel = 1 0.5 100 21 21
+35:offIfAny = 21
+25:m0 = 145.0
+25:mMin = 50.0
+25:mMax = 0.0
+HiggsH1:coup2W = 10.
+25:onMode = off
+25:onIfAny = 24
+24:onMode = off
+24:onIfAny = 11 13 15
+*/

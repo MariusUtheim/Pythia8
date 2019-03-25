@@ -1,0 +1,238 @@
+Debug with histograms in Pythia classes:
+
+1) In the main program declare histograms after headers but before 
+main program proper:
+#include "Pythia8/Pythia.h"
+using namespace Pythia8;
+Hist xAll( "all x values", 100, 0., 1.);
+int main() {
+
+2) In the .cc file put it between header and namespace, 
+with extern Pythia8:: preceding.
+#include "Pythia8/HardDiffraction.h"
+extern Pythia8::Hist xAll;
+namespace Pythia8 {
+ 
+----------------------------------------------------------------------
+
+Link to LHAPDF:
+
+check that PDF sets library correct by 
+~/Documents/code/lhapdf/bin/lhapdf --help
+
+in Pythia configure with
+./configure --with-lhapdf6=/Users/torbjorn/Documents/code/lhapdf
+ 
+----------------------------------------------------------------------
+
+Link to HepMC2:
+
+./configure --with-hepmc2=/Users/torbjorn/Documents/code/hepmc/install/
+----------------------------------------------------------------------
+
+Link to Fastjet:
+
+./configure --with-fastjet3=/Users/torbjorn/Documents/code/fastjet/fastjet-install
+ 
+----------------------------------------------------------------------
+
+Execute patch updates obtained from Steve:
+
+patch -i update020916.patch
+ 
+----------------------------------------------------------------------
+
+indent a section in emacs (number steps, may be negative): 
+C-u (number) C-x tab
+
+----------------------------------------------------------------------
+
+List of test programs for Pythia 8.2
+
+test101  number of MPIs in soft processes
+test102  number of soft jets around a hard q or g jet
+test103  check new compositeness processes from Olya Igonkina 
+test104  debug multiparton (mini)strings with low mass (m = 2) 
+test105  dn/dy and <pT>(y) changes for dampened kT at large y 
+test106  initialization of different pp tunes 
+test107  helix measure for particle correlation (Sharka)
+test108  sigma_eff dependence on pT0 for DPS
+test109  dn_ch/dpT for different multiplicity bins
+test110  QED radiation in e e -> e e (for Malte Buschmann)
+test111  energy non-conservation debug (Stefan Pestel)
+test112  check of forceTimeShower (for Torben Ferber and Ami Rostomyan)
+test113  Higgs -> gamma + phi (for Sergei Chekanov)
+test114  Deeply Inelastic Scattering (för Stefan)
+test115  improved iTopCopyId and iBotCopyId methods tested (Jesper)
+test116  Hidden Valley A' emission spectrum (Malte Buschmann & Mainz group)
+test117  very low-mass resonance (for Mikhail Kirsanov)
+test118  check diffractive pT and x spectra (Christine)
+test119  LHAup-derived class for runtime LHA input (Hannes)
+test120  modified main07 including W/Z emission off neutrinos (Martin Wolf)
+test121  modified main61 to better study hard diffraction 
+test122  new option MultipartonInteractions:pTmaxMatch = 3 (Paolo Gunnelini)
+test123  inelasticity distribution in neutrino interactions
+test124  copy of main26 for unparticle checks (Phil, August 2015)
+test125  Dark Matter production at the LHC
+test126  companion quark distribution numerical issues (Stefan)
+test127  negative square root debug in junction handling (Steve)
+test128  B0S - B0Sbar oscillations (Phil)
+test129  weird event with four junctions (Gabriel Magill)
+test130  set up fixed target (Thomas Ruf)
+test131  produce R-hadrons with top (Roberto Chierici)
+test132  test new pShift and daughterListRecursive methods
+test133  put massless b quark on mass shell (Monica D'Onofrio)
+test134  diffraction/Pomeron tests 
+test135  how to switch on/off W+/W- channels (Stefan P)
+test136  excited fermion multibody decay bug (Simone Amoroso)
+test137  changed pT spectrum between versions (Chun Shen)
+test138  vertex info not set when forming diquark (Cristiano Alpigiani)
+test139  debug R-hadron = top (Preisser, Hoang)
+test140  check Pomeron flux*PDF for CDF figure 4 (Christine)
+test141  several Pythia copies, sharing settings and particle data (Peter)
+test142  check double onium production (Phil)
+test143  test colour-summed 2 -> 2 QCD MEs (Stefan, Jesper)
+test144  debug large SUSY cross section (Andy Buckley)
+test145  study dead cone around top direction (Jesse Thaler)
+test146  further study dead cone around top direction (Jesse Thaler)
+test147  Donnachie-Landshoff and RPP sigma_tot and dsigma_el/dt
+test148  ABMST and RPP (modified) sigma_tot and dsigma_el/dt 
+test149  ABMST and RPP with Coulomb cross section
+test150  ABMST and RPP with new t selection including Coulomb
+test151  test extrapolate PDFs to small x values
+test152  simple standalone handling of LHAPDF6 grids
+test153  simple standalone handling of LHAPDF6 grids, with Q subgrids
+test154  ABMST single diffraction
+test155  J/psi cross section, dependence on useHard PDF selection (Phil)
+test156  ABMST single diffraction, standalone (Christine)
+test157  generation of elastic collisions
+test158  sequential decays in DecayHandler class (Phil/Evtgen)
+test159  production gamma gamma -> h0 -> gamma gamma (Joey Huston)
+test160  check of new WVect class in settings
+test161  off-shell Higgs decay chains debug (Stefan von Buddenbrock)
+test162  debug zero-weight unfragmented events (James Monk)
+test163  Dark Matter -> gammas, 8.1 vs. 8.2 (Albert, Yapici, Sehgal) 
+test164  Z0 decay to hadron pair (Hang Yin)
+test165  test gamma-gamma collisions (Ilkka)
+test166  750 GeV gamma-gamma resonance (Dyndal, Huston)
+test167  user hook to veto gluon emission in top decay (Andre Hoang)
+test168  ditto, modified by Peter
+test169  750 GeV gamma-gamma resonance, cf. test166 (Dyndal, Huston)
+test170  750 GeV H0 -> A0 A0 -> 4 gamma (Rachel Hyneman)
+test171  track down inadvertent change between versions (James Monk)
+test172  force decay gamma*/Z0 -> J/psi gamma (Felipe Silva)
+test173  program K_{1/4}(x) and apply it to exponential pT selection
+test174  test Dark Matter production (Nishita Desai)
+test175  debug neutron PDF isospin conjugation (Vincent Andrieux)
+test176  check exponential pT spectrum with new upper estimate (referee)
+test177  check cut on DIS Q2 (Stefan Prestel)
+test178  hidden valley bug (Colleen Treado)
+test179  thermal hadronization check 
+test180  calculate overlap integrals in MPI machinery, for debug
+test181  generate two hard interactions, for debug
+test182  memory leak in TimeShowers when only decays (Ryosuke Sato)
+test183  integrate MPI cross sections for article
+test184  debug Markus Ernstssons subjetfinding
+test185  check cross section for two hard interactions, cf. test181
+test186  compare NNPDF 3.1 vs. 2.3 (cf main51)
+test187  compare methods to construct transverse orthogonal four-vectors
+test188  consequence of MPI enhancement factor change (cf main04)
+test189  compare global vs dipole showers for article with Baptiste
+test190  production rates g -> c cbar and g -> b bbar (Keith Hamilton)
+test191  R-hadron gun (Steve)
+test192  charged and MPI multiplicity in minbias (for review Wiedemann)
+test193  lepton mass effects in DIS kinematics (for Stefan P, Ilkka)
+test194  tests PDF; copy main51 (for Kassabov)
+test195  eta(K^0_S) in ttbar events (Deepak Kar, Atlas)
+test196  (failed) test dbar > d sometimes in LHAPDF (Steve M)
+test197  radiation pattern in DIS for different pTevol (Johannes Bellm)
+test198  SaS diffractive differential cross sections (Christine) 
+test199  simple test elastic scattering generation
+test200  updated copy test150 for new elastic scattering generation
+test201  double diffractive cross section, comparison with Christine
+test202  single/double/central diffractive differential cross sections
+test203  leptoquark production in DIS (for question about LHE in DIS)
+test204  resolved photon + p hard diffraction
+test205  pT of primary partons from hard and MPI (Johannes Bellm)
+test206  Z' production to new fermions (DavidVannerom)
+test207  dipole vs normal ISR for colour singlet exchange (Alexander Karlberg)
+test208  search for colour octet states from hard process (Silvia Ferreres)
+test209  exercise from Johannes Bellm and development pyplot
+test210  test GKG18 Pomeron PDFs 
+test211  impact-parameter setting for MPI (discussion with Leif)
+test212  check that swappedTU fix by Phil does not affect results
+test213  bug fix for SigmaDiffractive:maxAXB = 0. (Christine)
+test214  jets in Dark Matter production, based on main75 (Nishita)
+test215  particle production and decay over 1 fm - 1 m (Silvia) 
+test216  debug elastic scattering Coulomb interference (Christine)
+test217  cleaned debug elastic scattering Coulomb interference (Christine)
+test218  dn/dpT for multiplicity bins (Guy Paic) 
+test219  set finite Zprime lifetime (Kulkarni)
+test220  not displaced vertices in Hidden Valley (Malte Buschmann)
+test221  force decay gamma*/Z0 -> J/psi gamma (cf test172, Steve, Kuo)
+test222  strange baryon enhancement a la ALICE, Jesper + Peter model, for QM18
+test223  strange baryon enhancement a la ALICE, Nadine model, for QM18
+test224  n_MPI, n_ch, n_jet correlations for QM18
+test225  how two nearby jets unresolve into one, for QM18 
+test226  rate of forward protons, for Valery Khoze
+test227  debug R-hadron masses (Steve)
+test228  debug setting secondary vertices in SUSY decays (Belyaev, Rojas)
+test229  first estimate rescattering rate (for Marius)
+test230  compare partonic and hadronic multiplicities
+test231  compare new NNPDF sets with improved small-x behaviour; plot results
+test232  dispaced vertices with beam vertex spread (Felipe Rojas)
+test233  debug for the SK colour reconnection scenarios (Marina Beguin)
+test234  illustration role of Sudakov (for Essma Redouane Salah)
+test235  debug showers in BNV decays (for ATLAS via Stefan)
+test236  check new handling of onia masses (from Phil)
+test237  setup for tau'+tau'- production (Saunak Dutta)
+test238  provide pdf for second interaction given first (Oleh Fedkevych)
+test239  improve (re)weighting of DPS events (Oleh Fedkevich)
+test240  check deuteron production (Phil)
+test241  copy main11 for debug (?)
+test242  check correlation n_MPI(n_ch) (refereeing Weber et at J/Psi study)
+test243  develop LowEnergyHadHad class
+test244  introduce code 93 for singlet -> q qbar singlet (for Mermod) 
+test245  further development of LowEnergyHadHad class (cf. test243)
+test246  further debug/development DPS events in LHEF (Oleh Fedkevych)  
+test247  try catch floating point exception (suggestion Peter Richardson)
+test248  DIS tryout (cf. test114; unclear reason) 
+test249  Black Hole LHEF decay debug (Andy Buckley)
+test250  streamlined class to obtain second PDF (Oleh, Baptiste)
+test251  further develop LowEnergyHadHad class (cf. test245)
+test252  further develop LowEnergyHadHad class (cf. test251)
+test253  illustrate danger of references/pointers to vectors (for Marius)
+test254  further develop LowEnergyHadHad class (cf. test252)
+test255
+test256
+test257
+test258
+test259
+test260
+
+
+
+----------------------------------------------------------------------
+
+For course in Particle Physics Phenomenology:
+
+test901 (1.3) use random number from Pythia; product of three R's
+test902 (2.7) compare rapidity and pseudorapidity spectra 
+test903 (3.4) simple shower branching of single quark
+test904 (3.5) parton-shower multiplicities at a few energies
+test905 (5.2) PYTHIA check of <pT_Z> as function of E_cm and m_Z 
+test906 (5.1) toy ISR evolution of quark
+test907 (6.3) nondiffractive "min bias" event properties
+test908 (9.1) jet finding in QCD 2-jets vs. t tbar
+test909 (9.2) rise of total and diffractive cross section
+test910 (9.3) rapidity gaps in single diffraction vs. nondiffractive
+test911 (exam 4) jet finding comparing kT, C/A, anti-kT
+test912 (exam 8) PDF evolution in a Pomeron
+test913 (exam 7) energy fraction of b quark by showering
+test914       pTW shower and analytic, exercise by Bellm
+test915       Glauber model for wounded nucleons, exercise by Leif
+test916 (reexam 6) total cross section from MPIs
+test917 (reexam 8) Artru-Mennessier model of hadronization
+test918 (reexam 7) PDF evolution in a resolved photon
+ 
+----------------------------------------------------------------------

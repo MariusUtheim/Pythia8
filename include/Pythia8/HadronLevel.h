@@ -1,5 +1,5 @@
 // HadronLevel.h is a part of the PYTHIA event generator.
-// Copyright (C) 2018 Torbjorn Sjostrand.
+// Copyright (C) 2019 Torbjorn Sjostrand.
 // PYTHIA is licenced under the GNU GPL v2 or later, see COPYING for details.
 // Please respect the MCnet Guidelines, see GUIDELINES for details.
 
@@ -12,17 +12,19 @@
 #include "Pythia8/Basics.h"
 #include "Pythia8/BoseEinstein.h"
 #include "Pythia8/ColourTracing.h"
+#include "Pythia8/DeuteronProduction.h"
 #include "Pythia8/Event.h"
 #include "Pythia8/FragmentationFlavZpT.h"
 #include "Pythia8/FragmentationSystems.h"
+#include "Pythia8/HadronScatter.h"
 #include "Pythia8/HiddenValleyFragmentation.h"
 #include "Pythia8/Info.h"
 #include "Pythia8/JunctionSplitting.h"
+#include "Pythia8/LowEnergyHadHad.h"
 #include "Pythia8/MiniStringFragmentation.h"
 #include "Pythia8/ParticleData.h"
 #include "Pythia8/ParticleDecays.h"
 #include "Pythia8/PythiaStdlib.h"
-#include "Pythia8/Rescattering.h"
 #include "Pythia8/RHadrons.h"
 #include "Pythia8/Settings.h"
 #include "Pythia8/StringFragmentation.h"
@@ -41,12 +43,17 @@ class HadronLevel {
 public:
 
   // Constructor.
-  HadronLevel() {}
+  HadronLevel() : doHadronize(), doDecay(), doBoseEinstein(), doDeuteronProd(),
+    allowRH(), closePacking(), mStringMin(), eNormJunction(), widthSepBE(),
+    doHadronScatter(), hsAfterDecay(), hadronScatMode(), infoPtr(),
+    particleDataPtr(), rndmPtr(), userHooksPtr(), couplingsPtr(),
+    doRopes(), doShoving(), doFlavour(), doVertex(), doBuffon(), rHadronsPtr(),
+    useHiddenValley() {}
 
   // Initialize HadronLevel classes as required.
   bool init(Info* infoPtrIn, Settings& settings,
-    ParticleData* particleDataPtrIn, LowEnergyController* lowEnergyControllerPtrIn,
-    Rndm* rndmPtrIn, Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
+    ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
+    Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
     RHadrons* rHadronsPtrIn, DecayHandler* decayHandlePtr,
     vector<int> handledParticles, UserHooks* userHooksPtrIn);
 
@@ -59,24 +66,29 @@ public:
   // Special routine to allow more decays if on/off switches changed.
   bool moreDecays(Event& event);
 
+  // Special routine to do a low-energy hadron-hadron sscattering.
+  bool doLowEnergyHadHad(int i1, int i2, int type, Event& event) {
+    return lowEnergyHadHad.collide( i1, i2, type, event); }
+
 private:
 
   // Constants: could only be changed in the code itself.
   static const double MTINY;
 
   // Initialization data, read from Settings.
-  bool   doHadronize, doDecay, doRescatter, doBoseEinstein, 
-         allowRH, closePacking;
+  bool doHadronize, doDecay, doBoseEinstein, doDeuteronProd,
+       allowRH, closePacking;
   double mStringMin, eNormJunction, widthSepBE;
+
+  // Settings for hadron scattering.
+  bool   doHadronScatter, hsAfterDecay;
+  int    hadronScatMode;
 
   // Pointer to various information on the generation.
   Info*         infoPtr;
 
   // Pointer to the particle data table.
   ParticleData* particleDataPtr;
-
-  // @TODO name and comments
-  LowEnergyController* lowEnergyControllerPtr;
 
   // Pointer to the random number generator.
   Rndm*         rndmPtr;
@@ -104,10 +116,11 @@ private:
   // The generator class for normal decays.
   ParticleDecays decays;
 
-  // The generator class for rescatterings.
-  // @TODO: Decide on naming conventions for the settings
-  Rescattering rescatterings;
-  bool scatterMultipleTimes;
+  // The generator class for hadron scattering.
+  HadronScatter  hadronScatter;
+
+  // The generator class for low-energy hadron-hadron collisions.
+  LowEnergyHadHad lowEnergyHadHad;
 
   // Class for event geometry for Rope Hadronization. Production vertices.
   Ropewalk ropewalk;
@@ -118,6 +131,9 @@ private:
 
   // The generator class for Bose-Einstein effects.
   BoseEinstein boseEinstein;
+
+  // The generator class for deuteron production.
+  DeuteronProduction deuteronProd;
 
   // Classes for flavour, pT and z generation.
   StringFlav flavSel;
@@ -152,14 +168,6 @@ private:
     double temp = log( ( pIn.e() + abs(pIn.pz()) ) / max( mTiny, pIn.mT()) );
     return (pIn.pz() > 0) ? temp : -temp; }
 
-  // Node for ordering scatterings and decays
-  // @TODO Decide on name and where to put this in the code
-  class PriorityNode;
-
-  // Calculate the time of each decay and scatter and add them to the queue
-  void queueDecResc(Event& event, int iStart,
-                    priority_queue<PriorityNode>& queue);
-  
 };
 
 //==========================================================================

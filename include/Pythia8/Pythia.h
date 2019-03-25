@@ -1,5 +1,5 @@
 // Pythia.h is a part of the PYTHIA event generator.
-// Copyright (C) 2018 Torbjorn Sjostrand.
+// Copyright (C) 2019 Torbjorn Sjostrand.
 // PYTHIA is licenced under the GNU GPL v2 or later, see COPYING for details.
 // Please respect the MCnet Guidelines, see GUIDELINES for details.
 
@@ -10,8 +10,8 @@
 #define Pythia8_Pythia_H
 
 // Version number defined for use in macros and for consistency checks.
-#define PYTHIA_VERSION 8.235
-#define PYTHIA_VERSION_INTEGER 8235
+#define PYTHIA_VERSION 8.241
+#define PYTHIA_VERSION_INTEGER 8241
 
 // Header files for the Pythia class and for what else the user may need.
 #include "Pythia8/Analysis.h"
@@ -40,15 +40,13 @@
 #include "Pythia8/Ropewalk.h"
 #include "Pythia8/Settings.h"
 #include "Pythia8/SigmaTotal.h"
+#include "Pythia8/SimpleSpaceShower.h"
+#include "Pythia8/SimpleTimeShower.h"
 #include "Pythia8/SpaceShower.h"
 #include "Pythia8/StandardModel.h"
 #include "Pythia8/SLHAinterface.h"
 #include "Pythia8/TimeShower.h"
 #include "Pythia8/UserHooks.h"
-
-#include "LowEnergyController.h"
-#include "LowEnergyData.h"
-#include "Pythia8/MassDependentWidth.h"
 
 namespace Pythia8 {
 
@@ -105,6 +103,8 @@ public:
     PDF* pdfHardGamBPtrIn = 0, PDF* pdfUnresAPtrIn = 0,
     PDF* pdfUnresBPtrIn = 0, PDF* pdfUnresGamAPtrIn = 0,
     PDF* pdfUnresGamBPtrIn = 0, PDF* pdfVMDAPtrIn = 0, PDF* pdfVMDBPtrIn = 0);
+  bool setPDFAPtr( PDF* pdfAPtrIn );
+  bool setPDFBPtr( PDF* pdfBPtrIn );
 
   // Set photon fluxes externally. Used with option "PDF:lepton2gammaSet = 2".
   bool setPhotonFluxPtr( PDF* photonFluxAIn, PDF* photonFluxBIn) {
@@ -193,8 +193,6 @@ public:
   // Generate the next event.
   bool next();
 
-  bool nextLowEnergy();
-
   // Generate only a single timelike shower as in a decay.
   int forceTimeShower( int iBeg, int iEnd, double pTmax, int nBranchMax = 0)
     {  partonSystems.clear(); info.setScalup( 0, pTmax);
@@ -208,6 +206,10 @@ public:
 
   // Special routine to force R-hadron decay when not done before.
   bool forceRHadronDecays() {return doRHadronDecays();}
+
+  // Do a low-energy collision between two hadrons in the event record.
+  bool doLowEnergyHadHad(int i1, int i2, int type) {
+    return hadronLevel.doLowEnergyHadHad( i1, i2, type, event); }
 
   // List the current Les Houches event.
   void LHAeventList() { if (lhaUpPtr != 0) lhaUpPtr->listEvent();}
@@ -244,11 +246,6 @@ public:
 
   // ParticleData: the particle data table/database.
   ParticleData   particleData;
-
-  // @TODO ResonanceData: the interaction data table/database.
-  LowEnergyController lowEnergyController;
-  LowEnergyData lowEnergyData;
-  MassDependentWidth massDependentWidths;
 
   // Random number generator.
   Rndm           rndm;
@@ -295,8 +292,7 @@ private:
   bool   doProcessLevel, doPartonLevel, doHadronLevel, doSoftQCDall,
          doSoftQCDinel, doCentralDiff, doDiffraction,
          doSoftQCD, doVMDsideA, doVMDsideB, doHardDiff, doResDec,
-         doFSRinRes, decayRHadrons, abortIfVeto, checkEvent, 
-         checkHistory;
+         doFSRinRes, decayRHadrons, abortIfVeto, checkEvent, checkHistory;
   int    nErrList;
   double epTolErr, epTolWarn, mTolErr, mTolWarn;
 

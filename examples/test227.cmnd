@@ -1,0 +1,48 @@
+Main:numberOfEvents = 10000       ! number of events to generate
+Main:timesAllowErrors = 100        ! abort run after this many flawed events
+Init:showChangedSettings = on      ! list changed settings
+Init:showAllSettings = off        ! list all settings
+Init:showChangedParticleData = off  ! list changed particle data
+Init:showAllParticleData = off     ! list all particle data
+Next:numberCount = 10000            ! print message every n events
+Next:numberShowLHA = 0             ! print LHA information n times
+Next:numberShowInfo = 0            ! print event information n times
+Next:numberShowProcess = 1         ! print process record n times
+Next:numberShowEvent = 1        ! print event record n times
+Stat:showPartonLevel = off         ! additional statistics on MPI
+Random:setSeed = on
+Main:spareParm1 = 6.491434e+05
+
+Main:spareWord2 = test
+%PDF:pSet = LHAPDF6:NNPDF31_lo_as_0130
+
+Beams:idA = 2212
+Beams:idB = 2212
+Beams:eCM = 13000.0
+
+RHadrons:allow = on
+RHadrons:allowDecay = off
+! RHadrons:mCollapse = 0.5
+RHadrons:diquarkSpin1 = 0.0
+ParticleDecays:limitTau0 = on
+! main30.cmnd.
+! This file contains commands to be read in for a Pythia8 run.
+! Lines not beginning with a letter or digit are comments.
+! Names are case-insensitive  -  but spellings-sensitive!
+! The settings here are illustrative, not always physics-motivated.
+
+SLHA:file = test227.lhe
+SUSY:all = on                      ! Switches on ALL (~400) SUSY processes
+
+! 5) Switch on/off the key event generation steps.
+HadronLevel:all = on            ! no decays
+PartonLevel:ISR = off
+PartonLevel:FSR = on
+! PartonLevel:MPI = on
+
+! Optionally select only specific sparticle codes in the final state
+SUSY:idA        = 1000021           ! 0: all
+SUSY:idB        = 1000021           ! 0: all
+
+ParticleDecays:limitTau0 = on      ! set long-lived particle stable ...
+ParticleDecays:tau0Max = 10        ! ... if c*tau0 > 10 mm

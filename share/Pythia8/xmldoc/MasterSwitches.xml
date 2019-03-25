@@ -165,7 +165,7 @@ Master switch for hadronization; on/off = true/false.
 Further options are found <aloc href="Fragmentation">here</aloc>. 
 </flag> 
  
-<flag name="HadronLevel:Rescatter" default="on"> 
+<flag name="HadronLevel:HadronScatter" default="off"> 
 Master switch for hadron rescattering, following the hadronization; 
 on/off = true/false. 
 Further options are found <aloc href="HadronScattering">here</aloc>. 
@@ -180,6 +180,12 @@ Further options are found <aloc href="ParticleDecays">here</aloc>.
 Master switch for the simulation of Bose-Einstein effects; 
 on/off = true/false. Further options are found 
 <aloc href="BoseEinsteinEffects">here</aloc>. 
+</flag> 
+ 
+<flag name="HadronLevel:DeuteronProduction" default="off"> 
+Master switch for the production of deuterons and anti-deuterons in an 
+event; on/off = true/false. Further options are found 
+<aloc href="DeuteronProduction">here</aloc>. 
 </flag> 
  
 <h3>Printing</h3> 
@@ -209,4 +215,4 @@ changed afterwards.
  
 </chapter> 
  
-<!-- Copyright (C) 2018 Torbjorn Sjostrand --> 
+<!-- Copyright (C) 2019 Torbjorn Sjostrand --> 

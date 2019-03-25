@@ -1,5 +1,5 @@
 // PythiaStdlib.h is a part of the PYTHIA event generator.
-// Copyright (C) 2018 Torbjorn Sjostrand.
+// Copyright (C) 2019 Torbjorn Sjostrand.
 // PYTHIA is licenced under the GNU GPL v2 or later, see COPYING for details.
 // Please respect the MCnet Guidelines, see GUIDELINES for details.
 
@@ -22,7 +22,6 @@
 #include <deque>
 #include <set>
 #include <list>
-#include <queue>
 
 // Stdlib header file for dynamic library loading.
 #define dlsym __
@@ -68,7 +67,6 @@ using std::deque;
 using std::set;
 using std::multiset;
 using std::list;
-using std::priority_queue;
 
 // Input/output streams.
 using std::cin;
@@ -108,12 +106,6 @@ namespace Pythia8 {
 #endif
 #ifndef MM2FM
 #define MM2FM 1e12
-#endif
-#ifndef MB2MMSQ
-#define MB2MMSQ 1e-25
-#endif
-#ifndef MMSQ2MB
-#define MMSQ2MB 1e25
 #endif
 
 // Powers of small integers - for balance speed/code clarity.

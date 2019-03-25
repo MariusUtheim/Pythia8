@@ -1,0 +1,2424 @@
+<LesHouchesEvents version="1.0">
+<!--
+File generated with CalcHEP-PYTHIA interface
+-->
+<header>
+<hepml>
+<samples xmlns="http://mcdb.cern.ch/hepml/0.2/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://mcdb.cern.ch/hepml/0.2/ http://mcdb.cern.ch/hepml/0.2/hepml.xsd">
+    <files>
+        <file>
+            <eventsNumber> 100           </eventsNumber>
+            <crossSection unit="pb">2.1230E+00</crossSection>
+            <fileSize> 140711           </fileSize>
+            <comments> </comments>
+            <location>
+            </location>
+        </file>
+    </files>
+    <description>
+        <title>  </title>
+        <abstract> </abstract>
+        <authorComments> </authorComments>
+	<experimentGroup>
+	    <experiment> </experiment>
+	    <group> </group>
+	    <responsiblePerson> </responsiblePerson>
+	    <description>  </description>
+	</experimentGroup>
+        <generator>
+            <name>CalcHEP</name>
+            <version> 3.7 </version>
+            <homepage>http://theory.sinp.msu.ru/~pukhov/calchep.html</homepage>
+            <description>
+ CalcHEP - a package for calculation of Feynman diagrams
+ integration over multi-particle phase space,
+ generation of events and application of decay processes
+            </description>
+        </generator>
+        <model>
+             <name> </name>
+             <description>MSSM(SLHA)</description>
+            <parameters>
+                <parameter>
+                    <name>EE</name>
+                    <value>0.312300</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>SW</name>
+                    <value>0.481000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>s12</name>
+                    <value>0.221000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>s23</name>
+                    <value>0.041000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>s13</name>
+                    <value>0.003500</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>MZ</name>
+                    <value>91.188400</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wt</name>
+                    <value>1.752400</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wZ</name>
+                    <value>2.494400</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wW</name>
+                    <value>2.088950</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>dlh5</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>dlh6</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>dlh7</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wh</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wHh</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wH3</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wHc</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wC1</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wC2</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wNE2</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wNE3</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wNE4</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSG</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSeL</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSeR</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSmL</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSmR</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSl1</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSl2</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSne</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSnm</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSnl</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSuL</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSuR</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSdL</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSdR</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wScL</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wScR</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSsL</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSsR</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSt1</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSt2</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSb1</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>wSb2</name>
+                    <value>0.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+                <parameter>
+                    <name>Maux</name>
+                    <value>1.000000</value>
+			      <notation>
+				      <plain> </plain>
+				      <Latex> </Latex>
+			      </notation>
+			      <description> </description>
+                </parameter>
+            </parameters>
+        </model>
+        <process>
+            <beam1>
+                <particle KFcode="2212">p</particle>
+                <energy unit="GeV">6.500E+03</energy>
+                <pdf name= "PDT:NNPDF23_lo_as_0130_qed(proton)"> </pdf>
+            </beam1>
+            <beam2>
+                <particle KFcode="2212">p</particle>
+                <energy unit="GeV">6.500E+03</energy>
+                <pdf name= "PDT:NNPDF23_lo_as_0130_qed(proton)"> </pdf>
+            </beam2>
+	    <finalState>
+		<state>
+                </state>
+		<notation>
+		    <plain>
+                   </plain>
+		    <Latex> </Latex>
+		</notation>
+	    </finalState>
+            <crossSection unit="pb">2.123E+00</crossSection>
+            <subprocesses>
+              <subprocess cutset_id="1" >
+                <notation> S(-3),G(21) -> S(-3),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.006556E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="2" >
+                <notation> C(-4),c(4) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 3.168747E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="3" >
+                <notation> d(1),C(-4) -> G(21),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 2.158419E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="4" >
+                <notation> u(2),U(-2) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 6.478694E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="5" >
+                <notation> C(-4),s(3) -> G(21),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 7.350221E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="6" >
+                <notation> d(1),G(21) -> u(2),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.107582E-01 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="7" >
+                <notation> b(5),G(21) -> b(5),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 5.680657E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="8" >
+                <notation> G(21),b(5) -> b(5),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 5.666724E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="9" >
+                <notation> d(1),G(21) -> d(1),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 5.996086E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="10" >
+                <notation> G(21),u(2) -> d(1),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 2.063993E-01 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="11" >
+                <notation> U(-2),s(3) -> G(21),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 6.603421E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="12" >
+                <notation> S(-3),G(21) -> U(-2),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 9.561686E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="13" >
+                <notation> D(-1),G(21) -> C(-4),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.671130E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="14" >
+                <notation> G(21),U(-2) -> U(-2),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.411716E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="15" >
+                <notation> G(21),S(-3) -> S(-3),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.005545E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="16" >
+                <notation> B(-5),b(5) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.531570E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="17" >
+                <notation> G(21),C(-4) -> S(-3),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.541014E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="18" >
+                <notation> C(-4),G(21) -> D(-1),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 7.937801E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="19" >
+                <notation> c(4),G(21) -> c(4),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 7.980786E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="20" >
+                <notation> S(-3),G(21) -> C(-4),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.857191E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="21" >
+                <notation> D(-1),u(2) -> G(21),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.385168E-01 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="22" >
+                <notation> U(-2),G(21) -> U(-2),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.415046E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="23" >
+                <notation> G(21),d(1) -> c(4),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 5.695015E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="24" >
+                <notation> G(21),d(1) -> d(1),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 5.993798E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="25" >
+                <notation> G(21),C(-4) -> C(-4),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 8.032103E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="26" >
+                <notation> c(4),C(-4) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 3.179777E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="27" >
+                <notation> c(4),D(-1) -> G(21),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 6.590348E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="28" >
+                <notation> s(3),U(-2) -> G(21),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 6.572084E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="29" >
+                <notation> c(4),G(21) -> s(3),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.538729E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="30" >
+                <notation> G(21),U(-2) -> S(-3),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.397881E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="31" >
+                <notation> s(3),G(21) -> u(2),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 9.542573E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="32" >
+                <notation> G(21),C(-4) -> D(-1),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 7.915610E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="33" >
+                <notation> B(-5),G(21) -> B(-5),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 5.687564E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="34" >
+                <notation> G(21),s(3) -> s(3),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.006236E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="35" >
+                <notation> G(21),D(-1) -> C(-4),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.673659E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="36" >
+                <notation> u(2),D(-1) -> G(21),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.382996E-01 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="37" >
+                <notation> U(-2),G(21) -> S(-3),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.396630E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="38" >
+                <notation> C(-4),d(1) -> G(21),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 2.147980E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="39" >
+                <notation> S(-3),c(4) -> G(21),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 7.330473E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="40" >
+                <notation> G(21),D(-1) -> D(-1),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.762898E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="41" >
+                <notation> G(21),u(2) -> s(3),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.060569E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="42" >
+                <notation> G(21),U(-2) -> D(-1),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 2.724154E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="43" >
+                <notation> d(1),G(21) -> c(4),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 5.694109E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="44" >
+                <notation> u(2),G(21) -> d(1),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 2.069316E-01 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="45" >
+                <notation> G(21),s(3) -> u(2),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 9.537470E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="46" >
+                <notation> D(-1),d(1) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 4.214811E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="47" >
+                <notation> D(-1),c(4) -> G(21),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 6.584336E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="48" >
+                <notation> G(21),d(1) -> u(2),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.108286E-01 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="49" >
+                <notation> s(3),G(21) -> c(4),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.861663E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="50" >
+                <notation> G(21),c(4) -> d(1),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 7.906870E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="51" >
+                <notation> s(3),C(-4) -> G(21),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 7.328797E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="52" >
+                <notation> G(21),c(4) -> c(4),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 7.997989E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="53" >
+                <notation> G(21),D(-1) -> U(-2),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 3.257337E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="54" >
+                <notation> U(-2),u(2) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 6.496657E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="55" >
+                <notation> G(21),c(4) -> s(3),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.541001E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="56" >
+                <notation> d(1),U(-2) -> G(21),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 6.939754E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="57" >
+                <notation> S(-3),s(3) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 4.747985E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="58" >
+                <notation> C(-4),G(21) -> C(-4),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 8.007454E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="59" >
+                <notation> U(-2),d(1) -> G(21),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 6.938431E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="60" >
+                <notation> d(1),D(-1) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 4.213590E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="61" >
+                <notation> s(3),G(21) -> s(3),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.007904E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="62" >
+                <notation> D(-1),G(21) -> U(-2),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 3.247735E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="63" >
+                <notation> c(4),G(21) -> d(1),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 7.920747E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="64" >
+                <notation> u(2),G(21) -> u(2),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.072461E-01 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="65" >
+                <notation> G(21),u(2) -> u(2),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.074403E-01 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="66" >
+                <notation> c(4),S(-3) -> G(21),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 7.319558E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="67" >
+                <notation> s(3),S(-3) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 4.728205E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="68" >
+                <notation> S(-3),u(2) -> G(21),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 4.527204E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="69" >
+                <notation> D(-1),G(21) -> D(-1),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.760645E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="70" >
+                <notation> G(21),s(3) -> c(4),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.857492E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="71" >
+                <notation> b(5),B(-5) -> G(21),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 1.529646E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="72" >
+                <notation> G(21),S(-3) -> U(-2),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 9.513947E-04 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="73" >
+                <notation> G(21),B(-5) -> B(-5),~1+(1000024),~1-(-1000024) </notation>
+                <crossSection unit="pb"> 5.669844E-03 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="74" >
+                <notation> u(2),G(21) -> s(3),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.065431E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="75" >
+                <notation> C(-4),G(21) -> S(-3),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.542979E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="76" >
+                <notation> G(21),S(-3) -> C(-4),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 1.854296E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="77" >
+                <notation> U(-2),G(21) -> D(-1),~1-(-1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 2.718791E-02 </crossSection>
+              </subprocess>
+              <subprocess cutset_id="78" >
+                <notation> u(2),S(-3) -> G(21),~1+(1000024),~o1(1000022) </notation>
+                <crossSection unit="pb"> 4.541507E-03 </crossSection>
+              </subprocess>
+            </subprocesses>
+        </process>
+        <cuts>
+            <cutSet cutset_id="1">
+                <cut>
+                    <object>
+                        <name> </name>
+                        <notation>
+                            <plain> </plain>
+                            <Latex> </Latex>
+                        </notation>
+                    </object>
+                    <minValue> </minValue>
+                    <maxValue> </maxValue>
+                    <logic> </logic>
+                </cut>
+            </cutSet>
+        </cuts>
+        <authors>
+       	   <author>
+       	      <firstName>CalcHEP</firstName>
+              <lastName> </lastName>
+              <email>calchep[at]goolegroups.com</email>  
+              <experiment> </experiment>
+              <group> </group>
+       	      <organization> </organization>
+   	   </author>
+         </authors>
+    </description>
+</samples>
+</hepml>
+<slha>
+BLOCK QNUMBERS 35 # H
+ 1 0
+ 2 1
+ 3 1
+ 4 0
+
+BLOCK QNUMBERS 36 # H3
+ 1 0
+ 2 1
+ 3 1
+ 4 0
+
+BLOCK QNUMBERS 37 # H+
+ 1 3
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 1000024 # ~1+
+ 1 3
+ 2 2
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 1000037 # ~2+
+ 1 3
+ 2 2
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 1000022 # ~o1
+ 1 0
+ 2 2
+ 3 1
+ 4 0
+
+BLOCK QNUMBERS 1000023 # ~o2
+ 1 0
+ 2 2
+ 3 1
+ 4 0
+
+BLOCK QNUMBERS 1000025 # ~o3
+ 1 0
+ 2 2
+ 3 1
+ 4 0
+
+BLOCK QNUMBERS 1000035 # ~o4
+ 1 0
+ 2 2
+ 3 1
+ 4 0
+
+BLOCK QNUMBERS 1000021 # ~g
+ 1 0
+ 2 2
+ 3 8
+ 4 0
+
+BLOCK QNUMBERS 1000011 # ~eL
+ 1 -3
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 2000011 # ~eR
+ 1 -3
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 1000013 # ~mL
+ 1 -3
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 2000013 # ~mR
+ 1 -3
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 1000015 # ~l1
+ 1 -3
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 2000015 # ~l2
+ 1 -3
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 1000012 # ~ne
+ 1 0
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 1000014 # ~nm
+ 1 0
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 1000016 # ~nl
+ 1 0
+ 2 1
+ 3 1
+ 4 1
+
+BLOCK QNUMBERS 1000002 # ~uL
+ 1 2
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 2000002 # ~uR
+ 1 2
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 1000001 # ~dL
+ 1 -1
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 2000001 # ~dR
+ 1 -1
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 1000004 # ~cL
+ 1 2
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 2000004 # ~cR
+ 1 2
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 1000003 # ~sL
+ 1 -1
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 2000003 # ~sR
+ 1 -1
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 1000006 # ~t1
+ 1 2
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 2000006 # ~t2
+ 1 2
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 1000005 # ~b1
+ 1 -1
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK QNUMBERS 2000005 # ~b2
+ 1 -1
+ 2 1
+ 3 3
+ 4 1
+
+BLOCK MASS
+ 22    0.000000E+00 # 
+ 23    9.118840E+01 # 
+ 24    7.994675E+01 # 
+ 21    0.000000E+00 # 
+ 11    0.000000E+00 # 
+ 12    0.000000E+00 # 
+ 13    0.000000E+00 # 
+ 14    0.000000E+00 # 
+ 16    0.000000E+00 # 
+ 15    1.777000E+00 # 
+ 3    0.000000E+00 # 
+ 4    0.000000E+00 # 
+ 2    0.000000E+00 # 
+ 1    0.000000E+00 # 
+ 6    1.725000E+02 # 
+ 5    4.200000E+00 # 
+ 25    1.150217E+02 # 
+ 35    5.177666E+03 # 
+ 36    5.143684E+03 # 
+ 37    5.178139E+03 # 
+ 1000024    9.067813E+01 # 
+ 1000037    9.075591E+02 # 
+ 1000022    9.050507E+01 # 
+ 1000023    2.906572E+02 # 
+ 1000025    9.017198E+02 # 
+ 1000035    9.068970E+02 # 
+ 1000021    6.804376E+02 # 
+ 1000011    4.990456E+03 # 
+ 2000011    4.993629E+03 # 
+ 1000013    4.990456E+03 # 
+ 2000013    4.993629E+03 # 
+ 1000015    4.980644E+03 # 
+ 2000015    4.984386E+03 # 
+ 1000012    4.991934E+03 # 
+ 1000014    4.991934E+03 # 
+ 1000016    4.986115E+03 # 
+ 1000002    4.994099E+03 # 
+ 2000002    5.014210E+03 # 
+ 1000001    4.994704E+03 # 
+ 2000001    5.017815E+03 # 
+ 1000004    4.994099E+03 # 
+ 2000004    5.014211E+03 # 
+ 1000003    4.994704E+03 # 
+ 2000003    5.017815E+03 # 
+ 1000006    2.906875E+03 # 
+ 2000006    4.115447E+03 # 
+ 1000005    4.101178E+03 # 
+ 2000005    5.001459E+03 # 
+
+DECAY 25  4.054144E-03 # h 
+   6.105181E-04  3  23  5  -5  # Z, b, B 
+   6.105181E-04  3  23  3  -3  # Z, s, S 
+   6.105181E-04  3  23  1  -1  # Z, d, D 
+   4.739141E-04  3  23  4  -4  # Z, c, C 
+   4.739141E-04  3  23  2  -2  # Z, u, U 
+   1.383321E-04  3  23  15  -15  # Z, l, L 
+   1.383321E-04  3  23  13  -13  # Z, m, M 
+   1.383321E-04  3  23  11  -11  # Z, e, E 
+   2.748557E-04  3  23  16  -16  # Z, nl, Nl 
+   2.748557E-04  3  23  14  -14  # Z, nm, Nm 
+   2.748557E-04  3  23  12  -12  # Z, ne, Ne 
+   9.034464E-03  3  -24  4  -3  # W-, c, S 
+   9.034464E-03  3  -24  2  -1  # W-, u, D 
+   3.011488E-03  3  -24  -15  16  # W-, L, nl 
+   3.011488E-03  3  -24  -13  14  # W-, M, nm 
+   3.011488E-03  3  -24  -11  12  # W-, E, ne 
+   9.034464E-03  3  24  -4  3  # W+, C, s 
+   9.034464E-03  3  24  -2  1  # W+, U, d 
+   3.011488E-03  3  24  15  -16  # W+, l, Nl 
+   3.011488E-03  3  24  13  -14  # W+, m, Nm 
+   3.011488E-03  3  24  11  -12  # W+, e, Ne 
+   3.969007E-02  2  21  21  # G, G 
+   1.894163E-03  2  22  22  # A, A 
+   3.644622E-02  2  4  -4  # c, C 
+   1.936116E-06  2  2  -2  # u, U 
+   8.027704E-01  2  5  -5  # b, B 
+   2.448877E-03  2  3  -3  # s, S 
+   6.060824E-06  2  1  -1  # d, D 
+   5.831277E-02  2  15  -15  # l, L 
+   2.038860E-04  2  13  -13  # m, M 
+   4.828952E-09  2  11  -11  # e, E 
+DECAY 35  7.782467E+01 # H 
+   5.308308E-05  2  25  25  # h, h 
+   2.603482E-01  2  -1000024  1000037  # ~1-, ~2+ 
+   2.603482E-01  2  1000024  -1000037  # ~1+, ~2- 
+   8.210078E-05  2  1000037  -1000037  # ~2+, ~2- 
+   6.763396E-03  2  1000024  -1000024  # ~1+, ~1- 
+   1.749683E-03  2  1000035  1000035  # ~o4, ~o4 
+   3.925562E-03  2  1000025  1000035  # ~o3, ~o4 
+   8.973916E-04  2  1000025  1000025  # ~o3, ~o3 
+   2.150770E-02  2  1000023  1000035  # ~o2, ~o4 
+   5.240441E-02  2  1000023  1000025  # ~o2, ~o3 
+   3.589674E-04  2  1000023  1000023  # ~o2, ~o2 
+   7.628228E-02  2  1000022  1000035  # ~o1, ~o4 
+   1.803029E-01  2  1000022  1000025  # ~o1, ~o3 
+   2.281475E-03  2  1000022  1000023  # ~o1, ~o2 
+   3.596447E-03  2  1000022  1000022  # ~o1, ~o1 
+   7.270698E-06  2  23  23  # Z, Z 
+   1.417081E-05  2  24  -24  # W+, W- 
+   1.313450E-05  2  21  21  # G, G 
+   8.168344E-08  2  22  22  # A, A 
+   1.084120E-01  2  6  -6  # t, T 
+   2.067160E-06  2  4  -4  # c, C 
+   1.754757E-10  2  2  -2  # u, U 
+   1.708102E-02  2  5  -5  # b, B 
+   1.382679E-04  2  3  -3  # s, S 
+   3.422045E-07  2  1  -1  # d, D 
+   3.417872E-03  2  15  -15  # l, L 
+   1.193328E-05  2  13  -13  # m, M 
+   2.826331E-10  2  11  -11  # e, E 
+DECAY 36  7.727959E+01 # H3 
+   1.416218E-05  2  25  23  # h, Z 
+   2.584009E-01  2  -1000024  1000037  # ~1-, ~2+ 
+   2.584009E-01  2  1000024  -1000037  # ~1+, ~2- 
+   1.908007E-03  2  1000037  -1000037  # ~2+, ~2- 
+   8.713521E-03  2  1000024  -1000024  # ~1+, ~1- 
+   4.506425E-03  2  1000035  1000035  # ~o4, ~o4 
+   2.576422E-03  2  1000025  1000035  # ~o3, ~o4 
+   4.520525E-04  2  1000025  1000025  # ~o3, ~o3 
+   5.098971E-02  2  1000023  1000035  # ~o2, ~o4 
+   2.206024E-02  2  1000023  1000025  # ~o2, ~o3 
+   5.357525E-04  2  1000023  1000023  # ~o2, ~o2 
+   1.760096E-01  2  1000022  1000035  # ~o1, ~o4 
+   7.823606E-02  2  1000022  1000025  # ~o1, ~o3 
+   3.170572E-03  2  1000022  1000023  # ~o1, ~o2 
+   4.640896E-03  2  1000022  1000022  # ~o1, ~o1 
+   1.510155E-05  2  21  21  # G, G 
+   2.833754E-07  2  22  22  # A, A 
+   1.087066E-01  2  6  -6  # t, T 
+   2.066305E-06  2  4  -4  # c, C 
+   1.752867E-10  2  2  -2  # u, U 
+   1.709039E-02  2  5  -5  # b, B 
+   1.383436E-04  2  3  -3  # s, S 
+   3.423916E-07  2  1  -1  # d, D 
+   3.419605E-03  2  15  -15  # l, L 
+   1.193933E-05  2  13  -13  # m, M 
+   2.827763E-10  2  11  -11  # e, E 
+DECAY 37  7.712544E+01 # H+ 
+   1.429236E-05  2  25  24  # h, W+ 
+   1.160263E-03  2  1000037  1000035  # ~2+, ~o4 
+   1.957798E-03  2  1000037  1000025  # ~2+, ~o3 
+   7.971884E-02  2  1000037  1000023  # ~2+, ~o2 
+   2.658402E-01  2  1000037  1000022  # ~2+, ~o1 
+   2.615862E-01  2  1000024  1000035  # ~1+, ~o4 
+   2.628220E-01  2  1000024  1000025  # ~1+, ~o3 
+   5.522452E-03  2  1000024  1000023  # ~1+, ~o2 
+   4.014898E-06  2  1000024  1000022  # ~1+, ~o1 
+   1.177806E-01  2  6  -5  # t, B 
+   1.317133E-04  2  4  -3  # c, S 
+   3.213525E-07  2  2  -1  # u, D 
+   3.449392E-03  2  16  -15  # nl, L 
+   1.204332E-05  2  14  -13  # nm, M 
+   2.852394E-10  2  12  -11  # ne, E 
+DECAY 1000024  4.356894E-16 # ~1+ 
+   5.879241E-01  3  2  -1  1000022  # u,D,~o1 
+   2.060379E-01  3  -13  14  1000022  # M,nm,~o1 
+   2.060379E-01  3  -11  12  1000022  # E,ne,~o1 
+DECAY 1000037  6.192662E+00 # ~2+ 
+   3.149490E-01  2  1000024  25  # ~1+, h 
+   2.058692E-10  3  1000024  15  -15  # ~1+, l, L 
+   2.048977E-10  3  1000024  13  -13  # ~1+, m, M 
+   2.048977E-10  3  1000024  11  -11  # ~1+, e, E 
+   2.043670E-09  3  1000024  16  -16  # ~1+, nl, Nl 
+   2.027422E-09  3  1000024  14  -14  # ~1+, nm, Nm 
+   2.027422E-09  3  1000024  12  -12  # ~1+, ne, Ne 
+   6.061313E-09  3  1000024  4  -4  # ~1+, c, C 
+   6.061313E-09  3  1000024  2  -2  # ~1+, u, U 
+   6.136129E-10  3  1000024  3  -3  # ~1+, s, S 
+   6.136129E-10  3  1000024  1  -1  # ~1+, d, D 
+   2.995312E-01  2  1000024  23  # ~1+, Z 
+   3.260814E-15  3  1000035  -13  14  # ~o4, M, nm 
+   3.260814E-15  3  1000035  -11  12  # ~o4, E, ne 
+   1.563290E-10  3  1000025  -15  16  # ~o3, L, nl 
+   1.563287E-10  3  1000025  -13  14  # ~o3, M, nm 
+   1.563287E-10  3  1000025  -11  12  # ~o3, E, ne 
+   4.689865E-10  3  1000025  4  -3  # ~o3, c, S 
+   4.689865E-10  3  1000025  2  -1  # ~o3, u, D 
+   1.053284E-01  2  1000023  24  # ~o2, W+ 
+   8.220942E-10  3  1000023  -15  16  # ~o2, L, nl 
+   2.201750E-10  3  1000023  -13  14  # ~o2, M, nm 
+   2.201750E-10  3  1000023  -11  12  # ~o2, E, ne 
+   6.517160E-11  3  1000023  4  -3  # ~o2, c, S 
+   6.517160E-11  3  1000023  2  -1  # ~o2, u, D 
+   2.801914E-01  2  1000022  24  # ~o1, W+ 
+   2.198129E-09  3  1000022  -15  16  # ~o1, L, nl 
+   1.003933E-09  3  1000022  -13  14  # ~o1, M, nm 
+   1.003933E-09  3  1000022  -11  12  # ~o1, E, ne 
+   3.026866E-09  3  1000022  4  -3  # ~o1, c, S 
+   3.026866E-09  3  1000022  2  -1  # ~o1, u, D 
+DECAY 1000023  5.846607E-03 # ~o2 
+   4.105057E-01  2  1000022  25  # ~o1, h 
+   5.299868E-08  3  1000022  16  -16  # ~o1, nl, Nl 
+   5.275161E-08  3  1000022  14  -14  # ~o1, nm, Nm 
+   5.275161E-08  3  1000022  12  -12  # ~o1, ne, Ne 
+   5.707865E-08  3  1000022  15  -15  # ~o1, l, L 
+   5.673989E-08  3  1000022  13  -13  # ~o1, m, M 
+   5.673989E-08  3  1000022  11  -11  # ~o1, e, E 
+   3.523001E-08  3  1000022  5  -5  # ~o1, b, B 
+   2.056278E-08  3  1000022  4  -4  # ~o1, c, C 
+   1.597591E-08  3  1000022  3  -3  # ~o1, s, S 
+   1.597591E-08  3  1000022  1  -1  # ~o1, d, D 
+   2.056278E-08  3  1000022  2  -2  # ~o1, u, U 
+   1.862651E-02  2  1000022  23  # ~o1, Z 
+   2.854337E-01  2  -1000024  24  # ~1-, W+ 
+   2.854337E-01  2  1000024  -24  # ~1+, W- 
+   1.151512E-08  2  1000022  22  # ~o1, A 
+DECAY 1000025  6.324980E+00 # ~o3 
+   1.049586E-02  2  1000023  25  # ~o2, h 
+   7.200529E-02  2  1000022  25  # ~o1, h 
+   1.760569E-11  3  1000023  16  -16  # ~o2, nl, Nl 
+   1.752229E-11  3  1000023  14  -14  # ~o2, nm, Nm 
+   1.752229E-11  3  1000023  12  -12  # ~o2, ne, Ne 
+   5.980698E-10  3  1000023  15  -15  # ~o2, l, L 
+   1.912359E-11  3  1000023  13  -13  # ~o2, m, M 
+   1.912359E-11  3  1000023  11  -11  # ~o2, e, E 
+   5.592912E-10  3  1000023  5  -5  # ~o2, b, B 
+   1.093944E-11  3  1000023  4  -4  # ~o2, c, C 
+   4.414970E-12  3  1000023  3  -3  # ~o2, s, S 
+   4.414970E-12  3  1000023  1  -1  # ~o2, d, D 
+   1.093945E-11  3  1000023  2  -2  # ~o2, u, U 
+   1.585833E-10  3  1000022  16  -16  # ~o1, nl, Nl 
+   1.578344E-10  3  1000022  14  -14  # ~o1, nm, Nm 
+   1.578344E-10  3  1000022  12  -12  # ~o1, ne, Ne 
+   1.178710E-09  3  1000022  15  -15  # ~o1, l, L 
+   5.334167E-11  3  1000022  13  -13  # ~o1, m, M 
+   5.334167E-11  3  1000022  11  -11  # ~o1, e, E 
+   9.421498E-09  3  1000022  5  -5  # ~o1, b, B 
+   2.450495E-10  3  1000022  4  -4  # ~o1, c, C 
+   3.491674E-10  3  1000022  3  -3  # ~o1, s, S 
+   3.491674E-10  3  1000022  1  -1  # ~o1, d, D 
+   2.450495E-10  3  1000022  2  -2  # ~o1, u, U 
+   8.478951E-02  2  1000023  23  # ~o2, Z 
+   2.425206E-01  2  1000022  23  # ~o1, Z 
+   2.950938E-01  2  -1000024  24  # ~1-, W+ 
+   2.950938E-01  2  1000024  -24  # ~1+, W- 
+   1.592833E-07  2  1000023  22  # ~o2, A 
+   8.613339E-07  2  1000022  22  # ~o1, A 
+DECAY 1000035  6.556759E+00 # ~o4 
+   8.593858E-02  2  1000023  25  # ~o2, h 
+   2.295770E-01  2  1000022  25  # ~o1, h 
+   4.119335E-11  3  1000025  16  -16  # ~o3, nl, Nl 
+   4.119335E-11  3  1000025  14  -14  # ~o3, nm, Nm 
+   4.119335E-11  3  1000025  12  -12  # ~o3, ne, Ne 
+   4.695222E-12  3  1000025  15  -15  # ~o3, l, L 
+   2.070355E-11  3  1000025  13  -13  # ~o3, m, M 
+   2.070355E-11  3  1000025  11  -11  # ~o3, e, E 
+   7.077532E-11  3  1000025  4  -4  # ~o3, c, C 
+   9.126565E-11  3  1000025  3  -3  # ~o3, s, S 
+   9.126565E-11  3  1000025  1  -1  # ~o3, d, D 
+   7.077532E-11  3  1000025  2  -2  # ~o3, u, U 
+   1.745385E-10  3  1000023  16  -16  # ~o2, nl, Nl 
+   1.737133E-10  3  1000023  14  -14  # ~o2, nm, Nm 
+   1.737133E-10  3  1000023  12  -12  # ~o2, ne, Ne 
+   8.363645E-10  3  1000023  15  -15  # ~o2, l, L 
+   2.633320E-10  3  1000023  13  -13  # ~o2, m, M 
+   2.633320E-10  3  1000023  11  -11  # ~o2, e, E 
+   6.112195E-10  3  1000023  5  -5  # ~o2, b, B 
+   1.588880E-10  3  1000023  4  -4  # ~o2, c, C 
+   4.321006E-11  3  1000023  3  -3  # ~o2, s, S 
+   4.321006E-11  3  1000023  1  -1  # ~o2, d, D 
+   1.588881E-10  3  1000023  2  -2  # ~o2, u, U 
+   9.976538E-10  3  1000022  16  -16  # ~o1, nl, Nl 
+   9.929489E-10  3  1000022  14  -14  # ~o1, nm, Nm 
+   9.929489E-10  3  1000022  12  -12  # ~o1, ne, Ne 
+   1.282171E-09  3  1000022  15  -15  # ~o1, l, L 
+   1.905534E-10  3  1000022  13  -13  # ~o1, m, M 
+   1.905534E-10  3  1000022  11  -11  # ~o1, e, E 
+   1.277646E-08  3  1000022  5  -5  # ~o1, b, B 
+   1.159127E-09  3  1000022  4  -4  # ~o1, c, C 
+   1.958434E-09  3  1000022  3  -3  # ~o1, s, S 
+   1.958434E-09  3  1000022  1  -1  # ~o1, d, D 
+   1.159127E-09  3  1000022  2  -2  # ~o1, u, U 
+   1.046489E-02  2  1000023  23  # ~o2, Z 
+   6.413102E-02  2  1000022  23  # ~o1, Z 
+   3.049441E-01  2  -1000024  24  # ~1-, W+ 
+   3.049441E-01  2  1000024  -24  # ~1+, W- 
+   1.513557E-11  2  1000025  22  # ~o3, A 
+   2.752036E-08  2  1000023  22  # ~o2, A 
+   2.252775E-07  2  1000022  22  # ~o1, A 
+DECAY 1000021  3.440839E-05 # ~g 
+   2.406706E-02  3  1000023  6  -6  # ~o2, t, T 
+   3.036875E-03  3  1000023  5  -5  # ~o2, b, B 
+   8.604802E-03  3  1000023  4  -4  # ~o2, c, C 
+   2.447618E-03  3  1000023  3  -3  # ~o2, s, S 
+   2.447618E-03  3  1000023  1  -1  # ~o2, d, D 
+   8.604808E-03  3  1000023  2  -2  # ~o2, u, U 
+   1.353370E-03  2  1000023  21  # ~o2, G 
+   5.191716E-02  3  1000022  6  -6  # ~o1, t, T 
+   9.515662E-02  3  1000022  5  -5  # ~o1, b, B 
+   4.250721E-02  3  1000022  4  -4  # ~o1, c, C 
+   4.268150E-02  3  1000022  3  -3  # ~o1, s, S 
+   4.268150E-02  3  1000022  1  -1  # ~o1, d, D 
+   4.250721E-02  3  1000022  2  -2  # ~o1, u, U 
+   2.112121E-04  2  1000022  21  # ~o1, G 
+   1.455309E-01  3  -1000024  6  -5  # ~1-, t, B 
+   1.455309E-01  3  1000024  5  -6  # ~1+, b, T 
+   8.517842E-02  3  -1000024  4  -3  # ~1-, c, S 
+   8.517842E-02  3  1000024  3  -4  # ~1+, s, C 
+   8.517842E-02  3  -1000024  2  -1  # ~1-, u, D 
+   8.517842E-02  3  1000024  1  -2  # ~1+, d, U 
+DECAY 1000011  6.923553E+01 # ~eL 
+   8.139715E-03  2  -1000037  12  # ~2-, ne 
+   5.977099E-01  2  -1000024  12  # ~1-, ne 
+   6.934805E-04  2  1000035  11  # ~o4, e 
+   2.743074E-04  2  1000025  11  # ~o3, e 
+   9.460578E-02  2  1000023  11  # ~o2, e 
+   2.985768E-01  2  1000022  11  # ~o1, e 
+DECAY 2000011  2.522172E+01 # ~eR 
+   3.065316E-03  2  1000035  11  # ~o4, e 
+   3.791914E-04  2  1000025  11  # ~o3, e 
+   9.965162E-01  2  1000023  11  # ~o2, e 
+   3.929734E-05  2  1000022  11  # ~o1, e 
+DECAY 1000013  6.923553E+01 # ~mL 
+   8.139715E-03  2  -1000037  14  # ~2-, nm 
+   5.977099E-01  2  -1000024  14  # ~1-, nm 
+   6.934805E-04  2  1000035  13  # ~o4, m 
+   2.743074E-04  2  1000025  13  # ~o3, m 
+   9.460578E-02  2  1000023  13  # ~o2, m 
+   2.985768E-01  2  1000022  13  # ~o1, m 
+DECAY 2000013  2.522172E+01 # ~mR 
+   3.065316E-03  2  1000035  13  # ~o4, m 
+   3.791914E-04  2  1000025  13  # ~o3, m 
+   9.965162E-01  2  1000023  13  # ~o2, m 
+   3.929734E-05  2  1000022  13  # ~o1, m 
+DECAY 1000015  3.447945E+01 # ~l1 
+   3.960809E-04  2  -1000037  16  # ~2-, nl 
+   2.499455E-01  2  -1000024  16  # ~1-, nl 
+   1.653993E-03  2  1000035  15  # ~o4, l 
+   2.118444E-03  2  1000025  15  # ~o3, l 
+   6.208056E-01  2  1000023  15  # ~o2, l 
+   1.250804E-01  2  1000022  15  # ~o1, l 
+DECAY 2000015  6.060209E+01 # ~l2 
+   1.329734E-02  2  -1000037  16  # ~2-, nl 
+   5.397816E-01  2  -1000024  16  # ~1-, nl 
+   5.358133E-03  2  1000035  15  # ~o4, l 
+   3.538707E-03  2  1000025  15  # ~o3, l 
+   1.684587E-01  2  1000023  15  # ~o2, l 
+   2.695655E-01  2  1000022  15  # ~o1, l 
+DECAY 1000012  6.927817E+01 # ~ne 
+   3.585066E-09  3  1000011  2  -1  # ~eL, u, D 
+   1.195022E-09  3  1000011  14  -13  # ~eL, nm, M 
+   1.195022E-09  3  1000011  12  -11  # ~eL, ne, E 
+   8.127351E-04  2  1000037  11  # ~2+, e 
+   6.053480E-01  2  1000024  11  # ~1+, e 
+   3.567682E-03  2  1000035  12  # ~o4, ne 
+   8.012931E-04  2  1000025  12  # ~o3, ne 
+   8.684218E-02  2  1000023  12  # ~o2, ne 
+   3.026281E-01  2  1000022  12  # ~o1, ne 
+DECAY 1000014  6.927817E+01 # ~nm 
+   3.585066E-09  3  1000013  2  -1  # ~mL, u, D 
+   1.195022E-09  3  1000013  14  -13  # ~mL, nm, M 
+   1.195022E-09  3  1000013  12  -11  # ~mL, ne, E 
+   8.127351E-04  2  1000037  13  # ~2+, m 
+   6.053480E-01  2  1000024  13  # ~1+, m 
+   3.567682E-03  2  1000035  14  # ~o4, nm 
+   8.012931E-04  2  1000025  14  # ~o3, nm 
+   8.684218E-02  2  1000023  14  # ~o2, nm 
+   3.026281E-01  2  1000022  14  # ~o1, nm 
+DECAY 1000016  6.945802E+01 # ~nl 
+   1.340373E-11  3  1000015  4  -3  # ~l1, c, S 
+   1.340373E-11  3  1000015  2  -1  # ~l1, u, D 
+   4.467912E-12  3  1000015  14  -13  # ~l1, nm, M 
+   4.467912E-12  3  1000015  12  -11  # ~l1, ne, E 
+   4.467912E-12  3  1000015  16  -15  # ~l1, nl, L 
+   4.507766E-03  2  1000037  15  # ~2+, l 
+   6.031331E-01  2  1000024  15  # ~1+, l 
+   3.553730E-03  2  1000035  16  # ~o4, nl 
+   7.981609E-04  2  1000025  16  # ~o3, nl 
+   8.651499E-02  2  1000023  16  # ~o2, nl 
+   3.014922E-01  2  1000022  16  # ~o1, nl 
+DECAY 1000002  3.117209E+02 # ~uL 
+   1.807147E-04  2  1000037  1  # ~2+, d 
+   1.345935E-01  2  1000024  1  # ~1+, d 
+   7.956136E-01  2  1000021  2  # ~g, u 
+   3.120780E-04  2  1000035  2  # ~o4, u 
+   9.322222E-05  2  1000025  2  # ~o3, u 
+   2.535673E-03  2  1000023  2  # ~o2, u 
+   6.667122E-02  2  1000022  2  # ~o1, u 
+DECAY 2000002  2.602970E+02 # ~uR 
+   9.567552E-01  2  1000021  2  # ~g, u 
+   1.326255E-04  2  1000035  2  # ~o4, u 
+   1.640618E-05  2  1000025  2  # ~o3, u 
+   4.309409E-02  2  1000023  2  # ~o2, u 
+   1.699318E-06  2  1000022  2  # ~o1, u 
+DECAY 1000001  3.117206E+02 # ~dL 
+   1.809643E-03  2  -1000037  2  # ~2-, u 
+   1.328691E-01  2  -1000024  2  # ~1-, u 
+   7.957143E-01  2  1000021  1  # ~g, d 
+   5.251952E-04  2  1000035  1  # ~o4, d 
+   1.323053E-04  2  1000025  1  # ~o3, d 
+   1.962739E-03  2  1000023  1  # ~o2, d 
+   6.698675E-02  2  1000022  1  # ~o1, d 
+DECAY 2000001  2.520414E+02 # ~dR 
+   9.888265E-01  2  1000021  1  # ~g, d 
+   3.427036E-05  2  1000035  1  # ~o4, d 
+   4.239343E-06  2  1000025  1  # ~o3, d 
+   1.113452E-02  2  1000023  1  # ~o2, d 
+   4.390606E-07  2  1000022  1  # ~o1, d 
+DECAY 1000004  3.117209E+02 # ~cL 
+   1.807147E-04  2  1000037  3  # ~2+, s 
+   1.345935E-01  2  1000024  3  # ~1+, s 
+   7.956135E-01  2  1000021  4  # ~g, c 
+   3.120780E-04  2  1000035  4  # ~o4, c 
+   9.322220E-05  2  1000025  4  # ~o3, c 
+   2.535673E-03  2  1000023  4  # ~o2, c 
+   6.667121E-02  2  1000022  4  # ~o1, c 
+DECAY 2000004  2.602970E+02 # ~cR 
+   9.567552E-01  2  1000021  4  # ~g, c 
+   1.326255E-04  2  1000035  4  # ~o4, c 
+   1.640618E-05  2  1000025  4  # ~o3, c 
+   4.309409E-02  2  1000023  4  # ~o2, c 
+   1.699318E-06  2  1000022  4  # ~o1, c 
+DECAY 1000003  3.117206E+02 # ~sL 
+   1.809643E-03  2  -1000037  4  # ~2-, c 
+   1.328691E-01  2  -1000024  4  # ~1-, c 
+   7.957143E-01  2  1000021  3  # ~g, s 
+   5.251952E-04  2  1000035  3  # ~o4, s 
+   1.323053E-04  2  1000025  3  # ~o3, s 
+   1.962739E-03  2  1000023  3  # ~o2, s 
+   6.698675E-02  2  1000022  3  # ~o1, s 
+DECAY 2000003  2.520414E+02 # ~sR 
+   9.888265E-01  2  1000021  3  # ~g, s 
+   3.427036E-05  2  1000035  3  # ~o4, s 
+   4.239343E-06  2  1000025  3  # ~o3, s 
+   1.113452E-02  2  1000023  3  # ~o2, s 
+   4.390606E-07  2  1000022  3  # ~o1, s 
+DECAY 1000006  2.032259E+02 # ~t1 
+   1.569161E-01  2  1000037  5  # ~2+, b 
+   2.314420E-04  2  1000024  5  # ~1+, b 
+   7.790580E-02  2  1000035  6  # ~o4, t 
+   7.827478E-02  2  1000025  6  # ~o3, t 
+   3.141262E-02  2  1000023  6  # ~o2, t 
+   1.241432E-04  2  1000022  6  # ~o1, t 
+   6.551352E-01  2  1000021  6  # ~g, t 
+DECAY 2000006  3.043096E+02 # ~t2 
+   8.218714E-02  2  1000035  6  # ~o4, t 
+   8.268617E-02  2  1000025  6  # ~o3, t 
+   2.265062E-03  2  1000023  6  # ~o2, t 
+   5.621386E-02  2  1000022  6  # ~o1, t 
+   4.676909E-04  2  25  1000006  # h, ~t1 
+   1.527496E-04  2  23  1000006  # Z, ~t1 
+   1.159887E-03  2  1000037  5  # ~2+, b 
+   1.136376E-01  2  1000024  5  # ~1+, b 
+   6.612298E-01  2  1000021  6  # ~g, t 
+DECAY 1000005  3.038053E+02 # ~b1 
+   2.932398E-04  2  -24  1000006  # W-, ~t1 
+   1.658310E-01  2  -1000037  6  # ~2-, t 
+   1.117548E-01  2  -1000024  6  # ~1-, t 
+   6.624550E-01  2  1000021  5  # ~g, b 
+   9.492511E-04  2  1000035  5  # ~o4, b 
+   6.346402E-04  2  1000025  5  # ~o3, b 
+   1.652436E-03  2  1000023  5  # ~o2, b 
+   5.642957E-02  2  1000022  5  # ~o1, b 
+DECAY 2000005  2.520285E+02 # ~b2 
+   2.137866E-05  2  25  1000005  # h, ~b1 
+   2.174684E-05  2  23  1000005  # Z, ~b1 
+   4.123742E-05  2  -24  2000006  # W-, ~t2 
+   5.826423E-09  2  -24  1000006  # W-, ~t1 
+   1.595725E-03  2  -1000037  6  # ~2-, t 
+   1.742325E-05  2  -1000024  6  # ~1-, t 
+   9.855500E-01  2  1000021  5  # ~g, b 
+   8.326634E-04  2  1000035  5  # ~o4, b 
+   8.082616E-04  2  1000025  5  # ~o3, b 
+   1.110180E-02  2  1000023  5  # ~o2, b 
+   9.818380E-06  2  1000022  5  # ~o1, b 
+</slha>
+
+<calchep-batch>
+<![CDATA[
+#########################################
+#            Model Info                 #
+#########################################
+Model:     MSSM(SLHA)
+#
+Gauge:     unitary
+
+
+#########################################
+#            Processes                  #
+#########################################
+Process   :    p,p->~1+,~o1,jet
+Process   :    p,p->~1-,~o1,jet
+Process   :    p,p->~1+,~1-,jet
+Alias :    p=u,U,d,D,s,S,c,C,b,B,G
+Alias :    jet=u,U,d,D,s,S,c,C,b,B,G
+
+#########################################
+#            PDF's                      #
+#########################################
+pdf1 :       PDT:NNPDF23_lo_as_0130_qed(proton)
+pdf2 :       PDT:NNPDF23_lo_as_0130_qed(proton)
+
+
+#########################################
+#            Momenta                    #
+#########################################
+p1 :         6500
+p2 :         6500
+
+
+#########################################
+#            Parameters                 #
+#########################################
+Parameter:   EE=0.3123
+Parameter:   SW=0.481
+Parameter:   s12=0.221
+Parameter:   s23=0.041
+Parameter:   s13=0.0035
+Parameter:   GG=1.238
+Parameter:   MZ=91.1884
+Parameter:   wt=1.7524
+Parameter:   wZ=2.4944
+Parameter:   wW=2.08895
+Parameter:   dlh5=0
+Parameter:   dlh6=0
+Parameter:   dlh7=0
+Parameter:   wh=0
+Parameter:   wHh=0
+Parameter:   wH3=0
+Parameter:   wHc=0
+Parameter:   wC1=0
+Parameter:   wC2=0
+Parameter:   wNE2=0
+Parameter:   wNE3=0
+Parameter:   wNE4=0
+Parameter:   wSG=0
+Parameter:   wSeL=0
+Parameter:   wSeR=0
+Parameter:   wSmL=0
+Parameter:   wSmR=0
+Parameter:   wSl1=0
+Parameter:   wSl2=0
+Parameter:   wSne=0
+Parameter:   wSnm=0
+Parameter:   wSnl=0
+Parameter:   wSuL=0
+Parameter:   wSuR=0
+Parameter:   wSdL=0
+Parameter:   wSdR=0
+Parameter:   wScL=0
+Parameter:   wScR=0
+Parameter:   wSsL=0
+Parameter:   wSsR=0
+Parameter:   wSt1=0
+Parameter:   wSt2=0
+Parameter:   wSb1=0
+Parameter:   wSb2=0
+Parameter:   Maux=1
+
+#########################################
+#            QCD running info           #
+#########################################
+parton dist. alpha : 1
+alpha(MZ)          : 0.1172
+alpha nf           : 5
+alpha order        : 2
+mb(mb)             : 4.2
+Mtop(pole)         : 175
+
+#########################################
+#            Breit-Wigner               #
+#########################################
+Breit Wigner range : 2.7
+T-channel widths   : OFF
+GI in T-channel    : OFF
+GI in S-channel    : OFF
+
+#########################################
+#            Cuts                       #
+#########################################
+Cut parameter :0: T(jet)
+Cut invert    :0: False
+Cut min       :0: 100
+Cut max       :0: 
+
+#########################################
+#            Kinematics                 #
+#########################################
+
+#########################################
+#            Regularization             #
+#########################################
+
+#########################################
+#            Distributions              #
+#########################################
+
+#########################################
+#            Events Generation          #
+#########################################
+Number of events (per run step): 100
+Max lumi [1/fb]                : 1000000000
+Filename                       : example-single
+Cleanup                        : False
+
+#########################################
+#            Parallelization info       #
+#########################################
+Parallelization method : local
+Que                    : 
+Walltime               : 0
+Memory                 : 0
+email                  : 
+Max number of cpus     : 8
+sleep time             : 3
+nice level             : 19
+
+#########################################
+#            Vegas                      #
+#########################################
+nSess_1  : 5
+nCalls_1 : 100000
+nSess_2  : 5
+nCalls_2 : 100000
+
+#########################################
+#           Event Generator             #
+#########################################
+sub-cubes      : 10000
+MAX*N          : 2.000000
+find new MAX   : 50
+
+]]>
+</calchep-batch>
+</header>
+<init>
+  2212  2212  6.50000007388E+03  6.50000007388E+03    -1    -1    -1    -1    -4     1
+  2.12304831330E+00  0.00000000000E+00  1.00000000000E+00   1
+</init>
+<event>
+ 5    1   2.1230483E+00   4.4580000E+02  -1.0000000E+00   1.0490000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  9.07815488890E+01  9.07815488890E+01  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -5.47355353920E+02  5.47355353920E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0 -1.57482262780E+02  6.20227455560E+01 -1.94108130960E+02  2.57537279945E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.65352860250E+01 -2.82657681270E+01 -5.21159999290E+01  1.09594572129E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  1.40946976760E+02 -3.37569774290E+01 -2.10349674140E+02  2.71005050733E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   9.1610000E+02  -1.0000000E+00   9.6790000E-02
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  4.87179367660E+02  4.87179367660E+02  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -4.30622795210E+02  4.30622795210E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  2.32390906640E+02 -4.62070375060E+01  3.77476236670E+02  4.45678059876E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.84054314600E+02  7.01547158720E+01 -2.90137056320E+02  3.62215004924E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -4.83365920410E+01 -2.39476783660E+01 -3.07826078980E+01  1.09909098068E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.5420000E+02  -1.0000000E+00   1.0470000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.70379528090E+03  1.70379528090E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -3.02739831530E+01  3.02739831530E+01  0.00000000000E+00  0.0000E+00  9.0
+        3    1    1    2  504    0  8.40724904500E+01  1.25804456160E+02  3.21804677890E+02  3.55602580913E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -7.13117117080E+00 -1.30138967000E+01  2.90588150270E+02  3.04769112029E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -7.69413192800E+01 -1.12790559460E+02  1.06112846960E+03  1.07369757113E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.5140000E+02  -1.0000000E+00   1.0790000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.78012107220E+03  1.78012107220E+03  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.73401392270E+01  1.73401392270E+01  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  8.92967976150E+01 -4.65637197650E+01  7.35265572470E+02  7.42130419887E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -5.75182280430E+01  6.90937369530E+01  7.49929434240E+02  7.60722663553E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -3.17785695710E+01 -2.25300171880E+01  2.77585926290E+02  2.94608128015E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.6540000E+02  -1.0000000E+00   1.0210000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  6.42046043860E+02  6.42046043860E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -1.24497578360E+02  1.24497578360E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  504    0 -9.63954950300E+01 -4.84813414230E+01  1.34593496510E+00  1.07908959170E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  2.07173369940E+01 -7.21921130160E+01  4.68774627900E+02  4.83335374721E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  7.56781580360E+01  1.20673454440E+02  4.74279026350E+01  1.75299288327E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.5010000E+02  -1.0000000E+00   1.0050000E-01
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  9.91408439280E+01  9.91408439280E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -1.06568079010E+03  1.06568079010E+03  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -6.54950862550E+01  1.13403842110E+02  2.48803452430E+01  1.33300672572E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  3.99170481910E+00  8.18363932970E-02 -1.49082543270E+02  1.74539590272E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  6.15033814360E+01 -1.13485678500E+02 -8.42337748180E+02  8.56981371222E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.4670000E+02  -1.0000000E+00   1.0490000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.53407026030E+02  1.53407026030E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -3.25162449170E+02  3.25162449170E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  504    0  3.10994544140E+01 -1.22855561050E+02 -4.99009435200E+00  1.26828884673E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  2.39685443850E+01  1.02197354940E+01  3.21999136610E+01  9.96909826066E+01  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -5.50679987990E+01  1.12635825560E+02 -1.98965242450E+02  2.52049607923E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.3730000E+02  -1.0000000E+00   1.0520000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.27490427890E+03  1.27490427890E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -3.74920402120E+01  3.74920402120E+01  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0 -1.13211819340E+02 -1.12847783490E+02  2.71931444430E+02  3.15433429976E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  9.01975568070E+01  6.10206456130E+01  5.40941281870E+02  5.59195057503E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  2.30142625370E+01  5.18271378800E+01  4.24539512360E+02  4.37767831601E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.7950000E+02  -1.0000000E+00   1.0180000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.80586006460E+03  1.80586006460E+03  0.00000000000E+00  0.0000E+00  9.0
+       -4   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00 -4.64951230330E+01  4.64951230330E+01  0.00000000000E+00  0.0000E+00  9.0
+       -4    1    1    2    0  504 -1.79108983920E+02  1.35456140850E+02  3.79358416870E+02  4.40841471126E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  6.82879606760E+01 -7.25309285870E+01  5.06105012220E+02  5.23725871071E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.10821023240E+02 -6.29252122680E+01  8.73901512460E+02  8.87787845417E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.2720000E+02  -1.0000000E+00   1.0550000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.95264647920E+01  1.95264647920E+01  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -2.33606376040E+03  2.33606376040E+03  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0  1.33008837560E+02 -7.11186350180E+00 -4.00276529030E+02  4.21856882324E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -1.27133319820E+00 -2.87941955250E+01 -7.56637747660E+02  7.62596830985E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -1.31737504360E+02  3.59060590270E+01 -1.15962301890E+03  1.17113651186E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.4710000E+02  -1.0000000E+00   9.7610000E-02
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.27432913100E+03  1.27432913100E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -1.40766234360E+02  1.40766234360E+02  0.00000000000E+00  0.0000E+00  9.0
+        3    1    1    2  504    0  1.29981578910E+02  2.15074870310E+02  1.49438391240E+01  2.51745365444E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -9.74270588200E+01 -1.59465775100E+02  7.64221748950E+02  7.91946191510E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -3.25545200910E+01 -5.56090952070E+01  3.54397308610E+02  3.71403808445E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.5120000E+02  -1.0000000E+00   1.0050000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.91823595060E+02  1.91823595060E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -5.52595679130E+02  5.52595679130E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  2.47396950490E+02  2.78606301190E+01 -2.31250734750E+02  3.39791654025E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.14474899060E+01  3.85132610290E+01 -5.22767001000E+01  1.12114642814E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -2.58844440400E+02 -6.63738911480E+01 -7.72446492150E+01  2.92512977342E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.3770000E+02  -1.0000000E+00   1.0520000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  2.16451882300E+02  2.16451882300E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00 -2.21229014740E+02  2.21229014740E+02  0.00000000000E+00  0.0000E+00  9.0
+       -1    1    1    2    0  504 -1.56657405450E+01  1.34761095880E+02  6.68590367570E+01  1.51248468375E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -4.17344281150E+01 -1.31746852010E+02 -1.71859157120E+01  1.66183256266E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  5.74001686590E+01 -3.01424387030E+00 -5.44502534880E+01  1.20249172398E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.9650000E+02  -1.0000000E+00   1.0640000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.24068494950E+02  1.24068494950E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -3.16803115710E+02  3.16803115710E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0  6.64993108610E+01  1.11847461010E+02 -6.12595846480E+01  1.43821937098E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -2.75260555890E+01 -1.55158592810E+01  1.35700168290E+01  9.69798661684E+01  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -3.89732552730E+01 -9.63316017300E+01 -1.45045052940E+02  2.00069807392E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   7.4930000E+02  -1.0000000E+00   9.8930000E-02
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  7.11127091930E+02  7.11127091930E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.97396870510E+02  1.97396870510E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  8.86729026600E+01  6.47072927420E+01  5.59205829540E+01  1.23195085121E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.94028223020E+02  9.25798233810E+01  5.17019286520E+02  5.67229619395E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.05355320360E+02 -1.57287116120E+02 -5.92096480500E+01  2.18099257925E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.7110000E+02  -1.0000000E+00   1.0430000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  3.40046223190E+02  3.40046223190E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00 -1.63145583610E+02  1.63145583610E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2    1    1    2    0  504  1.40112318030E+02 -5.67454157450E+01  1.65398398300E+02  2.24071716270E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.12287109480E+02  9.26229370360E+01 -2.06577271450E+01  1.72732940029E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -2.78252085510E+01 -3.58775212910E+01  3.21599684300E+01  1.06387150512E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.5840000E+02  -1.0000000E+00   1.0460000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  6.76858056720E+01  6.76858056720E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -7.76083526630E+02  7.76083526630E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  1.18797345210E+02 -3.91281331280E-01 -2.28944906890E+01  1.20983966020E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -9.15930969580E+01 -1.54494027040E+01 -3.30544451290E+02  3.55119891294E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -2.72042482520E+01  1.58406840350E+01 -3.54958778980E+02  3.67665474988E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.6490000E+02  -1.0000000E+00   1.0030000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  5.69419677080E+01  5.69419677080E+01  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -1.94104586800E+03  1.94104586800E+03  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0 -1.00078185890E+02 -2.49227156380E+02 -1.26456216760E+03  1.29276730098E+03  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.48672402430E+01  1.34156600460E+02 -3.62907748970E+02  3.97672712166E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  8.52109456470E+01  1.15070555920E+02 -2.56633983730E+02  3.07547822562E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.3110000E+02  -1.0000000E+00   1.0870000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.09204714490E+01  1.09204714490E+01  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -2.50964228770E+03  2.50964228770E+03  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0 -8.13934636110E+00 -1.11142428740E+02 -8.96676445900E+02  9.03574865220E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -9.93684477160E+00  5.13173981660E+01 -9.44808617800E+02  9.50588272580E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.80761911330E+01  5.98250305780E+01 -6.57236752500E+02  6.66399621298E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.1200000E+02  -1.0000000E+00   9.8060000E-02
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  2.62128994910E+02  2.62128994910E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -6.28882443570E+02  6.28882443570E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0  2.13283299640E+01  2.07010061520E+02  1.61157188790E+02  2.63210377319E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -8.68105311960E+01 -1.19251793760E+02 -1.69661231090E+02  2.42413934080E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  6.54822012320E+01 -8.77582677540E+01 -3.58249406350E+02  3.85387127077E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.7440000E+02  -1.0000000E+00   1.0010000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  9.87222641180E+02  9.87222641180E+02  0.00000000000E+00  0.0000E+00  9.0
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.15162418780E+02  1.15162418780E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  7.54513179310E+01  1.71917452340E+02  1.56476729910E+02  2.44404334659E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.36995396390E+02 -2.76725019920E+02  4.88562122810E+02  5.85029868115E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  6.15440784570E+01  1.04807567580E+02  2.27021369680E+02  2.72950857181E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   1.1750000E+03  -1.0000000E+00   9.4260000E-02
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  4.44598826000E+02  4.44598826000E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -7.76729956390E+02  7.76729956390E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  7.97204559750E+01  3.68400659460E+02  2.71754879160E+02  4.64677427189E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.58891261670E+01 -5.59633161690E+01 -2.47512906200E+02  2.69943548325E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -6.38313298070E+01 -3.12437343300E+02 -3.56373103350E+02  4.86707806876E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.3460000E+02  -1.0000000E+00   1.0860000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  4.48015676580E+01  4.48015676580E+01  0.00000000000E+00  0.0000E+00  9.0
+       -1   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00 -6.24902614840E+02  6.24902614840E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2    1    1    2    0  504 -5.40495768130E+01 -8.64081367420E+01 -2.28213588420E+02  2.49938321968E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  3.92115870700E+01  9.42186166340E+01 -2.20629911430E+02  2.59450915509E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  1.48379897430E+01 -7.81047989230E+00 -1.31257547330E+02  1.60314945018E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.9200000E+02  -1.0000000E+00   1.0650000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  3.67965267710E+02  3.67965267710E+02  0.00000000000E+00  0.0000E+00  9.0
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.04376239280E+02  1.04376239280E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  1.09303139360E+02  4.71066435330E+01  1.73900793500E+02  2.10731341093E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -8.21908800180E+01 -4.06708844130E+01 -2.97569391080E+00  1.28999379111E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -2.71122593470E+01 -6.43575911980E+00  9.26639288440E+01  1.32610786782E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.7090000E+02  -1.0000000E+00   1.0720000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  3.24945510050E+01  3.24945510050E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -1.05855080440E+03  1.05855080440E+03  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0 -2.18117046940E+01 -1.20925873870E+02 -3.68213911990E+02  3.88175607703E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.71508793460E+01  1.20659035870E+02 -3.41642196080E+02  3.73891253176E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  4.66082534790E+00  2.66838003980E-01 -3.16200145330E+02  3.28978494528E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.1180000E+02  -1.0000000E+00   1.0590000E-01
+        4   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.07364349280E+02  1.07364349280E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -3.94949889230E+02  3.94949889230E+02  0.00000000000E+00  0.0000E+00  9.0
+        3    1    1    2  504    0 -5.07772733230E+00  1.02511991840E+02 -2.31186775550E+02  2.52946272902E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.22915092060E+00 -1.78624709770E+01  3.12102451890E+01  9.75560431031E+01  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  3.84857641180E+00 -8.46495208640E+01 -8.76090096000E+01  1.51811922507E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.6840000E+02  -1.0000000E+00   1.0730000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  8.56505896490E+01  8.56505896490E+01  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -3.96239898270E+02  3.96239898270E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0  1.04724272860E+02  3.99293430810E+01 -1.20786816890E+02  1.64775547031E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -1.03285128700E+02 -1.44029433410E+01 -4.66946579550E+01  1.45870412109E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -1.43914415910E+00 -2.55263997400E+01 -1.43107833780E+02  1.71244528783E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.2520000E+02  -1.0000000E+00   1.0550000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  2.75235589430E+01  2.75235589430E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -1.64193940940E+03  1.64193940940E+03  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  2.73196869110E+01  1.26747226580E+02 -9.24098842250E+02  9.33150521077E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -4.27577196170E+01 -1.13527401190E+02 -5.28716334920E+02  5.49981981231E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  1.54380327070E+01 -1.32198253870E+01 -1.61600673300E+02  1.86330466047E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.8940000E+02  -1.0000000E+00   1.0380000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.97322130160E+01  1.97322130160E+01  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -3.03435388890E+03  3.03435388890E+03  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0  1.62685677290E+02 -4.85933730400E+01 -6.93255736240E+02  7.13744675166E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.20366701650E+00  3.89590333870E+01 -1.13167091790E+03  1.13596692072E+03  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -1.63889344300E+02  9.63433965300E+00 -1.18969502170E+03  1.20437450598E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.0920000E+02  -1.0000000E+00   1.0600000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.37947194790E+02  1.37947194790E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -3.03415044260E+02  3.03415044260E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -1.01504252580E+02  1.44503845740E+01 -4.23563268680E+01  1.10932345742E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.61674487360E+02 -3.85717580400E+00 -1.20648038210E+02  2.21205764509E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -6.01702347870E+01 -1.05932087700E+01 -2.46348439780E+00  1.09224128795E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.7660000E+02  -1.0000000E+00   1.0710000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  6.83195970930E+01  6.83195970930E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -5.18897408000E+02  5.18897408000E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0 -2.83992369910E+00  1.20935688210E+02 -2.10574661820E+02  2.42848088422E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.57665532830E+01 -6.02339302530E+00 -5.37727115680E+01  1.06765600430E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.86064769820E+01 -1.14912295190E+02 -1.86230437520E+02  2.37603316244E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.2810000E+02  -1.0000000E+00   1.0880000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  3.08985567110E+02  3.08985567110E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -8.70828878460E+01  8.70828878460E+01  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  7.92882459410E+01 -6.69215127880E+01  4.48818240730E+01  1.13046419450E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -7.26811227410E+01  1.95548615020E+01  8.41363094080E+01  1.44797721777E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -6.60712319930E+00  4.73666512860E+01  9.28845457800E+01  1.38224313726E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.0780000E+02  -1.0000000E+00   1.0130000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  8.60671456870E+02  8.60671456870E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -1.07323290320E+02  1.07323290320E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0 -1.53307278630E+02 -1.23447362430E+02  9.13975462830E+01  2.17015862182E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  2.04423917670E+02  5.60602015670E+01  4.21234698260E+02  4.80201081624E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -5.11166390330E+01  6.73871608640E+01  2.40715922010E+02  2.70777803382E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.1100000E+02  -1.0000000E+00   9.8080000E-02
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  6.81645118330E+01  6.81645118330E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -2.41244701390E+03  2.41244701390E+03  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0 -1.27354209370E+02 -3.41967954780E+02 -8.34948651620E+02  9.11208224053E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  3.27613275950E+01  9.20415735780E+01 -3.12069770830E+02  3.39344988438E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  9.45928817780E+01  2.49926381200E+02 -1.19726407970E+03  1.23005831332E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.8800000E+02  -1.0000000E+00   1.0170000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  2.93555676480E+02  2.93555676480E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -2.94416645080E+02  2.94416645080E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  504    0  9.74250881390E+01 -1.56087202070E+02 -1.37133840130E+02  2.29478871702E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -3.64949251880E+01  4.98247356480E+01 -4.76664938890E+01  1.19620240538E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -6.09301629510E+01  1.06262466420E+02  1.83939365420E+02  2.38873209335E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.5620000E+02  -1.0000000E+00   1.0470000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  3.37752514550E+02  3.37752514550E+02  0.00000000000E+00  0.0000E+00  9.0
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.54030920480E+02  1.54030920480E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  1.07511952470E+02  6.81008246540E+01  1.52471103400E+02  1.98605084564E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.35719809730E+02 -7.89575584750E+01  6.37831874540E+01  1.92210772994E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  2.82078572580E+01  1.08567338210E+01 -3.25326967820E+01  1.00967577469E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.3820000E+02  -1.0000000E+00   1.0270000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  9.14503560590E+02  9.14503560590E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -7.91805416910E+01  7.91805416910E+01  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  504    0  1.25948608730E+02 -1.78897253150E+02  2.79093988520E+02  3.54627598550E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.35080647610E+02  1.37352141980E+02  4.07022487440E+02  4.59349780676E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  9.13203887530E+00  4.15451111660E+01  1.49206542940E+02  1.79706723057E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.2310000E+02  -1.0000000E+00   1.0300000E-01
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  1.15494424940E+02  1.15494424940E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -5.92260067000E+02  5.92260067000E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  1.33261914120E+02 -9.01547446040E+01 -6.89634386210E+01  1.75050197361E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  4.81436847790E+01  9.35608579230E+01 -1.45975244980E+02  2.01501226116E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -1.81405598900E+02 -3.40611331890E+00 -2.61826958470E+02  3.31203068467E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.6680000E+02  -1.0000000E+00   1.0210000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  4.96489060670E+02  4.96489060670E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -1.61792139730E+02  1.61792139730E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0 -4.92371836390E+01 -9.05476093780E+01  4.19363529580E+02  4.31843651984E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  2.82527928890E+01  4.44661409670E+01 -2.93516068030E+01  1.08901323593E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  2.09843907500E+01  4.60814684110E+01 -5.53150018420E+01  1.17536224816E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.8150000E+02  -1.0000000E+00   9.9980000E-02
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  2.94869311000E+03  2.94869311000E+03  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -3.93785703910E+01  3.93785703910E+01  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  7.60685240900E+01 -8.84397470910E+01  7.60469881850E+02  7.69364965685E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -9.09590908500E+01 -1.73855511950E+01  2.03229534280E+03  2.03642399746E+03  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.48905667600E+01  1.05825298290E+02  1.16549315000E+02  1.82282717292E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   7.3570000E+02  -1.0000000E+00   9.9130000E-02
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.19786774970E+02  1.19786774970E+02  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -1.12967245610E+03  1.12967245610E+03  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0 -1.36849676300E+02 -1.73632523390E+02 -8.33331254980E+02  8.62158377335E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.61529266150E+02  1.58074868570E+02 -1.57912192290E+02  2.90238095070E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -2.46795898440E+01  1.55576548240E+01 -1.86422338680E+01  9.70627586764E+01  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.8410000E+02  -1.0000000E+00   9.9940000E-02
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  5.02587889800E+01  5.02587889800E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -2.32799764420E+03  2.32799764420E+03  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0  1.11426530420E+02  6.77160235950E+01 -9.59478367800E+01  1.61886747190E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  2.37583195180E+01 -4.04545271010E+01 -1.76701500770E+03  1.76996202993E+03  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -1.35184849930E+02 -2.72614964940E+01 -4.14776010710E+02  4.46407656030E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.3070000E+02  -1.0000000E+00   1.0540000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  4.08683519400E+02  4.08683519400E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -1.13455686900E+02  1.13455686900E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0  9.19098489510E+01  5.83013079790E+01 -3.32659083780E+01  1.13811614111E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -9.35611536760E+01  6.51900136950E+00  1.62721634810E+02  2.08559441769E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.65130472500E+00 -6.48203093480E+01  1.65772106070E+02  1.99768150419E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.5140000E+02  -1.0000000E+00   1.0480000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  5.35985966120E+02  5.35985966120E+02  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -9.50232286060E+01  9.50232286060E+01  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0  3.51491310160E+01 -1.08018582400E+02  2.64337713120E+02  2.87711491137E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  3.04944157980E+01  1.46400931150E+01 -1.97655058140E+01  9.87797570414E+01  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -6.56435468140E+01  9.33784892840E+01  1.96390530210E+02  2.44517946549E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.7710000E+02  -1.0000000E+00   1.0010000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  7.75062730140E+02  7.75062730140E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -1.47901479600E+02  1.47901479600E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0 -8.28395536500E+01  7.92809452600E+01  2.49295543800E+02  2.74401399575E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.97411374710E+02 -7.92047365450E+01  1.43002140910E+02  2.71876400080E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  2.80250928360E+02 -7.62087148050E-02  2.34863565830E+02  3.76686410079E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.8630000E+02  -1.0000000E+00   1.0170000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  7.86111547590E+01  7.86111547590E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -1.09315920020E+03  1.09315920020E+03  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0 -4.34205861440E+01 -1.69780721380E+02 -3.43455342700E+02  3.85580618137E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.62639654800E+02  3.63824155380E+01 -4.46105999160E+02  4.84776673758E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -1.19219068650E+02  1.33398305840E+02 -2.24986703530E+02  3.01413063015E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.2540000E+02  -1.0000000E+00   1.0550000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  2.23089356540E+01  2.23089356540E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -2.02821465630E+03  2.02821465630E+03  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  1.14791594410E+02  4.98680638030E+01 -3.70255621700E+02  3.90836486699E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -2.67673748750E+01 -2.90617123270E+01 -2.61317170850E+02  2.79410563011E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -8.80242195390E+01 -2.08063514760E+01 -1.37433292810E+03  1.38027654225E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.7990000E+02  -1.0000000E+00   1.0000000E-01
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  4.76290025850E+02  4.76290025850E+02  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -2.42652672500E+02  2.42652672500E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -5.53980660730E+01 -1.20498496350E+02 -8.60221149080E+01  1.58077947863E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.22870467170E+02  2.18044000380E+02  7.89370218460E+01  2.77657909453E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -6.74724010960E+01 -9.75455040390E+01  2.40722446410E+02  2.83206841024E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   7.2010000E+02  -1.0000000E+00   9.9370000E-02
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  3.51872810790E+03  3.51872810790E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -3.68466651880E+01  3.68466651880E+01  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  504    0 -1.25854707910E+00 -2.54225650840E+02  5.99636450340E+02  6.51303414748E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  4.99403865230E+00  2.73301846430E+01  1.27986269370E+03  1.28337169892E+03  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -3.73549157320E+00  2.26895466190E+02  1.60238229870E+03  1.62089965945E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.4360000E+02  -1.0000000E+00   1.0500000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  4.10490342820E+03  4.10490342820E+03  0.00000000000E+00  0.0000E+00  9.0
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.19870768340E+01  1.19870768340E+01  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -9.53361099580E+01 -1.43274557390E+02  1.71382976240E+03  1.72244855573E+03  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  6.77641862950E+01  4.63737960260E+01  7.68966470030E+02  7.78636288258E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  2.75719236630E+01  9.69007613610E+01  1.61012011890E+03  1.61580566101E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.5630000E+02  -1.0000000E+00   9.7500000E-02
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  1.23608706360E+03  1.23608706360E+03  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -1.48289589910E+02  1.48289589910E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  1.78821804350E+02 -9.11632141840E+00 -5.23887909510E+01  1.86560795572E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -6.12747526560E+01  1.28857662330E+02  4.18121637590E+02  4.51006784578E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -1.17547051690E+02 -1.19741340920E+02  7.22064627010E+02  7.46809073321E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.5440000E+02  -1.0000000E+00   1.0470000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  7.91209989560E+01  7.91209989560E+01  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -6.52525318910E+02  6.52525318910E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0 -8.03677139450E+01 -9.01909744500E+01 -3.10430207550E+01  1.24727905677E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  4.78499856250E+01 -3.68525009120E+01 -2.73302523070E+02  2.94218491132E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  3.25177283190E+01  1.27043475360E+02 -2.69058776130E+02  3.12699921056E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.5410000E+02  -1.0000000E+00   1.0470000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  5.95296673800E+02  5.95296673800E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -8.66037502160E+01  8.66037502160E+01  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -5.15317167450E+01  1.42390534590E+02  1.94791267750E+02  2.46727015471E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.01252851670E+02 -9.33948285400E+01  1.00597733010E+02  1.93176503012E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -4.97211349220E+01 -4.89957060460E+01  2.13303922820E+02  2.41996905535E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   1.2920000E+03  -1.0000000E+00   9.3330000E-02
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  4.69971970230E+02  4.69971970230E+02  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -8.88369996980E+02  8.88369996980E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0 -5.09391364000E+01  1.30600485180E+02  4.12809928920E+02  4.35962521051E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -3.70266656680E+00 -1.14945318880E+02 -7.96528695310E+02  8.09880622057E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  5.46418029670E+01 -1.56551662990E+01 -3.46792603670E+01  1.12498824095E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.3200000E+02  -1.0000000E+00   1.0530000E-01
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  6.86795891470E+01  6.86795891470E+01  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -6.79380089430E+02  6.79380089430E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -1.39229311220E+01  1.28122405940E+02 -2.18690463460E+02  2.53839945090E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.04842993630E+02 -9.01788946910E+01 -1.89485336910E+02  2.51498514359E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -9.09200625090E+01 -3.79435112450E+01 -2.02524699920E+02  2.42721219137E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   9.1330000E+02  -1.0000000E+00   9.6820000E-02
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  5.82596192270E+02  5.82596192270E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -3.57905730980E+02  3.57905730980E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  504    0 -9.81050518220E+01 -4.87427875360E+01 -2.06202021690E+02  2.33494612955E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.01767197660E+02  2.72563450210E+02  3.18057796770E+02  4.40489139998E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -3.66214583650E+00 -2.23820662670E+02  1.12834686210E+02  2.66518170284E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.8690000E+02  -1.0000000E+00   1.0390000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  6.16606290050E+01  6.16606290050E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -9.61224153030E+02  9.61224153030E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0 -7.84373389920E+01  1.25715608210E+02 -2.36149786200E+02  2.78789439933E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.62475888380E+01 -1.83783245460E+02 -3.35912354630E+02  3.93827245004E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  6.21897501540E+01  5.80676372550E+01 -3.27501383200E+02  3.50268097102E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.9860000E+02  -1.0000000E+00   9.9700000E-02
+       -3   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00  6.14429183790E+02  6.14429183790E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00 -1.98597379980E+02  1.98597379980E+02  0.00000000000E+00  0.0000E+00  9.0
+       -4    1    1    2    0  504 -6.70816665310E+01  8.28351527700E+01 -1.23120319290E+02  1.62850316368E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -7.81103567060E+00 -1.03584807620E+02  4.96707012510E+01  1.46562364441E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  7.48927022020E+01  2.07496548520E+01  4.89281421850E+02  5.03613882966E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.3630000E+02  -1.0000000E+00   1.0270000E-01
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  2.24327738410E+03  2.24327738410E+03  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -3.20493195250E+01  3.20493195250E+01  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  1.41293116330E+02  9.54865764360E+01  4.46413732760E+02  4.77877235070E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -6.49507935360E+01 -8.33808821880E+01  3.36409261400E+02  3.64094344519E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -7.63423227920E+01 -1.21056942490E+01  1.42840507040E+03  1.43335512402E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   7.9160000E+02  -1.0000000E+00   9.8340000E-02
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  2.00544761730E+02  2.00544761730E+02  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -7.81087746060E+02  7.81087746060E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0  5.61208433230E+01  3.51309390750E+02 -1.38487376880E+02  3.81767718174E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -4.04421487770E+01 -1.57540141040E+02 -2.51909480600E+02  3.13265659325E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -1.56786945450E+01 -1.93769249710E+02 -1.90146126860E+02  2.86599130293E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   9.9280000E+02  -1.0000000E+00   9.5960000E-02
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  4.04144585900E+02  4.04144585900E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -6.09708734300E+02  6.09708734300E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  3.51146266710E+02  2.15056497560E+01 -4.30949594050E+02  5.56312633514E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.36025206530E+02 -4.52690784350E+00  1.05485866650E+02  1.94610228993E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -2.15121060180E+02 -1.69787419120E+01  1.19899579000E+02  2.62930457695E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.2440000E+02  -1.0000000E+00   1.0100000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  4.10860400910E+02  4.10860400910E+02  0.00000000000E+00  0.0000E+00  9.0
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -2.37231905330E+02  2.37231905330E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  1.48007113320E+02 -1.43687589570E+02  1.34414742990E+02  2.46210381834E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -6.44847010050E+01  1.79903758750E+02 -8.04343243370E+01  2.26309175836E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -8.35224123180E+01 -3.62161691800E+01  1.19648076920E+02  1.75572748569E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   1.0580000E+03  -1.0000000E+00   9.5310000E-02
+       -1   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00  3.87948113110E+02  3.87948113110E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00 -7.21840690180E+02  7.21840690180E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2    1    1    2    0  504 -9.83411616790E+01 -3.05476284650E+02  1.74545063620E+02  3.65311817217E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  4.29308558120E+01 -8.54941195970E+01 -1.79130366510E+02  2.22401696334E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  5.54103058670E+01  3.90970404240E+02 -3.29307274190E+02  5.22075289735E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.0860000E+02  -1.0000000E+00   1.0600000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  4.76630831700E+02  4.76630831700E+02  0.00000000000E+00  0.0000E+00  9.0
+       -1   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00 -8.75675355480E+01  8.75675355480E+01  0.00000000000E+00  0.0000E+00  9.0
+       -1    1    1    2    0  504  9.26715789390E+01  8.83872919600E+01  1.84343867310E+02  2.24461569846E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -4.65200405600E+01  3.58211961260E+01  1.05469969220E+02  1.50975859437E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -4.61515383800E+01 -1.24208488090E+02  9.92494596330E+01  1.88760937976E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.5050000E+02  -1.0000000E+00   1.0480000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  5.14648323350E+01  5.14648323350E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -9.85750698930E+02  9.85750698930E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  8.00211029020E+01  1.07754646230E+02 -3.88582826220E+02  4.11109539572E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  4.63081097980E+01 -1.02246089690E+02 -1.95987536240E+02  2.43376953944E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -1.26329212700E+02 -5.50855654440E+00 -3.49715504130E+02  3.82729037747E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.8440000E+02  -1.0000000E+00   1.0170000E-01
+        3   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.32096290210E+03  1.32096290210E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -6.46400868030E+01  6.46400868030E+01  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  504    0 -3.95355303500E+01 -1.38186727920E+02  9.33359463050E+02  9.44361433561E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  2.78165011870E+01 -7.37478549880E+00  2.23064333190E+02  2.42504361612E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  1.17190291620E+01  1.45561513420E+02  9.98990190500E+01  1.98737193726E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   7.9910000E+02  -1.0000000E+00   9.8240000E-02
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.57265994570E+02  1.57265994570E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.01502554950E+03  1.01502554950E+03  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -3.59318814840E+02  4.72078231580E+01 -5.54443293140E+02  6.62379011272E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.33297403360E+02  3.21695600580E+00 -1.17921318150E+02  1.99766131470E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  2.26021411480E+02 -5.04247791640E+01 -1.85394943640E+02  3.10146401330E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.7700000E+02  -1.0000000E+00   1.0410000E-01
+        3   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  4.29801097490E+02  4.29801097490E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.32350789630E+02  1.32350789630E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  1.36935592200E+02  1.24649498680E+01 -4.50604034130E+01  1.44696825612E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -4.03529884990E+01  2.01173452500E+01  1.65758711090E+02  1.94246093970E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -9.65826037050E+01 -3.25822951170E+01  1.76752000180E+02  2.23208967540E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   1.0310000E+03  -1.0000000E+00   9.5570000E-02
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  2.07092196030E+03  2.07092196030E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -1.28248363370E+02  1.28248363370E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0 -8.45499029810E+01  1.33527214230E+02  4.30372073820E+01  1.63799890883E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  2.84757533990E+02 -1.60738993150E+02  4.23276173210E+02  5.42502644556E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -2.00207631010E+02  2.72117789200E+01  1.47636021630E+03  1.49286778819E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.3370000E+02  -1.0000000E+00   1.0530000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.21737771300E+02  1.21737771300E+02  0.00000000000E+00  0.0000E+00  9.0
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -3.86225231920E+02  3.86225231920E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -3.05076671730E+01 -1.56690309560E+02 -1.39736479270E+02  2.12152903598E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  2.46077224440E+01  1.45198846260E+02 -5.72791545410E+01  1.82185811643E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  5.89994472930E+00  1.14914633010E+01 -6.74718268090E+01  1.13624287979E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.8990000E+02  -1.0000000E+00   1.0160000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.03894232460E+02  1.03894232460E+02  0.00000000000E+00  0.0000E+00  9.0
+       -4   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00 -8.37222963100E+02  8.37222963100E+02  0.00000000000E+00  0.0000E+00  9.0
+       -3    1    1    2    0  504  2.28772057800E+01 -1.36867482060E+02 -1.76061753800E+02  2.24173627666E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -1.83989309750E+02  5.40261804860E+01 -1.42969720670E+02  2.55800232151E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  1.61112103970E+02  8.28413015770E+01 -4.14297256180E+02  4.61143335743E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.8370000E+02  -1.0000000E+00   9.7170000E-02
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  2.17322805510E+02  2.17322805510E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -8.98398720450E+02  8.98398720450E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  504    0 -1.27981182190E+02  1.55530382970E+02 -1.16437583470E+02  2.32651227948E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -2.34678382960E+02 -1.61049916480E+02 -1.91161433940E+02  3.54649455537E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  3.62659565150E+02  5.51953350900E+00 -3.73476897520E+02  5.28420842469E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.6340000E+02  -1.0000000E+00   1.0450000E-01
+       -2   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00  1.89466974210E+03  1.89466974210E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00 -2.83362083110E+01  2.83362083110E+01  0.00000000000E+00  0.0000E+00  9.0
+       -2    1    1    2    0  504 -1.67185233540E+02  5.37081384700E+00  7.41130765090E+02  7.59772702141E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.12256230490E+01 -5.53202981960E+00  4.38979413360E+02  4.48421751012E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.78410856590E+02  1.61215972610E-01  6.86223355360E+02  7.14811497278E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.5650000E+02  -1.0000000E+00   9.7500000E-02
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.05301827400E+02  1.05301827400E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -1.74164514710E+03  1.74164514710E+03  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0  1.59789230830E+02 -2.32738693470E+02 -4.16141425450E+02  5.02865373339E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.28031525760E+02 -2.93690471190E+01 -4.27517358360E+02  4.56342226488E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -2.87820756580E+02  2.62107740590E+02 -7.92684535910E+02  8.87739374702E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.1140000E+02  -1.0000000E+00   1.0590000E-01
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  5.28843653620E+01  5.28843653620E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -7.99963512830E+02  7.99963512830E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -4.39444177470E+00  1.29229490290E+02 -9.83005760960E+01  1.62427139173E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -5.97092791940E+00 -2.29807801070E+01 -3.10302610710E+02  3.24151202231E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  1.03653696940E+01 -1.06248710180E+02 -3.38475960670E+02  3.66269536796E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.8560000E+02  -1.0000000E+00   1.0170000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  4.91068374370E+02  4.91068374370E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.74606806950E+02  1.74606806950E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -1.98984975270E+02  1.04221936850E+02  2.39241626740E+01  2.25897317522E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  5.70523930280E+01 -8.44061987680E+00  2.65392847400E+01  1.10693616385E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.41932582240E+02 -9.57813169770E+01  2.65998120010E+02  3.29084247408E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.1980000E+02  -1.0000000E+00   1.0310000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  2.25414037640E+02  2.25414037640E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -2.99627775140E+02  2.99627775140E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0 -1.02538006690E+02  4.09603801140E+01  1.34758045270E+02  1.74216894474E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.47668815300E+02 -4.03214640220E+01 -1.09184182130E+02  2.08747715102E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -4.51308086110E+01 -6.38916091800E-01 -9.97876006320E+01  1.42077203199E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.8260000E+02  -1.0000000E+00   1.0400000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.39394470160E+03  1.39394470160E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -4.17622097580E+01  4.17622097580E+01  0.00000000000E+00  0.0000E+00  9.0
+        4    1    1    2  504    0  6.85386975830E+01  8.88675403960E+01  1.08578350840E+02  1.56154574296E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -8.69266402250E+01 -1.45897469910E+02  7.79026352100E+02  8.02463016738E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  1.83879426420E+01  5.70299295180E+01  4.64577788940E+02  4.77089320359E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.1290000E+02  -1.0000000E+00   1.0320000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.90923161630E+02  1.90923161630E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -3.44421626810E+02  3.44421626810E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0 -2.57420960080E+01  1.23489037490E+02  9.28686710380E+01  1.56642229132E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.74789023620E+01 -1.47685846140E+02 -2.00677125240E+02  2.65726275013E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  4.32209983700E+01  2.41968086450E+01 -4.56900109800E+01  1.12976284289E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.7850000E+02  -1.0000000E+00   1.0410000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  7.96174794400E+01  7.96174794400E+01  0.00000000000E+00  0.0000E+00  9.0
+        4   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -7.18952641960E+02  7.18952641960E+02  0.00000000000E+00  0.0000E+00  9.0
+        4    1    1    2  500    0 -1.01075859900E+02  4.48702320500E+01  2.96860778020E+00  1.10627662955E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  5.23712367880E+01  1.90529603270E+01 -4.34950936410E+02  4.47784102312E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  4.87046231170E+01 -6.39231923770E+01 -2.07352833900E+02  2.40158356138E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.5650000E+02  -1.0000000E+00   1.0230000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  8.57397531220E+02  8.57397531220E+02  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00 -9.03106035820E+01  9.03106035820E+01  0.00000000000E+00  0.0000E+00  9.0
+       -2    1    1    2    0  504  2.58824037150E+01  1.72021110320E+02  1.34010776370E+02  2.19590640513E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.09868058200E+02 -1.86935019130E+02  4.24062826110E+02  4.84837597076E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  8.39856544870E+01  1.49139088080E+01  2.09013325150E+02  2.43279897208E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.5360000E+02  -1.0000000E+00   9.7530000E-02
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.83029436490E+02  1.83029436490E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -9.95212835470E+02  9.95212835470E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  8.20038962780E+01  7.50995119630E+01  1.49112208350E+02  1.86008135255E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.58912316590E+00 -3.22075954090E+01 -2.28879399310E+02  2.48290469819E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -8.35930194430E+01 -4.28919165540E+01 -7.32416208010E+02  7.43943666880E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.5520000E+02  -1.0000000E+00   1.0780000E-01
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  5.32346729680E+01  5.32346729680E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -5.92349947650E+02  5.92349947650E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  1.03928855130E+02 -1.29700225810E+01 -1.06208799460E+02  1.49163458988E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -9.24625570980E+00 -3.55829729120E+01 -2.30689799370E+02  2.50583216116E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -9.46825994160E+01  4.85529954930E+01 -2.02216675860E+02  2.45837945523E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.1820000E+02  -1.0000000E+00   1.0110000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  5.78569207090E+02  5.78569207090E+02  0.00000000000E+00  0.0000E+00  9.0
+       -4   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00 -1.65110296230E+02  1.65110296230E+02  0.00000000000E+00  0.0000E+00  9.0
+       -4    1    1    2    0  504 -2.55710566750E+02  1.07442513200E+02  2.28115134140E+02  3.59121569965E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.56952490190E+02 -8.76859819990E+01  1.07054568120E+02  2.28048502804E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  9.87580765540E+01 -1.97565312020E+01  7.82892086040E+01  1.56509430557E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.2600000E+02  -1.0000000E+00   1.0550000E-01
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  8.34395614050E+01  8.34395614050E+01  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -5.43810369080E+02  5.43810369080E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -1.29908986230E+02  2.71091505200E+01 -2.37665344910E+02  2.72205927409E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  7.57773138260E+00  5.21753044790E+01 -8.18420266750E+01  1.33042569129E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  1.22331254850E+02 -7.92844549990E+01 -1.40863436090E+02  2.22001433946E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.2160000E+02  -1.0000000E+00   9.7940000E-02
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  1.14921173000E+03  1.14921173000E+03  0.00000000000E+00  0.0000E+00  9.0
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -1.46844464730E+02  1.46844464730E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504  3.09576444220E+01  1.56443541750E+02  6.26490361180E+02  6.46469744191E+02  0.00000000000E+00  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.44284667680E+02 -2.52194771050E+02  2.66572909290E+02  4.04603395067E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -1.75242312100E+02  9.57512292970E+01  1.09303994810E+02  2.44983055481E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.8170000E+02  -1.0000000E+00   9.7190000E-02
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  5.68917260270E+02  5.68917260270E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -3.41619410960E+02  3.41619410960E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0 -1.30087806530E+02  5.51757860980E+01 -2.88134489960E+02  3.20918508478E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  9.87085981160E+01 -7.82891581470E+01  1.69305394230E+02  2.29694187128E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  3.13792084090E+01  2.31133720500E+01  3.46126945040E+02  3.59923975626E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   6.8030000E+02  -1.0000000E+00   1.0000000E-01
+       -2   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00  1.71248949060E+02  1.71248949060E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00 -6.75627526460E+02  6.75627526460E+02  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -1.01827806190E+02  1.09822998250E+02  6.09680906670E+01  1.61700652867E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  4.82095216700E+00 -2.03265234510E+02 -2.91181101500E+02  3.66536429937E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  9.70068540210E+01  9.34422362560E+01 -2.74165566570E+02  3.18639392725E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.1530000E+02  -1.0000000E+00   1.0320000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.35451352190E+03  1.35451352190E+03  0.00000000000E+00  0.0000E+00  9.0
+       -3   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00 -4.90179443570E+01  4.90179443570E+01  0.00000000000E+00  0.0000E+00  9.0
+       -3    1    1    2    0  504 -6.60264411880E+01 -9.51499424370E+01  2.27890932690E+02  2.55631139895E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -8.00479661220E+01  1.23289082410E+02  8.12637906760E+02  8.30789242639E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.46074407310E+02 -2.81391399680E+01  2.64966738140E+02  3.17111083769E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.7310000E+02  -1.0000000E+00   1.0420000E-01
+        1   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  4.18093558100E+02  4.18093558100E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -1.33841208260E+02  1.33841208260E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0 -7.81465136720E+01  1.60784477410E+02  1.31279558490E+02  2.21794608258E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -8.55427208440E+00 -2.03735692030E+01  1.03001453300E+01  9.38982126910E+01  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  8.67007857560E+01 -1.40410908200E+02  1.42672646020E+02  2.36241945417E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.9740000E+02  -1.0000000E+00   1.0640000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  2.03292265550E+03  2.03292265550E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -1.94214695990E+01  1.94214695990E+01  0.00000000000E+00  0.0000E+00  9.0
+        3    1    1    2  504    0 -1.35746131790E+02 -6.11732992410E+01  7.06106322670E+02  7.21633787839E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  4.86653672900E+01  2.81345939380E+01  3.96440336690E+02  4.10545170918E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  8.70807644980E+01  3.30387053030E+01  9.10954526520E+02  9.20165166321E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   3.8290000E+02  -1.0000000E+00   1.0680000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.51785450690E+01  1.51785450690E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -2.41425552990E+03  2.41425552990E+03  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0 -1.15779207400E+02  4.59286643470E+01 -1.23833706020E+03  1.24458544975E+03  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  9.81385039590E+01 -1.33110053220E+01 -5.41124752870E+02  5.57536429707E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.76407034410E+01 -3.26176590250E+01 -6.19615171810E+02  6.27312195557E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.7860000E+02  -1.0000000E+00   1.0180000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  1.19214269200E+02  1.19214269200E+02  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -7.02093182540E+02  7.02093182540E+02  0.00000000000E+00  0.0000E+00  9.0
+        2    1    1    2  500    0 -1.11460996600E+02 -1.62591867990E+02 -2.64517806310E+02  3.29892920740E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -8.14800113340E+01  5.36575589410E+01 -9.15048294440E+01  1.61597596362E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  1.92941007940E+02  1.08934309050E+02 -2.26856277590E+02  3.29816934639E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.9390000E+02  -1.0000000E+00   1.0370000E-01
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  6.74240639330E+02  6.74240639330E+02  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -9.04606666630E+01  9.04606666630E+01  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0 -8.36930059610E+01 -1.43218712760E+02  3.44044725870E+02  3.81946190360E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.66650928130E+01 -2.45651142990E+00  1.70334316530E+01  9.37892372319E+01  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  6.70279131480E+01  1.45675224190E+02  2.22701815140E+02  2.88965878400E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   7.4730000E+02  -1.0000000E+00   9.8960000E-02
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  2.41845869980E+02  2.41845869980E+02  0.00000000000E+00  0.0000E+00  9.0
+        1   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -5.77284024450E+02  5.77284024450E+02  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0 -1.14818208520E+01 -1.04119589060E+02  1.94104768260E+02  2.20566049285E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -4.84446046910E+01  1.30673421770E+02 -2.92857595540E+02  3.36764780828E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0  5.99264255430E+01 -2.65538327100E+01 -2.36685327190E+02  2.61799064316E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   8.2750000E+02  -1.0000000E+00   9.7860000E-02
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  2.29533958830E+03  2.29533958830E+03  0.00000000000E+00  0.0000E+00  9.0
+       -1   -1    0    0    0  504  0.00000000000E+00  0.00000000000E+00 -7.45899629890E+01  7.45899629890E+01  0.00000000000E+00  0.0000E+00  9.0
+       21    1    1    2  500  504 -1.36125758590E+02 -4.58606438870E+01  6.41263425110E+02  6.57154625026E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  2.73547004560E+02  1.87218132640E+02  4.69755460450E+02  5.82040642031E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -1.37421245960E+02 -1.41357488750E+02  1.10973073970E+03  1.13073428418E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.6230000E+02  -1.0000000E+00   1.0450000E-01
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00  2.00075184750E+01  2.00075184750E+01  0.00000000000E+00  0.0000E+00  9.0
+        2   -1    0    0  504    0  0.00000000000E+00  0.00000000000E+00 -2.67076354860E+03  2.67076354860E+03  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  500    0  8.98506036820E+01 -1.53390982630E+02 -7.13586468100E+02  7.35396200690E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -4.41385490200E+01  2.75122754090E+01 -7.45760972520E+02  7.53051849743E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0 -4.57120546610E+01  1.25878707220E+02 -1.19140858950E+03  1.20232301664E+03  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   5.8390000E+02  -1.0000000E+00   1.0170000E-01
+        5   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  2.19886254250E+02  2.19926362236E+02  4.19999981000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -3.87548662010E+02  3.87548662010E+02  0.00000000000E+00  0.0000E+00  9.0
+        5    1    1    2  504    0 -1.32133999090E+02 -6.72815682550E+01 -1.69728998070E+02  2.25414675491E+02  4.19999981000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  1.72992011570E+02 -9.18127770830E+00 -1.00653693030E+02  2.19918669757E+02  9.06781311000E+01  0.0000E+00  9.0
+ -1000024    1    1    2    0    0 -4.08580124850E+01  7.64628459630E+01  1.02720283340E+02  1.62141678992E+02  9.06781311000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   4.1810000E+02  -1.0000000E+00   1.0570000E-01
+       -1   -1    0    0    0  500  0.00000000000E+00  0.00000000000E+00  4.02523189620E+01  4.02523189620E+01  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  500  504  0.00000000000E+00  0.00000000000E+00 -1.08582683390E+03  1.08582683390E+03  0.00000000000E+00  0.0000E+00  9.0
+       -2    1    1    2    0  504 -9.68424810060E+01  1.15044399120E+02 -2.72122548710E+02  3.10908927843E+02  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0  3.61955922170E+00 -8.36589790850E+01 -3.50317497810E+02  3.71425360903E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  9.32229217840E+01 -3.13854200330E+01 -4.23134468420E+02  4.43744864118E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+<event>
+ 5    1   2.1230483E+00   9.0750000E+02  -1.0000000E+00   9.6890000E-02
+        2   -1    0    0  500    0  0.00000000000E+00  0.00000000000E+00  2.35240602420E+03  2.35240602420E+03  0.00000000000E+00  0.0000E+00  9.0
+       21   -1    0    0  504  500  0.00000000000E+00  0.00000000000E+00 -8.75313109610E+01  8.75313109610E+01  0.00000000000E+00  0.0000E+00  9.0
+        1    1    1    2  504    0 -9.23503012570E+01  8.47736292110E+01  1.36665286620E+03  1.37239032460E+03  0.00000000000E+00  0.0000E+00  9.0
+  1000024    1    1    2    0    0 -1.53071184760E+01  1.70446375750E+02  6.69932257370E+02  6.97365060644E+02  9.06781311000E+01  0.0000E+00  9.0
+  1000022    1    1    2    0    0  1.07657419730E+02 -2.55220004960E+02  2.28289589620E+02  3.70181949874E+02  9.05050735000E+01  0.0000E+00  9.0
+</event>
+</LesHouchesEvents>
