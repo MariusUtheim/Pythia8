@@ -98,7 +98,7 @@ Pythia::Pythia(string xmlDir, bool printBanner) {
     return;
   }
   
-  lowEnergyController.initPtr(&rndm, &particleData, &lowEnergyData);
+  lowEnergyController.initPtr(&info, &settings, &rndm, &particleData, &lowEnergyData);
 
   // Write the Pythia banner to output.
   if (printBanner) banner();
@@ -2026,7 +2026,7 @@ bool Pythia::nextLowEnergy() {
 
   double mp = particleData.m0(2212), mpi = particleData.m0(211);
   event.append(2212, 0, 0, 0, Vec4(0, 0, 2, sqrt(4 + mp * mp)), mp);
-  event.append(2212, 0, 0, 0, Vec4(0, 0, -2, sqrt(4 + mpi * mpi)), mpi);
+  event.append(-211, 0, 0, 0, Vec4(0, 0, -2, sqrt(4 + mpi * mpi)), mpi);
 
   //for (auto beam : { beamA, beamB }) {
   //  event.append(beam.id(), 0, 0, 0, beam.p(), beam.m());

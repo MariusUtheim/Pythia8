@@ -6,6 +6,7 @@
 #include "Pythia8/Interpolator.h"
 #include "Pythia8/LowEnergyDiffractive.h"
 #include "Pythia8/LowEnergyResonance.h"
+#include "Pythia8/LowEnergyStrings.h"
 #include "Pythia8/MassDependentWidth.h"
 
 namespace Pythia8 {
@@ -18,12 +19,14 @@ typedef string ResGenus;
 class LowEnergyController {
 public:
 
-  void initPtr(Rndm* rndmPtrIn, ParticleData* particleDataPtrIn, LowEnergyData* lowEnergyDataPtrIn)
+  void initPtr(Info* infoPtrIn, Settings* settingsPtrIn, Rndm* rndmPtrIn, 
+    ParticleData* particleDataPtrIn, LowEnergyData* lowEnergyDataPtrIn)
   {
     rndmPtr = rndmPtrIn;
     particleDataPtr = particleDataPtrIn;
     lowEnergyResonance.initPtr(rndmPtrIn, particleDataPtrIn, lowEnergyDataPtrIn);
     lowEnergyDiffractive.initPtr(rndmPtrIn, particleDataPtrIn, lowEnergyDataPtrIn);
+    lowEnergyStrings.init(infoPtrIn, settingsPtrIn, particleDataPtrIn, rndmPtrIn);
   }
 
 
@@ -56,6 +59,7 @@ private:
 
   LowEnergyResonance lowEnergyResonance;
   LowEnergyDiffractive lowEnergyDiffractive;
+  LowEnergyStrings lowEnergyStrings;
 };
 
 }

@@ -183,12 +183,10 @@ const LowEnergyProcess& LowEnergyController::pickProcess(int idA, int idB, doubl
     double pEl = lowEnergyResonance.getElasticResonanceSigma(idA, idB, eCM) / sigmaTotal;
     double pStr = 1 - pRes - pEl;
 
-    return lowEnergyResonance; // @TODO Temporary
-
     switch (rndmPtr->pick({ pRes, pEl, pStr })) {
       case 0: return lowEnergyResonance;
-      case 1: throw "Not implemented";// return lowEnergyElastic;
-      case 2: throw "Not implemented";// return lowEnergyString;
+      case 1: return lowEnergyResonance;// @TODO return lowEnergyElastic;
+      case 2: return lowEnergyStrings;
       default: throw "Error in Pythia internal logic (LowEnergyController)"; // @TODO
     }
   }
