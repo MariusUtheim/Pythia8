@@ -110,6 +110,9 @@ namespace Pythia8 {
 #ifndef MB2MMSQ
 #define MB2MMSQ 1e-25
 #endif
+#ifndef GEVINVSQ2MB
+#define GEVINVSQ2MB 0.38937966
+#endif
 
 // Powers of small integers - for balance speed/code clarity.
 inline double pow2(const double& x) {return x*x;}
