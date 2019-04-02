@@ -4,6 +4,7 @@
 #include "Basics.h"
 #include "Event.h"
 #include "Info.h"
+#include "LowEnergyResonance.h"
 #include "ParticleData.h"
 
 namespace Pythia8 {
@@ -79,6 +80,8 @@ private:
 
   // Pick slope b of exp(b * t) for elastic and diffractive events.
   double bSlope( int type);
+
+  LowEnergyResonance lowEnergyResonance;
 
 };
 

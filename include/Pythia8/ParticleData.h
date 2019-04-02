@@ -732,6 +732,9 @@ public:
   // Check initialisation status.
   bool getIsInit() {return isInit;}
 
+  map<int, ParticleDataEntry>::iterator begin() { return pdt.begin(); }
+  map<int, ParticleDataEntry>::iterator end()   { return pdt.end();   }
+
 private:
 
   // Common data, accessible for the individual particles.

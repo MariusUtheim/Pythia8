@@ -277,6 +277,10 @@ public:
   BeamParticle beamA;
   BeamParticle beamB;
 
+
+  // The total cross section class is used both on process and parton level.
+  SigmaTotal sigmaTot;
+
 private:
 
   // Copy and = constructors are made private so they cannot be used.
@@ -424,9 +428,6 @@ private:
 
   // The main generator class to produce the hadron level of the event.
   HadronLevel hadronLevel;
-
-  // The total cross section class is used both on process and parton level.
-  SigmaTotal sigmaTot;
 
   // The RHadrons class is used both at PartonLevel and HadronLevel.
   RHadrons   rHadrons;

@@ -5,60 +5,98 @@
 
 namespace Pythia8 {
 
+//==========================================================================
 
+// LowEnergyResonance class.
+// This deals with cross sections and scattering through resonances.
 
-/*
-void LowEnergyController::showPickProbabilities(int idX, int idM, double eCM) const {
-  if (idX == 2212 && idM == -211) {
-    double total = getTotalSigmaXM(idX, idM, eCM);
-    
-    double resonant = getResonanceSigma(idX, idM, eCM);
-    
-    double mp = particleDataPtr->m0(2212), mpi = particleDataPtr->m0(211);
-    double pLab = sqrt((pow2(eCM) - pow2(mp + mpi)) * (pow2(eCM) - (mp - mpi)) / (2 * mp));
-    double elastic = 1.76 + 11.2 * pow(pLab, -0.64) + 0.043 * pow2(log(pLab))
-                   - getElasticResonanceSigma(idX, idM, eCM);
+//--------------------------------------------------------------------------
 
-    double string = total - resonant - elastic;
-
-    cout << setw(8) << "Total: " << total << endl
-         << setw(8) << "Res: " << resonant << endl
-         << setw(8) << "El: " << elastic << endl
-         << setw(8) << "Str: " << string << endl
-         << endl;
+bool LowEnergyResonance::init(string path) {
   
+  ifstream stream(path);
+  if (!stream.is_open()) {
+    infoPtr->errorMsg( "Warning in LowEnergyResonance::init: "
+      "cannot open file");
+    return false;
   }
-}
-*/
 
-bool LowEnergyResonance::collide(int i1, int i2, Event& event) {
+  if (!particleWidths.readXML(stream)) {
+    infoPtr->errorMsg( "Warning in LowEnergyResonance::init: "
+      "cannot read resonance widths");
+    return false;
+  }
+
+  for (auto id : particleWidths.getResonances()) {
+  
+    //@TODO: If a particle in particleWidths is not a hadron, it's an error
+    if (!particleDataPtr->isHadron(id) || hasHeavyQuark(id))
+      continue;
+
+    // Signature takes the form BQS
+    int charge = particleDataPtr->charge(id), strangeness = getStrangeness(id);
+    int signature = (particleDataPtr->isBaryon(id) * 100)
+                  + ((2 * abs(charge) - (charge < 0)) * 10)
+                  + ((2 * abs(strangeness) - (strangeness < 0)));
+
+    auto ptr = signatureToParticles.lower_bound(signature);
+    if (ptr != signatureToParticles.end() && ptr->first == signature)
+      ptr->second.push_back(id);
+    else
+      signatureToParticles.insert(ptr, make_pair(signature, vector<int>{id}));
+  }
+
+  return true;
+}
+
+//--------------------------------------------------------------------------
+
+bool LowEnergyResonance::collide(int i1, int i2, Event& event, Vec4 origin) {
   Particle& hA = event[i1];
   Particle& hB = event[i2];
-  
+
   double eCM = (hA.p() + hB.p()).mCalc();
 
-  vector<int> candidates = lowEnergyDataPtr->getResonanceCandidates(hA.id(), hB.id());
+  // Find possible resonances and their relative probabilities
+  vector<int> candidates = getResonanceCandidates(hA.id(), hB.id());
+  if (candidates.size() == 0) 
+    return (cout << "Got no resonances" << endl), false;
+
   vector<double> probabilities(candidates.size());
 
   for (size_t i = 0; i < candidates.size(); ++i)
-    probabilities[i] = getPartialResonanceSigma(hA.id(), hB.id(), candidates[i], false, eCM);
-  
+    (probabilities[i] = getPartialResonanceSigma(hA.id(), hB.id(), candidates[i], eCM)), (cout << probabilities[i] << " ");
+
+  // Create the resonance
   int iNew = event.append(candidates[rndmPtr->pick(probabilities)],
                           115, i1, i2, 0, 0, 0, 0, hA.p() + hB.p(), eCM);
+  event[iNew].vProd(origin);
 
   for (int i : { i1, i2 }) {
     event[i].daughters(iNew, iNew);
     event[i].statusNeg();
   }
 
-  // @TODO Decay the resonance
-  auto brs = lowEnergyDataPtr->massDependentBRs(event[iNew].id(), eCM);
+  // Decay the resonance
+  // @TODO: Do this properly
+  auto brs = particleWidths.getWeightedProducts(event[iNew].id(), eCM);
+
+  if (brs.size() == 0) {
+    cout << "Got no decay modes" << endl;
+    return false;
+  }
+  for (auto prpr : brs) {
+    for (auto prod : prpr.second)
+      cout << prod << " ";
+    cout << ": " << prpr.first << endl;
+  }
+
   double threshold = rndmPtr->flat();
   double cumulativeSum = 0.;
   for (auto br : brs) {
-    cumulativeSum += br.second;
+    cumulativeSum += br.first;
     if (cumulativeSum >= threshold) {
-      for (int id : br.first)
+      for (int id : br.second)
         event.append(id, 116, iNew, iNew, 0, 0, 0, 0, Vec4());
       break;
     }
@@ -67,78 +105,46 @@ bool LowEnergyResonance::collide(int i1, int i2, Event& event) {
   return true;
 }
 
+//--------------------------------------------------------------------------
 
-double LowEnergyResonance::getPartialResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const {
-  double br = lowEnergyDataPtr->getBR(idR, idA, idB, eCM);
-  if (br == 0.)
+double LowEnergyResonance::getPartialResonanceSigma(int idA, int idB, int idR, double eCM) const {
+  
+  // Get mass dependent width. If it is zero, the resonance cannot be formed
+  double gammaR = particleWidths.width(idR, eCM);
+  if (gammaR == 0)
     return 0.;
 
-  double gammaRes2 = pow2(lowEnergyDataPtr->massDependentWidth(idR, eCM));
-
-  int iA = lowEnergyDataPtr->getIsospin(idA);
-  int i3A = lowEnergyDataPtr->getIso3(idA);
-
-  int iB = lowEnergyDataPtr->getIsospin(idB);
-  int i3B = lowEnergyDataPtr->getIso3(idB);
-  
-  int iR = lowEnergyDataPtr->getIsospin(idR);
-  int i3R = lowEnergyDataPtr->getIso3(idR);
-
-  double cg2 = lowEnergyDataPtr->getClebschGordan2(iA, i3A, iB, i3B, iR, i3R);
-
-  if (isnan(cg2)) {
-    cout << " for " << particleDataPtr->name(idA) << " + " << particleDataPtr->name(idB) << " --> " << particleDataPtr->name(idR) << endl
-         << "     < " << iA << " " << i3A << " , " << iB << " " << i3B << " | " << iR << " " << i3R << " > " << endl;
-  }
-
-  int nJRes = particleDataPtr->spinType(idR);
-  double m0 = particleDataPtr->m0(idR);
-
-  double contribution = cg2 * nJRes * br * gammaRes2/(pow2(eCM - m0) + 0.25 * gammaRes2);
-
-  if (gensEqual && idA != idB)
-    contribution *= 2;
-
-  return contribution;
-}
-
-double LowEnergyResonance::getPartialElasticResonanceSigma(int idA, int idB, int idR, bool gensEqual, double eCM) const {
-  double br = lowEnergyDataPtr->getBR(idR, idA, idB, eCM);
-  if (br == 0.)
+  // @TODO: Ordering matters, make sure the ordering of ids is canonical.
+  double branchingRatio = particleWidths.branchingRatio(idR, vector<int>{idA, idB}, eCM);
+  if (branchingRatio == 0)
     return 0.;
 
-  double gammaRes2 = pow2(lowEnergyDataPtr->massDependentWidth(idR, eCM));
+  double s = pow2(eCM), mR = particleDataPtr->m0(idR),
+         mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
 
-  int iA = lowEnergyDataPtr->getIsospin(idA);
-  int i3A = lowEnergyDataPtr->getIso3(idA);
+  // Calculate the resonance sigma
+  double sigma = 
+      4 * M_PI * s / ((s - pow2(mA + mB)) * (s - pow2(mA - mB))) 
+    * particleDataPtr->spinType(idR) / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB))
+    * branchingRatio * pow2(gammaR) / (pow2(mR - eCM) + 0.25 * pow2(gammaR))
+    * INVGEVSQ2MB;
 
-  int iB = lowEnergyDataPtr->getIsospin(idB);
-  int i3B = lowEnergyDataPtr->getIso3(idB);
-  
-  int iR = lowEnergyDataPtr->getIsospin(idR);
-  int i3R = lowEnergyDataPtr->getIso3(idR);
-
-  double cg2 = lowEnergyDataPtr->getClebschGordan2(iA, i3A, iB, i3B, iR, i3R);
-
-  if (isnan(cg2)) {
-    cout << " for " << particleDataPtr->name(idA) << " + " << particleDataPtr->name(idB) << " --> " << particleDataPtr->name(idR) << endl
-         << "     < " << iA << " " << i3A << " , " << iB << " " << i3B << " | " << iR << " " << i3R << " > " << endl;
+  // If the two particles are the same except for I3, then multiply by 2
+  // (e.g. for pi+pi- --> rho)
+  // @TODO: Check that this test is correct for all cases. What about charm?
+  // @TODO: Is this necessary? Shouldn't it be included in gamma already?
+  int quarksA = (idA / 10) % 1000, quarksB = (idB / 10) % 1000;
+  if (quarksA != quarksB && (idA - 10 * quarksA) == (idB - 10 * quarksB)
+      && getStrangeness(idA) == getStrangeness(idB))
+  {
+    sigma *= 2;
   }
 
-  int nJRes = particleDataPtr->spinType(idR);
-  double m0 = particleDataPtr->m0(idR);
-
-  double contribution = cg2 * nJRes * br * gammaRes2/(pow2(eCM - m0) + 0.25 * gammaRes2);
-
-  if (gensEqual && idA != idB)
-    contribution *= 2;
-
-  contribution *= br * cg2; // Elastic correction
-
-  return contribution;
+  return sigma;
 }
 
-// @TODO Probably take Particles instead of just ids
+//--------------------------------------------------------------------------
+
 double LowEnergyResonance::getResonanceSigma(int idA, int idB, double eCM) const {
 
   // For K_S and K_L, take average of K and Kbar
@@ -147,66 +153,79 @@ double LowEnergyResonance::getResonanceSigma(int idA, int idB, double eCM) const
   if (idB == 310 || idB == 130)
     return 0.5 * (getResonanceSigma(idA, 311, eCM) + getResonanceSigma(idA, -311, eCM));
 
-  // @TODO Deal with what happens when there is an antibaryon
-  double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
-  if (eCM < mA + mB) return 0.; // @TODO: This isn't needed if we take two input particles and calculate s
-
   // Ensure baryon is always idA, if there is a baryon
   if (particleDataPtr->isBaryon(idB) && particleDataPtr->isMeson(idA))
     swap(idA, idB);
 
+  // If the baryon is an antiparticle, flip both ids
+  if (idA < 0) {
+    idA = -idA;
+    if (particleDataPtr->hasAnti(idB))
+      idB = -idB;
+  }
+  
+  // Abort if total energy is too low
+  if (eCM < particleDataPtr->m0(idA) + particleDataPtr->m0(idB)) 
+    return 0.;
 
-  vector<int> resonanceCandidates = lowEnergyDataPtr->getResonanceCandidates(idA, idB);
+  // Sum over all possible resonances
+  vector<int> resonanceCandidates = getResonanceCandidates(idA, idB);
 
   double sigmaRes = 0;
   for (auto idR : resonanceCandidates) {
-    sigmaRes += getPartialResonanceSigma(idA, idB, idR, lowEnergyDataPtr->gensEqual(idA, idB), eCM);
+    // @TODO If we don't need partial sigma to be public, just put that code
+    //       here instead
+    sigmaRes += getPartialResonanceSigma(idA, idB, idR, eCM);
   }
-
-  double s = eCM * eCM;
-  double pCMS2 = (s - pow2(mA + mB)) * (s - pow2(mA - mB)) / (4 * s);
-
-  // @TODO define constant 0.38937966 = GeV^-2 to mb
-  double preFactor = 0.38937966 * M_PI / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB) * pCMS2);
-  sigmaRes *= preFactor;
 
   return sigmaRes;
 }
 
+//--------------------------------------------------------------------------
 
-double LowEnergyResonance::getElasticResonanceSigma(int idA, int idB, double eCM) const {
+vector<int> LowEnergyResonance::getResonanceCandidates(int idA, int idB) const {
 
-  // For K_S and K_L, take average of K and Kbar
-  if (idA == 310 || idA == 130)
-    return 0.5 * (getResonanceSigma(311, idB, eCM) + getResonanceSigma(-311, idB, eCM));
-  if (idB == 310 || idB == 130)
-    return 0.5 * (getResonanceSigma(idA, 311, eCM) + getResonanceSigma(idA, -311, eCM));
+  // Calculate total signature
+  int baryonNumber = particleDataPtr->isBaryon(idA)
+                   + particleDataPtr->isBaryon(idB); // @TODO: What about antiparticles?
+  int charge = particleDataPtr->charge(idA) + particleDataPtr->charge(idB);
+  int strangeness = getStrangeness(idA) + getStrangeness(idB);
 
-  // @TODO Deal with what happens when there is an antibaryon
-  double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
-  if (eCM < mA + mB) return 0.; // @TODO: This isn't needed if we take two input particles and calculate s
+  int signature = (baryonNumber * 100) 
+                + ((2 * abs(charge) - (charge < 0)) * 10)
+                + ((2 * abs(strangeness) - (strangeness < 0)));
 
-  // Ensure baryon is always idA, if there is a baryon
-  if (particleDataPtr->isBaryon(idB) && particleDataPtr->isMeson(idA))
-    swap(idA, idB);
-
-
-  vector<int> resonanceCandidates = lowEnergyDataPtr->getResonanceCandidates(idA, idB);
-
-  double sigmaRes = 0;
-  for (auto idR : resonanceCandidates) {
-    sigmaRes += getPartialElasticResonanceSigma(idA, idB, idR, lowEnergyDataPtr->gensEqual(idA, idB), eCM);
-  }
-
-  double s = eCM * eCM;
-  double pCMS2 = (s - pow2(mA + mB)) * (s - pow2(mA - mB)) / (4 * s);
-
-  // @TODO define constant 0.38937966 = GeV^-2 to mb
-  double preFactor = 0.38937966 * M_PI / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB) * pCMS2);
-  sigmaRes *= preFactor;
-
-  return sigmaRes;
+  // Get the resonances that conserve the signature
+  auto candidates = signatureToParticles.find(signature);
+  if (candidates == signatureToParticles.end())
+    return vector<int>();
+  else
+    return candidates->second;
 }
 
+//--------------------------------------------------------------------------
+
+int LowEnergyResonance::getStrangeness(int id) const {
+  // In baryon id xxxabcx, count number of occurrences of '3' in abc
+  id = abs(id);
+  int count = 0;
+  for (int n = (id / 10) % 1000; n > 0; n /= 10) {
+    int j = n % 10;
+  
+    if (j == 3)
+      count++;
+  }
+
+  return count;
+}
+
+bool LowEnergyResonance::hasHeavyQuark(int id) const {
+  for (int n = (abs(id) / 10) % 1000; n > 0; n /= 10)
+    if (n % 10 > 3)
+      return true;
+  return false;
+}
+
+//==========================================================================
 
 }

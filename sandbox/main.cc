@@ -1,7 +1,7 @@
 #include <chrono>
 #include <iostream>
 #include "tests.h"
-#include "Pythia8/MassDependentWidth.h"
+#include "Pythia8/ParticleWidths.h"
 #include "Pythia8/LowEnergyHadHad.h"
 
 void singleEvent()
@@ -71,9 +71,18 @@ int main(int argc, const char *argv[]) {
   pythia.readFile("mymain.cmnd");
   pythia.init();
 
-  pythia.next();
+  LowEnergyHadHad lowEnergyHadHad;
+  lowEnergyHadHad.init(&pythia.info, pythia.settings, &pythia.particleData, &pythia.rndm);
+
+  cout << "Setting up beams..." << endl;
+  pythia.event.reset();
+  pythia.event.append(2212, 12, 0, 0, 0, 0, 0, 0, 
+                             0, 0, 4, sqrt(16 + pythia.particleData.m0(2212)));
+  pythia.event.append(211, 12, 0, 0, 0, 0, 0, 0,
+                             0, 0, -4, sqrt(16 + pythia.particleData.m0(211)));
+
+  cout << "Performing collision..." << endl;
+  lowEnergyHadHad.collide(1, 2, 7, pythia.event);
 
   pythia.event.list(false, false);
-
-
 }

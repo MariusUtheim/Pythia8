@@ -221,6 +221,7 @@ bool SigmaTotal::calc(int idA, int idB, double eCM) {
   else                       sigDiffPtr = new SigmaABMST();
 
   // Initialize and calculate for selected diffractive class.
+  // @TODO: This check always fails, because they are separate pointers
   if (sigDiffPtr != sigTotElPtr)
     sigDiffPtr->init( infoPtr, *settingsPtr, particleDataPtr, rndmPtr);
   if ( !sigDiffPtr->calcDiff( idA, idB, s, mA, mB) ) return false;
@@ -391,7 +392,7 @@ void SigmaTotOwn::init(Info* , Settings& settings,
   a0      = 1. + settings.parm("SigmaDiffractive:PomFluxEpsilon");
   ap      = settings.parm("SigmaDiffractive:PomFluxAlphaPrime");
 
-  // Schuler-Sjöstrand.
+  // Schuler-Sjï¿½strand.
   if (pomFlux == 1) {
     b0    = 2.3;
 
@@ -488,7 +489,7 @@ double SigmaTotOwn::dsigmaSD(double xi, double t, bool , int ) {
   wtNow   = 1.;
   yNow    = -log(xi);
 
-  // Schuler-Sjöstrand.
+  // Schuler-Sjï¿½strand.
   if (pomFlux == 1) {
     b     = 2. * b0 + 2. * ap * yNow;
     wtNow = exp(b * t);
@@ -538,7 +539,7 @@ double SigmaTotOwn::dsigmaDD(double xi1, double xi2, double t, int ) {
   wtNow   = 1.;
   yNow    = - log(xi1 * xi2 * s / SPROTON);
 
-  // Schuler-Sjöstrand.
+  // Schuler-Sjï¿½strand.
   if (pomFlux == 1) {
     b     = max( bMinDD, 2. * ap * yNow);
     wtNow = exp(b * t);
@@ -589,7 +590,7 @@ double SigmaTotOwn::dsigmaCD( double xi1, double xi2, double t1, double t2,
   yNow1   = -log(xi1);
   yNow2   = -log(xi2);
 
-  // Schuler-Sjöstrand.
+  // Schuler-Sjï¿½strand.
   if (pomFlux == 1) {
     b1    = 2. * b0 + 2. * ap * yNow1;
     b2    = 2. * b0 + 2. * ap * yNow2;

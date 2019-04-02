@@ -37,6 +37,9 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
   particleDataPtr = particleDataPtrIn;
   rndmPtr         = rndmPtrIn;
 
+  // Set up resonance handler
+  lowEnergyResonance.initPtr(rndmPtrIn, particleDataPtrIn);
+
   // Mixing for eta and eta'.
   double theta    = settings.parm("StringFlav:thetaPS");
   double alpha    = (theta + 54.7) * M_PI / 180.; 
@@ -55,6 +58,9 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
   // Initialize collision event record.
   leEvent.init( "(low energy event)", particleDataPtr);
 
+  lowEnergyResonance.initPtr(rndmPtrIn, particleDataPtrIn);
+  lowEnergyResonance.init("../share/Pythia8/xmldoc/ParticleWidths.xml");
+
   // Done.
   return true;
  
@@ -64,14 +70,14 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
 
 // Produce outgoing primary hadrons from collision of incoming pair.
 // type = 0: mix; = 1: nondiff; = 2 : el; = 3: SD (XB); = 4: SD (AX); 
-//      = 5: DD; = 6: annihilation.
+//      = 5: DD; = 6: annihilation; = 7: resonance
 
 bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   Vec4 vtx) {
 
   // Check that incoming hadrons. Store current event size.
   if (!event[i1].isHadron() || !event[i2].isHadron()) return false;
-  if (typeIn < 0 || typeIn > 6) return false;
+  if (typeIn < 0 || typeIn > 7) return false;
   sizeOld = event.size();
 
   // Pick event type for typeIn = 0.
@@ -101,23 +107,29 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   RotBstMatrix MtoCM = toCMframe( leEvent[1].p(), leEvent[2].p());
   leEvent.rotbst( MtoCM);
 
-  // Do inelastic nondiffractive collision.
-  if (type == 1 && !nondiff()) return false;
+  if (type >= 1 && type <= 6) {
+    // Do inelastic nondiffractive collision.
+    if (type == 1 && !nondiff()) return false;
 
-  // Do elastic or diffractive collision.
-  if (type > 1 && type < 6 && !eldiff( type)) return false;
+    // Do elastic or diffractive collision.
+    if (type > 1 && type < 6 && !eldiff( type)) return false;
 
-  // Do annihilation collision.
-  if (type == 6 && !annihilation()) return false;
+    // Do annihilation collision.
+    if (type == 6 && !annihilation()) return false;
 
-  // Hadronize new strings and move products to standard event record.
-//  if (!pythiaPtr->simpleHadronization( leEvent)) {
-//    infoPtr->errorMsg( "Error in LowEnergyHadHad::collide: "
-//      "no rescattering since hadronization failed");
-//    return false;
-//  }
-  for (int i = 3; i < leEvent.size(); ++i) if (leEvent[i].isFinal()) 
-    event.append( leEvent[i]);
+    // Hadronize new strings and move products to standard event record.
+//    if (!pythiaPtr->simpleHadronization( leEvent)) {
+//      infoPtr->errorMsg( "Error in LowEnergyHadHad::collide: "
+//        "no rescattering since hadronization failed");
+//      return false;
+//    }
+    for (int i = 3; i < leEvent.size(); ++i) if (leEvent[i].isFinal()) 
+      event.append( leEvent[i]);
+  }
+  else if (type == 7) {
+    cout << "Doing low energy resonance..." << endl;
+    lowEnergyResonance.collide(1, 2, leEvent);
+  }
   
   // Boost from collision rest frame to event frame. 
   // Set status and mothers. Offset vertex info to collision vertex.
