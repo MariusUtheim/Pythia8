@@ -30,20 +30,21 @@ bool LowEnergyResonance::init(string path) {
   for (auto id : particleWidths.getResonances()) {
   
     //@TODO: If a particle in particleWidths is not a hadron, it's an error
-    if (!particleDataPtr->isHadron(id) || hasHeavyQuark(id))
+    if (!particleDataPtr->isHadron(id)
+        || particleDataPtr->heaviestQuark(id) > 3)
       continue;
 
     // Signature takes the form BQS
-    int charge = particleDataPtr->charge(id), strangeness = getStrangeness(id);
-    int signature = (particleDataPtr->isBaryon(id) * 100)
-                  + ((2 * abs(charge) - (charge < 0)) * 10)
-                  + ((2 * abs(strangeness) - (strangeness < 0)));
+    int charge = particleDataPtr->chargeType(id), strangeness = getStrangeness(id);
+    int signature = 100 * (particleDataPtr->isBaryon(id))
+                  +  10 * (charge > 0 ? charge : 10 + charge)
+                  +   1 * (strangeness > 0 ? strangeness : 10 + strangeness);
 
-    auto ptr = signatureToParticles.lower_bound(signature);
-    if (ptr != signatureToParticles.end() && ptr->first == signature)
-      ptr->second.push_back(id);
+    auto iter = signatureToParticles.find(signature);
+    if (iter != signatureToParticles.end())
+      iter->second.push_back(id);
     else
-      signatureToParticles.insert(ptr, make_pair(signature, vector<int>{id}));
+      signatureToParticles.emplace(signature, vector<int>{id});
   }
 
   return true;
@@ -65,15 +66,17 @@ bool LowEnergyResonance::collide(int i1, int i2, Event& event, Vec4 origin) {
   vector<double> probabilities(candidates.size());
 
   for (size_t i = 0; i < candidates.size(); ++i)
+    //TS?? Lines should not be 80 or more characters long for consistency.
     (probabilities[i] = getPartialResonanceSigma(hA.id(), hB.id(), candidates[i], eCM)), (cout << probabilities[i] << " ");
 
   // Create the resonance
   int iNew = event.append(candidates[rndmPtr->pick(probabilities)],
-                          115, i1, i2, 0, 0, 0, 0, hA.p() + hB.p(), eCM);
+                          999, max(i1, i2), min(i1, i2),
+                          0, 0, 0, 0, hA.p() + hB.p(), eCM);
   event[iNew].vProd(origin);
 
   for (int i : { i1, i2 }) {
-    event[i].daughters(iNew, iNew);
+    event[i].daughters(iNew, 0);
     event[i].statusNeg();
   }
 
@@ -91,13 +94,14 @@ bool LowEnergyResonance::collide(int i1, int i2, Event& event, Vec4 origin) {
     cout << ": " << prpr.first << endl;
   }
 
+  //TS?? Are you sure the BR sum = 1 always? If not what do?
   double threshold = rndmPtr->flat();
   double cumulativeSum = 0.;
   for (auto br : brs) {
     cumulativeSum += br.first;
     if (cumulativeSum >= threshold) {
       for (int id : br.second)
-        event.append(id, 116, iNew, iNew, 0, 0, 0, 0, Vec4());
+        event.append(id, 999, iNew, 0, 0, 0, 0, 0, Vec4());
       break;
     }
   }
@@ -124,10 +128,11 @@ double LowEnergyResonance::getPartialResonanceSigma(int idA, int idB, int idR, d
 
   // Calculate the resonance sigma
   double sigma = 
-      4 * M_PI * s / ((s - pow2(mA + mB)) * (s - pow2(mA - mB))) 
-    * particleDataPtr->spinType(idR) / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB))
+      4 * M_PI * s / sqrt((s - pow2(mA + mB)) * (s - pow2(mA - mB))) 
+    * particleDataPtr->spinType(idR)
+        / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB))
     * branchingRatio * pow2(gammaR) / (pow2(mR - eCM) + 0.25 * pow2(gammaR))
-    * INVGEVSQ2MB;
+    * GEVINVSQ2MB;
 
   // If the two particles are the same except for I3, then multiply by 2
   // (e.g. for pi+pi- --> rho)
@@ -136,9 +141,7 @@ double LowEnergyResonance::getPartialResonanceSigma(int idA, int idB, int idR, d
   int quarksA = (idA / 10) % 1000, quarksB = (idB / 10) % 1000;
   if (quarksA != quarksB && (idA - 10 * quarksA) == (idB - 10 * quarksB)
       && getStrangeness(idA) == getStrangeness(idB))
-  {
     sigma *= 2;
-  }
 
   return sigma;
 }
@@ -191,9 +194,9 @@ vector<int> LowEnergyResonance::getResonanceCandidates(int idA, int idB) const {
   int charge = particleDataPtr->charge(idA) + particleDataPtr->charge(idB);
   int strangeness = getStrangeness(idA) + getStrangeness(idB);
 
-  int signature = (baryonNumber * 100) 
-                + ((2 * abs(charge) - (charge < 0)) * 10)
-                + ((2 * abs(strangeness) - (strangeness < 0)));
+  int signature = 100 * (baryonNumber) 
+                +  10 * (charge > 0 ? charge : 10 + charge)
+                +   1 * (strangeness > 0 ? strangeness : 10 + strangeness);
 
   // Get the resonances that conserve the signature
   auto candidates = signatureToParticles.find(signature);
@@ -219,12 +222,6 @@ int LowEnergyResonance::getStrangeness(int id) const {
   return count;
 }
 
-bool LowEnergyResonance::hasHeavyQuark(int id) const {
-  for (int n = (abs(id) / 10) % 1000; n > 0; n /= 10)
-    if (n % 10 > 3)
-      return true;
-  return false;
-}
 
 //==========================================================================
 

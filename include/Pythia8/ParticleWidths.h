@@ -28,6 +28,8 @@ public:
   map<vector<int>, Interpolator> branchingRatios;
 };
 
+//TS?? HadronWidths better name?
+//Then also ParticleWidths.xml -> HadronWidthData.xml
 class ParticleWidths {
 
 public:
