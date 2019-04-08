@@ -3,6 +3,7 @@
 #include "tests.h"
 #include "Pythia8/ParticleWidths.h"
 #include "Pythia8/LowEnergyHadHad.h"
+#include "Pythia8/LowEnergySigma.h"
 
 void singleEvent()
 {
@@ -64,25 +65,24 @@ public:
 };
 
 int Test::count = 10;
-
+ 
 int main(int argc, const char *argv[]) {
 
   Pythia pythia("../share/Pythia8/xmldoc", false);
   pythia.readFile("mymain.cmnd");
   pythia.init();
 
-  LowEnergyHadHad lowEnergyHadHad;
-  lowEnergyHadHad.init(&pythia.info, pythia.settings, &pythia.particleData, &pythia.rndm);
+  LowEnergyResonance resonance;
+  resonance.initPtr(&pythia.rndm, &pythia.particleData);
+  if (!resonance.init("../share/Pythia8/xmldoc/ParticleWidths.xml"))
+    cout << "Failed to initialize " << endl;
 
-  cout << "Setting up beams..." << endl;
-  pythia.event.reset();
-  pythia.event.append(2212, 12, 0, 0, 0, 0, 0, 0, 
-                             0, 0, 4, sqrt(16 + pythia.particleData.m0(2212)));
-  pythia.event.append(211, 12, 0, 0, 0, 0, 0, 0,
-                             0, 0, -4, sqrt(16 + pythia.particleData.m0(211)));
-
-  cout << "Performing collision..." << endl;
-  lowEnergyHadHad.collide(1, 2, 7, pythia.event);
-
-  pythia.event.list(false, false);
+  LowEnergySigma sigma;
+  sigma.initPtr(&pythia.info, &pythia.particleData, &resonance);
+  
+  
+  Hist sigmaTotal = Hist::plotFunc(
+    [&](double eCM) { return sigma.sigmaTotal(2112, 211, eCM); },
+    "sigma_total", 100, 0., 5.);
+  cout << sigmaTotal;
 }

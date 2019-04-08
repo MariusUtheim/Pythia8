@@ -9,3 +9,4 @@ HadronLevel:Rescatter = on
 HadronLevel:Decay = on
 
 Next:numberCount = 1000
+Print:quiet = on
