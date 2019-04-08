@@ -13,6 +13,7 @@
 #define Pythia8_HeavyIons_H
 
 #include "Pythia8/HIUserHooks.h"
+#include "Pythia8/Pythia.h"
 
 namespace Pythia8 {
 

@@ -395,6 +395,12 @@ public:
     headerList.replace(0, headerIn.length() + 2, headerIn + "  ");
      particleDataPtr = particleDataPtrIn; startColTag = startColTagIn;}
 
+  // Enable iteration over Event as a list of Particles
+  vector<Particle>::iterator begin() { return entry.begin(); }
+  vector<Particle>::iterator end()   { return entry.end();   }
+  vector<Particle>::const_iterator begin() const { return entry.begin(); }
+  vector<Particle>::const_iterator end()   const { return entry.end();   }
+
   // Clear event record.
   void clear() {entry.resize(0); maxColTag = startColTag;
     savedPartonLevelSize = 0; scaleSave = 0.; scaleSecondSave = 0.;
@@ -573,10 +579,6 @@ public:
   // Operator overloading allows to append one event to an existing one.
   // Warning: particles should be OK, but some other information unreliable.
   Event& operator+=(const Event& addEvent);
-
-  vector<Pythia8::Particle>::iterator begin() {
-    return entry.begin();
-  }
 
 private:
 

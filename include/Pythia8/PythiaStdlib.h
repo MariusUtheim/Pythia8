@@ -96,32 +96,24 @@ using std::setprecision;
 namespace Pythia8 {
 
 // Define conversion hbar * c = 0.2 GeV * fm = 1.
-#ifndef HBARC
-#define HBARC 0.19732698
-#endif
+constexpr double HBARC = 0.19732698;
 
 // Define conversion between fm and mm, in both directions.
-#ifndef FM2MM
-#define FM2MM 1e-12
-#endif
-#ifndef MM2FM
-#define MM2FM 1e12
-#endif
-#ifndef MB2MMSQ
-#define MB2MMSQ 1e-25
-#endif
-#ifndef GEVINVSQ2MB
-#define GEVINVSQ2MB 0.38937966
-#endif
+constexpr double FM2MM = 1e-12;
+constexpr double MM2FM = 1e12;
+
+// Define conversions between mb, mm^2 and GeV^-2
+constexpr double MB2MMSQ = 1e-25;
+constexpr double GEVINVSQ2MB = 0.38937966;
 
 // Powers of small integers - for balance speed/code clarity.
-inline double pow2(const double& x) {return x*x;}
-inline double pow3(const double& x) {return x*x*x;}
-inline double pow4(const double& x) {return x*x*x*x;}
-inline double pow5(const double& x) {return x*x*x*x*x;}
-inline double pow6(const double& x) {return x*x*x*x*x*x;}
-inline double pow7(const double& x) {return x*x*x*x*x*x*x;}
-inline double pow8(const double& x) {return x*x*x*x*x*x*x*x;}
+constexpr double pow2(double x) {return x*x;}
+constexpr double pow3(double x) {return x*x*x;}
+constexpr double pow4(double x) {return x*x*x*x;}
+constexpr double pow5(double x) {return x*x*x*x*x;}
+constexpr double pow6(double x) {return x*x*x*x*x*x;}
+constexpr double pow7(double x) {return x*x*x*x*x*x*x;}
+constexpr double pow8(double x) {return x*x*x*x*x*x*x*x;}
 
 // Avoid problem with negative square root argument (from roundoff).
 inline double sqrtpos(const double& x) {return sqrt( max( 0., x));}

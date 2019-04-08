@@ -6,7 +6,6 @@
 // Function definitions (not found in the HIUserHooks.h header) for
 // the heavy ion classes classes, and some related global functions.
 
-#include "Pythia8/Pythia.h"
 #include "Pythia8/HIUserHooks.h"
 
 namespace Pythia8 {

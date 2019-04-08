@@ -46,10 +46,8 @@ class Rndm {
 public:
 
   // Constructors.
-  Rndm() : initRndm(false), i97(), j97(), seedSave(0), sequence(0), u(), c(),
-    cd(), cm(), useExternalRndm(false), rndmEngPtr(0) { }
-  Rndm(int seedIn) : initRndm(false), i97(), j97(), seedSave(0), sequence(0),
-    u(), c(), cd(), cm(), useExternalRndm(false), rndmEngPtr(0) {init(seedIn);}
+  Rndm() = default;
+  Rndm(int seedIn) : Rndm() { init(seedIn); }
 
   // Possibility to pass in pointer for external random number generation.
   bool rndmEnginePtr( RndmEngine* rndmEngPtrIn);
@@ -116,11 +114,11 @@ public:
   // Constructors.
   Vec4(double xIn = 0., double yIn = 0., double zIn = 0., double tIn = 0.)
     : xx(xIn), yy(yIn), zz(zIn), tt(tIn) { }
-  Vec4(const Vec4& v) : xx(v.xx), yy(v.yy), zz(v.zz), tt(v.tt) { }
-  Vec4& operator=(const Vec4& v) { if (this != &v) { xx = v.xx; yy = v.yy;
-    zz = v.zz; tt = v.tt; } return *this; }
-  Vec4& operator=(double value) { xx = value; yy = value; zz = value;
-    tt = value; return *this; }
+  Vec4(const Vec4& v) = default;
+  Vec4(Vec4&& v) = default;
+  Vec4& operator=(const Vec4& v) = default;
+  Vec4& operator=(Vec4&& v) = default;
+  Vec4& operator=(double value) { xx = yy = zz = tt = value; return *this; }
 
   // Member functions for input.
   void reset() {xx = 0.; yy = 0.; zz = 0.; tt = 0.;}
@@ -401,25 +399,23 @@ class Hist {
 
 public:
 
-  // Constructors, including copy constructors.
-  Hist() : titleSave(""), nBin(), nFill(), xMin(), xMax(), linX(), dx(),
-    under(), inside(), over() { }
+  // Constructors
+  Hist() = default;
+  Hist(string titleIn, const Hist& h) : Hist(h) { titleSave = titleIn; }
   Hist(string titleIn, int nBinIn = 100, double xMinIn = 0.,
-    double xMaxIn = 1., bool logXIn = false) : nBin(), nFill(), xMin(), xMax(),
-    linX(), dx(), under(), inside(), over() {
+    double xMaxIn = 1., bool logXIn = false) : Hist() {
     book(titleIn, nBinIn, xMinIn, xMaxIn, logXIn);}
-  Hist(const Hist& h)
-    : titleSave(h.titleSave), nBin(h.nBin), nFill(h.nFill), xMin(h.xMin),
-    xMax(h.xMax), linX(h.linX), dx(h.dx), under(h.under), inside(h.inside),
-    over(h.over), res(h.res) { }
-  Hist(string titleIn, const Hist& h)
-    : titleSave(titleIn), nBin(h.nBin), nFill(h.nFill), xMin(h.xMin),
-    xMax(h.xMax), linX(h.linX), dx(h.dx), under(h.under), inside(h.inside),
-    over(h.over), res(h.res) { }
-  Hist& operator=(const Hist& h) { if(this != &h) {
-    nBin = h.nBin; nFill = h.nFill; xMin = h.xMin; xMax = h.xMax;
-    linX = h.linX; dx = h.dx;  under = h.under; inside = h.inside;
-    over = h.over; res = h.res; } return *this; }
+
+  // Create a histogram that is the plot of the function
+  static Hist plotFunc(std::function<double(double)> f, string titleIn = "  ",
+    int nBinIn = 100, double xMinIn = 0., double xMaxIn = 1.,
+    bool logXIn = false) {
+    Hist result(titleIn, nBinIn, xMinIn, xMaxIn, logXIn);
+    double dx = (xMaxIn - xMinIn) / nBinIn;
+    for (double x = xMinIn + 0.5 * dx; x < xMaxIn; x += dx) 
+      result.fill(x, f(x));
+    return result;
+  }
 
   // Book a histogram.
   void book(string titleIn = "  ", int nBinIn = 100, double xMinIn = 0.,

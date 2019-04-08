@@ -22,7 +22,11 @@
 #ifndef Pythia8_HIUserHooks_H
 #define Pythia8_HIUserHooks_H
 
-#include "Pythia8/Pythia.h"
+#include "Pythia8/Event.h"
+#include "Pythia8/Info.h"
+#include "Pythia8/PythiaStdlib.h"
+#include "Pythia8/Settings.h"
+#include "Pythia8/SigmaTotal.h"
 #include <limits>
 
 namespace Pythia8 {

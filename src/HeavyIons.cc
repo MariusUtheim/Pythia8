@@ -7,7 +7,6 @@
 // heavy ion classes classes, and some related global functions.
 
 #include "Pythia8/HeavyIons.h"
-#include "Pythia8/Pythia.h"
 #include <cassert>
 
 namespace Pythia8 {
