@@ -62,7 +62,7 @@ bool ParticleWidths::readXML(istream& stream) {
       while (dataStr >> currentData)
         data.push_back(currentData);
 
-      this->entries.emplace(id, Interpolator(left, right, data));
+      this->entries.emplace(id, ParticleWidthEntry(Interpolator(left, right, data)));
     }
     else if (word1 == "<br") {
       completeTag(stream, line);
@@ -88,7 +88,7 @@ bool ParticleWidths::readXML(istream& stream) {
         return false;
       }
       else {
-        ParticleWidthEntry entry = iter->second;
+        ParticleWidthEntry& entry = iter->second;
         Interpolator br(entry.widths.left(), entry.widths.right(), data);
         entry.addProducts(products, br);
       }
@@ -129,7 +129,7 @@ vector<pair<double, vector<int>>> ParticleWidths::getWeightedProducts(int id, do
   if (iter == entries.end()) 
     return vector<pair<double, vector<int>>>();
   else {
-    ParticleWidthEntry entry = iter->second;
+    const ParticleWidthEntry& entry = iter->second;
     vector<pair<double, vector<int>>> result;
     for (auto prodBRs : entry.branchingRatios) 
       result.push_back(make_pair(prodBRs.second(eCM), prodBRs.first));

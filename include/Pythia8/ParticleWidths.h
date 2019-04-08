@@ -12,6 +12,8 @@ public:
 
   ParticleWidthEntry(Interpolator widthsIn)
     : widths(widthsIn) {}
+  ParticleWidthEntry(const ParticleWidthEntry&) = delete;
+  ParticleWidthEntry(ParticleWidthEntry&&) = default;
 
   void addProducts(vector<int> prods, Interpolator brs) {
     branchingRatios.emplace(prods, brs);
