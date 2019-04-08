@@ -261,6 +261,45 @@ int ParticleDataEntry::baryonNumberType(int idIn) const {
 
 //--------------------------------------------------------------------------
 
+// Calculate the strangeness, i.e. number of strange quarks
+
+int ParticleDataEntry::strangeness() const {
+
+  int sign  = idSave < 0 ? -1 : 1;
+  int idNow = abs(idSave);
+  int nS    = 0;
+
+  // Quarks
+  if (isQuark()) return sign * (idNow == 3);
+
+  // Diquarks
+  if (isDiquark()) {
+    if ( (idNow/100) % 10 == 3) ++nS;
+    if ( (idNow/10)  % 10 == 3) ++nS;
+    return sign * nS;
+  }
+
+  // Mesons
+  if (isMeson()) {
+    if ( (idNow/100) % 10 == 3) ++nS;
+    if ( (idNow/10)  % 10 == 3) --nS; // decrement becuase this is antiparticle
+    return sign * nS;
+  }
+
+  // Baryons
+  if (isBaryon()) {
+    if ( (idNow/1000) % 10 == 3) ++nS;
+    if ( (idNow/100)  % 10 == 3) ++nS;
+    if ( (idNow/10)   % 10 == 3) ++nS;
+      return sign * nS;    
+  }
+  
+  // Done.
+  return 0;
+}
+
+//--------------------------------------------------------------------------
+
 // Find number of quarks of given kind inside quark, diquark or hadron.
 // Note: naive answer for flavour-diagonal meson mixing.
 

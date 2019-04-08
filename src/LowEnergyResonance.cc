@@ -28,17 +28,16 @@ bool LowEnergyResonance::init(string path) {
   }
 
   for (auto id : particleWidths.getResonances()) {
-  
     //@TODO: If a particle in particleWidths is not a hadron, it's an error
     if (!particleDataPtr->isHadron(id)
         || particleDataPtr->heaviestQuark(id) > 3)
       continue;
-
+    
     // Signature takes the form BQS
-    int charge = particleDataPtr->chargeType(id), strangeness = getStrangeness(id);
+    int charge = particleDataPtr->chargeType(id), strangeness = particleDataPtr->strangeness(id);
     int signature = 100 * (particleDataPtr->isBaryon(id))
-                  +  10 * (charge > 0 ? charge : 10 + charge)
-                  +   1 * (strangeness > 0 ? strangeness : 10 + strangeness);
+                  +  10 * ((charge >= 0) ? charge : (10 + charge))
+                  +   1 * ((strangeness >= 0) ? strangeness : (10 + strangeness));
 
     auto iter = signatureToParticles.find(signature);
     if (iter != signatureToParticles.end())
@@ -140,7 +139,7 @@ double LowEnergyResonance::getPartialResonanceSigma(int idA, int idB, int idR, d
   // @TODO: Is this necessary? Shouldn't it be included in gamma already?
   int quarksA = (idA / 10) % 1000, quarksB = (idB / 10) % 1000;
   if (quarksA != quarksB && (idA - 10 * quarksA) == (idB - 10 * quarksB)
-      && getStrangeness(idA) == getStrangeness(idB))
+      && particleDataPtr->strangeness(idA) == particleDataPtr->strangeness(idB))
     sigma *= 2;
 
   return sigma;
@@ -191,12 +190,14 @@ vector<int> LowEnergyResonance::getResonanceCandidates(int idA, int idB) const {
   // Calculate total signature
   int baryonNumber = particleDataPtr->isBaryon(idA)
                    + particleDataPtr->isBaryon(idB); // @TODO: What about antiparticles?
-  int charge = particleDataPtr->charge(idA) + particleDataPtr->charge(idB);
-  int strangeness = getStrangeness(idA) + getStrangeness(idB);
+  int charge = particleDataPtr->chargeType(idA) 
+             + particleDataPtr->chargeType(idB);
+  int strangeness = particleDataPtr->strangeness(idA) 
+                  + particleDataPtr->strangeness(idB);
 
-  int signature = 100 * (baryonNumber) 
-                +  10 * (charge > 0 ? charge : 10 + charge)
-                +   1 * (strangeness > 0 ? strangeness : 10 + strangeness);
+  int signature = 100 * (baryonNumber)
+                +  10 * ((charge >= 0) ? charge : (10 + charge))
+                +   1 * ((strangeness >= 0) ? strangeness : (10 + strangeness));
 
   // Get the resonances that conserve the signature
   auto candidates = signatureToParticles.find(signature);
@@ -205,23 +206,6 @@ vector<int> LowEnergyResonance::getResonanceCandidates(int idA, int idB) const {
   else
     return candidates->second;
 }
-
-//--------------------------------------------------------------------------
-
-int LowEnergyResonance::getStrangeness(int id) const {
-  // In baryon id xxxabcx, count number of occurrences of '3' in abc
-  id = abs(id);
-  int count = 0;
-  for (int n = (id / 10) % 1000; n > 0; n /= 10) {
-    int j = n % 10;
-  
-    if (j == 3)
-      count++;
-  }
-
-  return count;
-}
-
 
 //==========================================================================
 

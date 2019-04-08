@@ -58,10 +58,6 @@ private:
 
   // Get a list over possible resonances that can be formed by the particles
   vector<int> getResonanceCandidates(int idA, int idB) const;
-
-  // Get the strangeness of the specified particle
-  int getStrangeness(int id) const;
-
 };
 
 }

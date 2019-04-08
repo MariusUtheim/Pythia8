@@ -37,9 +37,6 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
   particleDataPtr = particleDataPtrIn;
   rndmPtr         = rndmPtrIn;
 
-  // Set up resonance handler
-  lowEnergyResonance.initPtr(rndmPtrIn, particleDataPtrIn);
-
   // Mixing for eta and eta'.
   double theta    = settings.parm("StringFlav:thetaPS");
   double alpha    = (theta + 54.7) * M_PI / 180.; 
@@ -58,8 +55,13 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
   // Initialize collision event record.
   leEvent.init( "(low energy event)", particleDataPtr);
 
+  // Set up resonance handler
   lowEnergyResonance.initPtr(rndmPtrIn, particleDataPtrIn);
-  lowEnergyResonance.init("../share/Pythia8/xmldoc/ParticleWidths.xml");
+  if (!lowEnergyResonance.init("../share/Pythia8/xmldoc/ParticleWidths.xml")) {
+    infoPtr->errorMsg(" In LowEnergyHadHad::init: "
+      "failed to initialize resonance handler.");
+    return false;
+  }
 
   // Done.
   return true;
@@ -69,8 +71,8 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
 //--------------------------------------------------------------------------
 
 // Produce outgoing primary hadrons from collision of incoming pair.
-// type = 0: mix; = 1: nondiff; = 2 : el; = 3: SD (XB); = 4: SD (AX); 
-//      = 5: DD; = 6: annihilation; = 7: resonance
+// type | 0: mix | 1: nondiff | 2: el | 3: SD (XB) | 4: SD (AX); 
+//      | 5: DD | 6: annihilation | 7: resonance
 
 bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   Vec4 vtx) {
