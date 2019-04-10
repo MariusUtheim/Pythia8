@@ -401,10 +401,12 @@ public:
 
   // Constructors
   Hist() = default;
+  Hist(const Hist&) = default;
   Hist(string titleIn, const Hist& h) : Hist(h) { titleSave = titleIn; }
   Hist(string titleIn, int nBinIn = 100, double xMinIn = 0.,
     double xMaxIn = 1., bool logXIn = false) : Hist() {
     book(titleIn, nBinIn, xMinIn, xMaxIn, logXIn);}
+  Hist(Hist&&) = default;
 
   // Create a histogram that is the plot of the function
   static Hist plotFunc(std::function<double(double)> f, string titleIn = "  ",
