@@ -58,7 +58,7 @@ bool LowEnergyResonance::collide(int i1, int i2, Event& event, Vec4 origin) {
   double eCM = (hA.p() + hB.p()).mCalc();
 
   // Find possible resonances and their relative probabilities
-  vector<int> candidates = getResonanceCandidates(hA.id(), hB.id());
+  vector<int> candidates = getPossibleResonances(hA.id(), hB.id());
   if (candidates.size() == 0) 
     return (cout << "Got no resonances" << endl), false;
 
@@ -171,7 +171,7 @@ double LowEnergyResonance::getResonanceSigma(int idA, int idB, double eCM) const
     return 0.;
 
   // Sum over all possible resonances
-  vector<int> resonanceCandidates = getResonanceCandidates(idA, idB);
+  vector<int> resonanceCandidates = getPossibleResonances(idA, idB);
 
   double sigmaRes = 0;
   for (auto idR : resonanceCandidates) {
@@ -185,7 +185,7 @@ double LowEnergyResonance::getResonanceSigma(int idA, int idB, double eCM) const
 
 //--------------------------------------------------------------------------
 
-vector<int> LowEnergyResonance::getResonanceCandidates(int idA, int idB) const {
+vector<int> LowEnergyResonance::getPossibleResonances(int idA, int idB) const {
 
   // Calculate total signature
   int baryonNumber = particleDataPtr->isBaryon(idA)

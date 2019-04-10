@@ -33,9 +33,11 @@ public:
   // Get sigma for resonance scattering through all possible resonances
   double getResonanceSigma(int idA, int idB, double eCM) const;
 
-//  double getPartialElasticResonanceSigma(int idA, int idB, int idR, double eCM) const;
-//
-//  double getElasticResonanceSigma(int idA, int idB, double eCM) const;
+  // Get a list over possible resonances that can be formed by the particles
+  // This is determined only by conservation of quantum numbers; just beacuse
+  // a resonance conserves quantum numbers, it does not mean it can actually
+  // decay into the specified products.
+  vector<int> getPossibleResonances(int idA, int idB) const;
 
 private:
 
@@ -56,8 +58,6 @@ private:
   // signature is always positive. Strangeness signature is defined similarly.
   map<int, vector<int>> signatureToParticles;
 
-  // Get a list over possible resonances that can be formed by the particles
-  vector<int> getResonanceCandidates(int idA, int idB) const;
 };
 
 }
