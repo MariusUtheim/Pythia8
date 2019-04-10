@@ -4,23 +4,32 @@
 
 namespace Pythia8 {
 
+static constexpr double clamp(double min, double max, double x) {
+  return (x < min) ? min : (x > max) ? max : x;
+}
+
 // Returns int representing the overall process type:
 //  0 - Not hadron-hadron
-//  1 - BB'
-//  2 - BBar
+//  1 - BB
+//  2 - BBbar
 //  3 - XM
-// The canonical form of A and B satisfies A > 0 and A >= abs(B)
-// Note that this means in hadron-meson collision, B will always be meson
+// The canonical ordering of A and B satisfies A > 0 and |A| >= |B|. If both
+// A and B are negative, they are both negated. 
+// In particular:
+//  - All BB are between baryons, not antibaryons
+//  - In BBbar, A is the particle and B is the antiparticle
+//  - In XM, B is always a meson and X is a baryon (not antibaryon) or meson 
 int LowEnergySigma::canonicalForm(int& idA, int& idB) const {
+  if (!particleDataPtr->isHadron(idA) || !particleDataPtr->isHadron(idB))
+    return 0;
+
   if (abs(idA) < abs(idB))
     swap(idA, idB);
 
   if (idA < 0)
   { idA = -idA; idB = -idB; }
 
-  if (!particleDataPtr->isHadron(idA) || !particleDataPtr->isHadron(idB))
-    return 0;
-  else if (particleDataPtr->isMeson(idB))
+  if (particleDataPtr->isMeson(idB))
     return 3;
   else if (idB < 0)
     return 2;
@@ -32,17 +41,17 @@ double LowEnergySigma::sigmaTotal(int idA, int idB, double eCM) const {
   if (!particleDataPtr->isHadron(idA) || !particleDataPtr->isHadron(idB))
     return 0.; // @TODO Error message in this case?
 
+  // If energy is less than the hadron masses, return 0.
   if (particleDataPtr->m0(idA) + particleDataPtr->m0(idB) > eCM)
-    return (cout << "energy too low" << endl), 0.;
+    return 0.;
 
   switch (canonicalForm(idA, idB)) {
     case 0: return 0.; // @TODO: Probably give an error message?
     case 1: return sigmaTotalBB(idA, idB, eCM);
     case 2: return sigmaTotalBBbar(idA, idB, eCM);
     case 3: return sigmaTotalXM(idA, idB, eCM);
-    default: return 0.; // @TODO: Probably do something dramatical
+    default: return 0.; // @TODO: This should never occur
   }
-
 }
 
 // Scattering only through the specified process
@@ -112,16 +121,11 @@ double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM, int proc) cons
 
     case 1: // BB
       switch (proc) {
-        case 2:
-          return sigmaElasticBB(idA, idB, eCM);
-
-        case 1: 
-          return sigmaTotalBB(idA, idB, eCM) - sigmaElasticBB(idA, idB, eCM);
-
+        case 1: return sigmaTotalBB(idA, idB, eCM) - sigmaElasticBB(idA, idB, eCM);
+        case 2: return sigmaElasticBB(idA, idB, eCM);
         case 3: case 4: case 5:
           // @TODO: Be more discriminate between cases
           return sigmaTotalBB(idA, idB, eCM) - sigmaElasticBB(idA, idB, eCM);
-
         default: return 0;
       }
 
@@ -173,28 +177,28 @@ static double HERAFit(double a, double b, double n, double c, double d, double p
 // @TODO: Check all these tables and compare with UrQMD and PDG data
 
 static Interpolator ppTotalData(1.88, 5.0, {
-  335.561, 99.5353, 32.9358, 27.753, 24.4147, 23.7205, 23.8078,
-  24.1367, 24.0177, 25.2023, 26.1183, 29.1103, 31.7825, 34.3526, 
-  38.1058, 41.6417, 43.6273, 45.439, 46.5519, 47.5467, 47.5348, 
-  47.5201, 47.4971, 47.4584, 47.3441, 47.2299, 47.2413, 47.2926, 
-  47.2723, 47.1574, 47.0425, 46.9276, 46.7771, 46.5213, 46.2655, 
-  46.0097, 45.7539, 45.4981, 45.2562, 45.0241, 44.792, 44.5599, 
-  44.3278, 44.3162, 44.3281, 44.34, 44.2698, 44.1811, 44.0924, 43.9772,
-  43.7315, 43.4857, 43.24, 42.9942, 42.7736, 42.6152, 42.4568, 42.2983, 
-  42.1399, 41.9815, 41.8231, 41.7054, 41.6882, 41.6711, 41.6539, 
-  41.6367, 41.6195, 41.6023, 41.5851, 41.5679, 41.5507, 41.5335, 
-  41.5164, 41.4992, 41.482, 41.4648, 41.4476, 41.4304, 41.4132, 41.396,
-  41.3788, 41.3617, 41.3445, 41.3273, 41.3101, 41.2929, 41.2757,
-  41.2585, 41.2413, 41.2241, 41.207, 41.1898, 41.1726, 41.1554, 
-  41.1382, 41.121, 41.1038, 41.0866, 41.0694, 41.0522, 41.0351, 
-  41.0179, 41.0007, 40.9835, 40.9663, 40.9491, 40.9319, 40.9147,
-  40.8975, 40.8804, 40.8632, 40.846, 40.8288, 40.8116, 40.7944, 
-  40.7772, 40.76, 40.7428, 40.7257, 40.7085, 40.6913, 40.6741, 40.6569,
-  40.6397, 40.6225, 40.6053, 40.5881, 40.571, 40.5538, 40.5366, 
-  40.5194, 40.5022, 40.485, 40.4678, 40.4506, 40.4334, 40.4162, 
-  40.3991, 40.3819, 40.3647, 40.3475, 40.3303, 40.3131, 40.2959,
-  40.2787, 40.2615, 40.2444, 40.2272, 40.21, 40.1928, 40.1756, 40.1584,
-  40.1412, 40.124, 40.1068, 40.0897, 40.0725
+314.914, 60.7018, 30.4889, 25.1787, 24.5172, 24.125, 22.744, 24.151, 
+24.4887, 25.5162, 26.0655, 28.7429, 31.5493, 35.0329, 38.0288, 
+42.1204, 43.5899, 45.5891, 46.9695, 47.4814, 47.0977, 48.031, 
+47.7431, 46.9851, 47.6045, 47.4623, 47.0786, 47.2336, 47.8374, 
+46.3766, 46.6738, 46.9709, 46.8992, 46.5721, 46.1646, 45.6672, 
+45.4572, 45.4466, 45.4359, 44.6773, 43.4844, 44.1945, 44.9942, 
+45.0851, 44.5214, 44.373, 44.2346, 44.3895, 44.95, 44.7822, 42.7161,
+42.824, 43.0213, 42.8924, 42.6889, 42.6083, 42.5568, 42.5052, 
+42.4028, 42.2919, 42.1811, 41.702, 41.1733, 41.1347, 41.4545, 
+41.7743, 41.8671, 41.7377, 41.6083, 41.4789, 41.3854, 41.3247, 
+41.2641, 41.2035, 41.1429, 41.0823, 41.0217, 40.961, 40.9004, 
+40.8398, 40.7792, 40.7186, 40.658, 40.5973, 40.5367, 40.4761, 
+40.4155, 40.3549, 40.2942, 40.2336, 40.173, 40.1124, 40.0518, 
+39.9912, 39.9305, 39.8699, 39.8093, 39.7487, 39.6881, 39.6275,
+39.5668, 39.5062, 39.4456, 39.385, 39.3244, 39.2638, 39.2031, 
+39.1425, 39.0819, 39.0213, 38.9607, 38.9, 38.8394, 38.7788, 38.7182, 
+38.6576, 38.597, 38.5363, 38.4757, 38.4151, 38.3545, 38.2939, 
+38.2333, 38.1726, 38.112, 38.0514, 37.9908, 37.9302, 37.8696, 
+37.8089, 37.7483, 37.6877, 37.6271, 37.5665, 37.5058, 37.4452, 
+37.3846, 37.324, 37.2634, 37.2028, 37.1421, 37.0815, 37.0209, 
+36.9603, 36.8997, 36.8391, 36.7784, 36.7178, 36.6572, 36.5966, 
+36.536, 36.4754, 36.4147, 36.3541, 36.2935, 36.2329, 36.1723
 });
 
 static Interpolator pnTotalData(1.88, 5.0, {
@@ -256,20 +260,19 @@ double LowEnergySigma::sigmaTotalBB(int idA, int idB, double eCM) const {
   // Look for parametrisation
   if ((idA == 2212 && idB == 2212)
    || (idA == 2112 && idB == 2112)) {
-    double t = (eCM - 3.) / (5. - 3.);
+    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
     return (1 - t) * ppTotalData(eCM) 
-         +       t * ReggeFit(35.45, 42.53, 33.34, eCM * eCM);
+               + t * ReggeFit(35.45, 42.53, 33.34, eCM * eCM);
   }
   else if (idA == 2212 && idB == 2112)
   {
-    double t = (eCM - 3.) / (5. - 3.);
+    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
     return (1 - t) * pnTotalData(eCM) 
-         +       t * ReggeFit(35.80, 40.15, 30.00, eCM * eCM);
-
+               + t * ReggeFit(35.80, 40.15, 30.00, eCM * eCM);
   }
   // @TODO: Something special for Delta1232+N or Delta1232+Delta1232
   else {
-    double sigmaAQM = 40. * strangenessFactor(idA) * strangenessFactor(idB);
+    double sigmaAQM = aqm(idA, idB);
 
     // @TODO Add strangeness exchange for Lambda+Sigma or Xi+N
     {
@@ -288,12 +291,12 @@ double LowEnergySigma::sigmaElasticBB(int idA, int idB, double eCM) const {
 
   if ((idA == 2212 && idB == 2212)
    || (idA == 2112 && idB == 2112)) {
-    double t = (eCM - 3.) / (5. - 3.);
+    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
     return (1 - t) * ppElasticData(eCM) 
          +       t * HERAFit(11.9, 26.9, -1.21, 0.169, -1.85, pLab);
   }
   else if (idA == 2212 && idB == 2112) {
-    double t = (eCM - 3.) / (5. - 3.);
+    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
     return (1 - t) * pnElasticData(eCM) 
          +       t * HERAFit(11.9, 26.9, -1.21, 0.169, -1.85, pLab);
   }
@@ -369,9 +372,7 @@ map<int, double> LowEnergySigma::sigmaPartialBBbar(int idA, int idB, double eCM)
 
   // Diffractive (string + inelastic)
   double sigmaInelasticNN = sigmaTotNN - sigmaElNN - sigmaAnnNN;
-  double t = (eCM < 3.) ? 0.
-           : (eCM > 5.) ? 1. 
-           :              (eCM - 3.) / 2.; 
+  double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
   double sigmaStringNN = t * sigmaInelasticNN;
   double sigmaDiffNN = (1 - t) * sigmaInelasticNN;
 
@@ -387,7 +388,6 @@ map<int, double> LowEnergySigma::sigmaPartialBBbar(int idA, int idB, double eCM)
     { 6, sigmaAnnNN    * aqmFactor }
   };
 }
-
 
 //--------------------------------------------------------------------------
 
