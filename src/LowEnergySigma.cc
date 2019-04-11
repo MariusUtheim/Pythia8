@@ -121,9 +121,8 @@ double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM, int proc) cons
 
     case 1: // BB
       switch (proc) {
-        case 1: return sigmaTotalBB(idA, idB, eCM) - sigmaElasticBB(idA, idB, eCM);
         case 2: return sigmaElasticBB(idA, idB, eCM);
-        case 3: case 4: case 5:
+        case 1: case 3: case 4: case 5:
           // @TODO: Be more discriminate between cases
           return sigmaTotalBB(idA, idB, eCM) - sigmaElasticBB(idA, idB, eCM);
         default: return 0;
@@ -174,31 +173,40 @@ static double HERAFit(double a, double b, double n, double c, double d, double p
 
 // Baryon-Baryon section
 
+/**@TODO list for BB:
+ *  Check that the tables are correct and sufficiently smooth, compare w/ data
+ *  Implement strangeness exchange
+ *  Implement parametrisation for Lambda+p and Sigma+p special cases
+ *  Implement D+N and D+D collisions
+ *  Decide when diffraction occurs and when strings are formed
+ *  Do something abour charm and bottom? 
+ **/
+
 // @TODO: Check all these tables and compare with UrQMD and PDG data
 
 static Interpolator ppTotalData(1.88, 5.0, {
-314.914, 60.7018, 30.4889, 25.1787, 24.5172, 24.125, 22.744, 24.151, 
-24.4887, 25.5162, 26.0655, 28.7429, 31.5493, 35.0329, 38.0288, 
-42.1204, 43.5899, 45.5891, 46.9695, 47.4814, 47.0977, 48.031, 
-47.7431, 46.9851, 47.6045, 47.4623, 47.0786, 47.2336, 47.8374, 
-46.3766, 46.6738, 46.9709, 46.8992, 46.5721, 46.1646, 45.6672, 
-45.4572, 45.4466, 45.4359, 44.6773, 43.4844, 44.1945, 44.9942, 
-45.0851, 44.5214, 44.373, 44.2346, 44.3895, 44.95, 44.7822, 42.7161,
-42.824, 43.0213, 42.8924, 42.6889, 42.6083, 42.5568, 42.5052, 
-42.4028, 42.2919, 42.1811, 41.702, 41.1733, 41.1347, 41.4545, 
-41.7743, 41.8671, 41.7377, 41.6083, 41.4789, 41.3854, 41.3247, 
-41.2641, 41.2035, 41.1429, 41.0823, 41.0217, 40.961, 40.9004, 
-40.8398, 40.7792, 40.7186, 40.658, 40.5973, 40.5367, 40.4761, 
-40.4155, 40.3549, 40.2942, 40.2336, 40.173, 40.1124, 40.0518, 
-39.9912, 39.9305, 39.8699, 39.8093, 39.7487, 39.6881, 39.6275,
-39.5668, 39.5062, 39.4456, 39.385, 39.3244, 39.2638, 39.2031, 
-39.1425, 39.0819, 39.0213, 38.9607, 38.9, 38.8394, 38.7788, 38.7182, 
-38.6576, 38.597, 38.5363, 38.4757, 38.4151, 38.3545, 38.2939, 
-38.2333, 38.1726, 38.112, 38.0514, 37.9908, 37.9302, 37.8696, 
-37.8089, 37.7483, 37.6877, 37.6271, 37.5665, 37.5058, 37.4452, 
-37.3846, 37.324, 37.2634, 37.2028, 37.1421, 37.0815, 37.0209, 
-36.9603, 36.8997, 36.8391, 36.7784, 36.7178, 36.6572, 36.5966, 
-36.536, 36.4754, 36.4147, 36.3541, 36.2935, 36.2329, 36.1723
+  314.914, 60.7018, 30.4889, 25.1787, 24.5172, 24.125, 22.744, 24.151, 
+  24.4887, 25.5162, 26.0655, 28.7429, 31.5493, 35.0329, 38.0288, 
+  42.1204, 43.5899, 45.5891, 46.9695, 47.4814, 47.0977, 48.031, 
+  47.7431, 46.9851, 47.6045, 47.4623, 47.0786, 47.2336, 47.8374, 
+  46.3766, 46.6738, 46.9709, 46.8992, 46.5721, 46.1646, 45.6672, 
+  45.4572, 45.4466, 45.4359, 44.6773, 43.4844, 44.1945, 44.9942, 
+  45.0851, 44.5214, 44.373, 44.2346, 44.3895, 44.95, 44.7822, 42.7161,
+  42.824, 43.0213, 42.8924, 42.6889, 42.6083, 42.5568, 42.5052, 
+  42.4028, 42.2919, 42.1811, 41.702, 41.1733, 41.1347, 41.4545, 
+  41.7743, 41.8671, 41.7377, 41.6083, 41.4789, 41.3854, 41.3247, 
+  41.2641, 41.2035, 41.1429, 41.0823, 41.0217, 40.961, 40.9004, 
+  40.8398, 40.7792, 40.7186, 40.658, 40.5973, 40.5367, 40.4761, 
+  40.4155, 40.3549, 40.2942, 40.2336, 40.173, 40.1124, 40.0518, 
+  39.9912, 39.9305, 39.8699, 39.8093, 39.7487, 39.6881, 39.6275,
+  39.5668, 39.5062, 39.4456, 39.385, 39.3244, 39.2638, 39.2031, 
+  39.1425, 39.0819, 39.0213, 38.9607, 38.9, 38.8394, 38.7788, 38.7182, 
+  38.6576, 38.597, 38.5363, 38.4757, 38.4151, 38.3545, 38.2939, 
+  38.2333, 38.1726, 38.112, 38.0514, 37.9908, 37.9302, 37.8696, 
+  37.8089, 37.7483, 37.6877, 37.6271, 37.5665, 37.5058, 37.4452, 
+  37.3846, 37.324, 37.2634, 37.2028, 37.1421, 37.0815, 37.0209, 
+  36.9603, 36.8997, 36.8391, 36.7784, 36.7178, 36.6572, 36.5966, 
+  36.536, 36.4754, 36.4147, 36.3541, 36.2935, 36.2329, 36.1723
 });
 
 static Interpolator pnTotalData(1.88, 5.0, {
@@ -255,15 +263,20 @@ static Interpolator pnElasticData(2.0, 4.0, {
   12.0672, 10.7543, 8.17421
 });
 
+double LowEnergySigma::sigmaStrEx(int, int, double) const {
+  
+  // @TODO Implement this
+  return 0.;
+}
 
 double LowEnergySigma::sigmaTotalBB(int idA, int idB, double eCM) const {
-  // Look for parametrisation
-  if ((idA == 2212 && idB == 2212)
-   || (idA == 2112 && idB == 2112)) {
+  // Use parametrisation for pp/nn
+  if ((idA == 2212 && idB == 2212) || (idA == 2112 && idB == 2112)) {
     double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
     return (1 - t) * ppTotalData(eCM) 
                + t * ReggeFit(35.45, 42.53, 33.34, eCM * eCM);
   }
+  // Use parametrisation for pn
   else if (idA == 2212 && idB == 2112)
   {
     double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
@@ -271,39 +284,34 @@ double LowEnergySigma::sigmaTotalBB(int idA, int idB, double eCM) const {
                + t * ReggeFit(35.80, 40.15, 30.00, eCM * eCM);
   }
   // @TODO: Something special for Delta1232+N or Delta1232+Delta1232
+  // ...
+  // Use AQM + strangeness exchange for all others
   else {
-    double sigmaAQM = aqm(idA, idB);
-
-    // @TODO Add strangeness exchange for Lambda+Sigma or Xi+N
-    {
-      double sigmaSTREX = 0.; // @TODO get STREX
-      sigmaAQM += sigmaSTREX; 
-    }
-
-    return sigmaAQM;
+    return aqm(idA, idB) + sigmaStrEx(idA, idB, eCM);
   }
 }
 
 double LowEnergySigma::sigmaElasticBB(int idA, int idB, double eCM) const {
-  double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
-  double s = eCM * eCM;
-  double pLab = sqrt((s - pow2(mA + mB)) * (s - pow2(mA - mB))) / (2. * eCM);
+  // Fit pp/nn/pn
+  if ((idA == 2112 || idA == 2212) && (idB == 2112 || idB == 2212)) {
+    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
 
-  if ((idA == 2212 && idB == 2212)
-   || (idA == 2112 && idB == 2112)) {
-    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
-    return (1 - t) * ppElasticData(eCM) 
-         +       t * HERAFit(11.9, 26.9, -1.21, 0.169, -1.85, pLab);
-  }
-  else if (idA == 2212 && idB == 2112) {
-    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
-    return (1 - t) * pnElasticData(eCM) 
-         +       t * HERAFit(11.9, 26.9, -1.21, 0.169, -1.85, pLab);
+    double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
+    double s = eCM * eCM;
+    double pLab = sqrt((s - pow2(mA + mB)) * (s - pow2(mA - mB))) / (2. * eCM);
+    
+    // HERA fit is the same for others (pp and pn are simlar at high energies)
+    double sigmaHERA = HERAFit(11.9, 26.9, -1.21, 0.169, -1.85, pLab);
+
+    // Data fit at low energies is different for pp/nn or pn
+    double sigmaData = (idA == idB) ? ppElasticData(eCM)  // pp/nn
+                                    : pnElasticData(eCM); // pn
+
+    return (1 - t) * sigmaData + t * sigmaHERA;
   }
   else {
-    double sigmaAQM = 40. * strangenessFactor(idA) * strangenessFactor(idB);
-    double sigmaEl = 0.039 * pow(sigmaAQM, 3. / 2.);
-    return sigmaEl >= 0.001 ? sigmaEl : 0.;
+    // @TODO: UrQMD puts a threshold on this value, returning 0 if < 1 MeV
+    return 0.039 * pow(aqm(idA, idB), 2./3.);
   }
 }
 
@@ -311,7 +319,7 @@ double LowEnergySigma::sigmaElasticBB(int idA, int idB, double eCM) const {
 
 // Baryon-Antibaryon section
 
-/**@TODO Potential problems and points for discussion:
+/**@TODO list for BBbar:
  *  Check that sNN is correct
  *  UrQMD actually uses Regge fit instead of HERA fit for sigmaTotNN
  *  sigmaTotNN and sigmaElNN do not match data well for pLab < 0.3
@@ -420,11 +428,10 @@ double LowEnergySigma::sigmaNondiffXM(int idX, int idM, double eCM) const {
 }
 
 double LowEnergySigma::sigmaElasticXM(int idX, int idM, double eCM) const {
-  if (particleDataPtr->isBaryon(idX)) {
-    double sigmaElppi = ppiElData(eCM);
-    double aqmFactor = aqm(idX, idM) / aqm(2212, 211);
-    return sigmaElppi * aqmFactor;
-  }
+  if (particleDataPtr->isBaryon(idX))
+    // Return parametrisation of ppi, scaled by an aqm factor
+    // @TODO: Should this scale by the elastic aqm or the total aqm?
+    return ppiElData(eCM) * pow(aqm(idX, idM) / aqm(2212, 211), 2./3.);
   else
     return 5.;
 }

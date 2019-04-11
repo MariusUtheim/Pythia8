@@ -44,8 +44,8 @@ private:
   double aqmNN() const;
 
   double sigmaTotalBB(int idA, int idB, double eCM) const;
-
   double sigmaElasticBB(int idA, int idB, double eCM) const;
+  double sigmaStrEx(int idA, int idB, double eCM) const;
 
   double sigmaTotalBBbar(int idA, int idB, double eCM) const;
   map<int, double> sigmaPartialBBbar(int idA, int idB, double eCM) const;
