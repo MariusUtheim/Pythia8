@@ -4,5 +4,5 @@ sh b
 if [ $? -eq 0 ]; then
 sh r
 python myplot.py
-okular outplot.pdf &
+okular myplot.pdf &
 fi

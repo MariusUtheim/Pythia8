@@ -79,16 +79,19 @@ static Interpolator ppiDiffData(1.9, 3.19642, {
     20.6341
   });
 
-double mp = 0.938;
+constexpr double mN = 0.938;
+constexpr double mpi = 0.135;
 double pLab(double eCM) {
-  if (eCM < 2 * mp) 
+  if (eCM < 2 * mN) 
     return 0.;
-  return sqrt(eCM * eCM * (pow2(eCM / (2. * mp)) - 1));
+  return sqrt(eCM * eCM * (pow2(eCM / (2. * mN)) - 1));
 }
 
-double pLabInv(double p) {
-  return sqrt(2 * mp * mp + 2 * mp * sqrt(mp * mp + p * p));
+double pLabInv(double mBeam, double mTarget, double p) {
+  return sqrt(mBeam * mBeam + mTarget * mTarget 
+            + mTarget * sqrt(mBeam * mBeam + p * p));
 }
+
 
 int main(int argc, const char *argv[]) {
 
@@ -101,40 +104,33 @@ int main(int argc, const char *argv[]) {
   if (!resonance.init("../share/Pythia8/xmldoc/ParticleWidths.xml"))
     cout << "Failed to initialize " << endl;
 
-  initPDGData();
-
-    // Pythia cross sections
+  // Pythia cross sections
   LowEnergySigma sigma;
   sigma.initPtr(&pythia.info, &pythia.particleData, &resonance);
 
-  double eLeft = 0.1, eRight = 2.;
+  double eLeft = 0.1, eRight = 5.;
+  double mN = pythia.particleData.m0(2212), mL = pythia.particleData.m0(3122);
 
   Hist sigmaTotal = Hist::plotFunc(
-    [&](double eCM) { return sigma.sigmaTotal(2212, -2212, pLabInv(eCM)); }, 
-    "total", 100, eLeft, eRight);
-
-  Hist sigmaAnn = Hist::plotFunc(
-    [&](double eCM) { return sigma.sigmaPartial(2212, -2212, pLabInv(eCM), 6); }, 
-    "annihilation", 100, eLeft, eRight);
+    [&](double p) { return sigma.sigmaTotal(2212, 3122, pLabInv(mL, mN, p)); }, 
+    "total", 200, eLeft, eRight);
 
   Hist sigmaEl = Hist::plotFunc(
-    [&](double eCM) { return sigma.sigmaPartial(2212, -2212, pLabInv(eCM), 2); }, 
+    [&](double p) { return sigma.sigmaPartial(2212, 3122, pLabInv(mL, mN, p), 2); }, 
     "elastic", 100, eLeft, eRight);
 
   Hist sigmaDiff = Hist::plotFunc(
-    [&](double eCM) { return sigma.sigmaPartial(2112, -2212, pLabInv(eCM), 3) 
-                         + sigma.sigmaPartial(2112, -2212, pLabInv(eCM), 1)
-                  ;}, 
+    [&](double p) { return sigma.sigmaPartial(2212, 3122, pLabInv(mL, mN, p), 1); }, 
     "diffractive", 100, eLeft, eRight);
+
 
   // PDG cross sections
   Hist sigmaTotalPDG = Hist::plotFunc(
-    [&](double p) { return interpol(ppbarTotal, p); },
-    "Total (PDG)", 100, eLeft, eRight
-  );
+    [&](double p) { return interpol(LambdapTotal, p); },
+    "Total (PDG)", 100, eLeft, eRight);
 
   Hist sigmaElPDG = Hist::plotFunc(
-    [&](double p) { return interpol(ppbarElastic, p); },
+    [&](double p) { return interpol(LambdapElastic, p); },
     "Elastic (PDG)", 100, eLeft, eRight
   );
   
@@ -144,7 +140,6 @@ int main(int argc, const char *argv[]) {
   plt.frame("myplot");
   plt.add(sigmaTotal, "-");
   plt.add(sigmaEl, "-");
-  plt.add(sigmaAnn, "-");
   plt.add(sigmaDiff, "-");
   plt.add(sigmaTotalPDG, "h");
   plt.add(sigmaElPDG, "h");
