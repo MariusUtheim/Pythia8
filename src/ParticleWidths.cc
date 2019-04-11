@@ -108,20 +108,19 @@ vector<int> ParticleWidths::getResonances() const {
 
 double ParticleWidths::width(int id, double eCM) const {
   auto iter = entries.find(id);
-  if (iter == entries.end())
-    // @TODO Figure what to do when mass is missing
-    return 0.;
-  else
-    return iter->second.widths(eCM);
+  return (iter != entries.end()) ? iter->second.widths(eCM) : 0.;
 }
+
+double ParticleWidths::partialWidth(int id, vector<int> prods, double eCM) const {
+  auto iter = entries.find(id);
+  return (iter != entries.end()) ? iter->second.getWidth(prods, eCM) : 0.;
+}
+
 
 double ParticleWidths::branchingRatio(int id, vector<int> prods, double eCM) const {
   // @TODO Ordering of products?
   auto iter = entries.find(id);
-  if (iter == entries.end())
-    return 0.;
-  else
-    return iter->second.getBR(prods, eCM);
+  return (iter != entries.end()) ? iter->second.getBR(prods, eCM) : 0.;
 }
 
 vector<pair<double, vector<int>>> ParticleWidths::getWeightedProducts(int id, double eCM) const {
