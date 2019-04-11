@@ -4,38 +4,53 @@
 
 namespace Pythia8 {
 
-static constexpr double clamp(double min, double max, double x) {
+// @TODO: Move this to a better place
+static double clamp(double min, double max, double x) {
   return (x < min) ? min : (x > max) ? max : x;
 }
 
+//==========================================================================
+
+// The LowEnergySigma class.
+
+//--------------------------------------------------------------------------
+
 // Returns int representing the overall process type:
-//  0 - Not hadron-hadron
+//  0 - Collision not implemented (ids will not be ordered)
 //  1 - BB
 //  2 - BBbar
 //  3 - XM
-// The canonical ordering of A and B satisfies A > 0 and |A| >= |B|. If both
-// A and B are negative, they are both negated. 
-// In particular:
-//  - All BB are between baryons, not antibaryons
+// 
+// The canonical ordering of A and B satisfies two criteria:
+//   1) |A| >= |B|, and 2) A > 0.
+// 
+// Implications:
+//  - If both A and B are negative, they will both be negated (BbarBbar --> BB)
 //  - In BBbar, A is the particle and B is the antiparticle
 //  - In XM, B is always a meson and X is a baryon (not antibaryon) or meson 
+//
 int LowEnergySigma::canonicalForm(int& idA, int& idB) const {
   if (!particleDataPtr->isHadron(idA) || !particleDataPtr->isHadron(idB))
     return 0;
 
+  // Ensure |A| >= |B|
   if (abs(idA) < abs(idB))
     swap(idA, idB);
 
+  // Ensure A > 0
   if (idA < 0)
   { idA = -idA; idB = -idB; }
 
+  // Get id of overall collision type
   if (particleDataPtr->isMeson(idB))
-    return 3;
+    return 3; // XM
   else if (idB < 0)
-    return 2;
+    return 2; // BBbar
   else
-    return 1;
+    return 1; // BB
 }
+
+//--------------------------------------------------------------------------
 
 double LowEnergySigma::sigmaTotal(int idA, int idB, double eCM) const {
   if (!particleDataPtr->isHadron(idA) || !particleDataPtr->isHadron(idB))
@@ -54,10 +69,8 @@ double LowEnergySigma::sigmaTotal(int idA, int idB, double eCM) const {
   }
 }
 
-// Scattering only through the specified process
-// 1: non-diffractive | 2: elastic | 3: SD (XB) | 4: SD (AX)
-// 5: DD | 6: annihilation | 7: resonant
-// >101: resonant through the particle specified by the id
+//--------------------------------------------------------------------------
+
 map<int, double> LowEnergySigma::sigmaPartial(int idA, int idB, double eCM) const {
   if (!particleDataPtr->isHadron(idA) || !particleDataPtr->isHadron(idB))
     return map<int, double>(); // @TODO Error message in this case?
@@ -102,6 +115,8 @@ map<int, double> LowEnergySigma::sigmaPartial(int idA, int idB, double eCM) cons
       return map<int, double>(); 
   }
 }
+
+//--------------------------------------------------------------------------
 
 double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM, int proc) const {
   // Note: A shorthand way of calculating this would be to get the map of
@@ -149,6 +164,8 @@ double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM, int proc) cons
   }
 }
 
+//--------------------------------------------------------------------------
+
 double LowEnergySigma::aqm(int idA, int idB) const {
   double mesA = particleDataPtr->isMeson(idA);
   double mesB = particleDataPtr->isMeson(idB);
@@ -181,8 +198,6 @@ static double HERAFit(double a, double b, double n, double c, double d, double p
  *  Decide when diffraction occurs and when strings are formed
  *  Do something abour charm and bottom? 
  **/
-
-// @TODO: Check all these tables and compare with UrQMD and PDG data
 
 static Interpolator ppTotalData(1.88, 5.0, {
   314.914, 60.7018, 30.4889, 25.1787, 24.5172, 24.125, 22.744, 24.151, 
@@ -263,8 +278,8 @@ static Interpolator pnElasticData(2.0, 4.0, {
   12.0672, 10.7543, 8.17421
 });
 
+// Strangeness exchange
 double LowEnergySigma::sigmaStrEx(int, int, double) const {
-  
   // @TODO Implement this
   return 0.;
 }
@@ -352,6 +367,9 @@ double LowEnergySigma::sigmaTotalBBbar(int idA, int idB, double eCM) const {
   return sigmaTotNN * aqmFactor;
 }
 
+// @TODO: Consider making separate functions. For now I chose to put them all
+// in one function, since many partial cross sections depend on the same initial
+// computations, such as sNN and sigmaTotal
 map<int, double> LowEnergySigma::sigmaPartialBBbar(int idA, int idB, double eCM) const {
   // Calculate effective energy, i.e. energy of protons with the same momenta
   double m0 = particleDataPtr->m0(2212);
@@ -401,6 +419,19 @@ map<int, double> LowEnergySigma::sigmaPartialBBbar(int idA, int idB, double eCM)
 
 // Hadron-Meson section
 
+/**@TODO list for XM:
+ *  Consider parametrising ppiTotal, and define diff = total - res - elastic
+ *  Parametrise other cases explicitly, such as other pi+N and K+N
+ *  Get full elastic cross section (i.e. include resonant elastic)
+ *  Something with strangeness exchange?
+ *  UrQMD includes something about Danielewicz forward delay
+ *  Decide which resonances should be implemented
+ *  Check that all excited particles have the correct data, including id
+ *  Verify that mass-dependent widths are correct for all particles
+ *  Compare pi/K + p cross sections to PDG data
+ *  Compare a lot of cases to UrQMD
+ **/
+
 static Interpolator ppiDiffData(1.9, 3.19642, {
     0., 0.597966, 1.6208, 2.64363, 3.66647, 4.6893, 5.71213, 6.67697,
     7.63029, 8.79865, 10.016, 11.3516, 12.4208, 13.3126, 13.984, 14.5885,
@@ -421,7 +452,14 @@ static Interpolator ppiElData(1.975, 3.18545,
     5.09824, 5.09596, 5.09174, 5.08824, 5.083, 5.07694, 5.07013, 5.06264,
     5.05453, 5.04584, 5.03664, 5.02696, 5.01684, 5.00633, 4.99546 });
 
-double LowEnergySigma::sigmaNondiffXM(int idX, int idM, double eCM) const {
+
+// Total = resonant + elastic + diffractive(including strings)
+double LowEnergySigma::sigmaTotalXM(int idX, int idM, double eCM) const {
+  return lowEnergyResPtr->getResonanceSigma(idX, idM, eCM)
+       + sigmaElasticXM(idX, idM, eCM) + sigmaDiffXM(idX, idM, eCM);
+}
+
+double LowEnergySigma::sigmaDiffXM(int idX, int idM, double eCM) const {
   double sigmaDiffppi = ppiDiffData(eCM);
   double aqmFactor = aqm(idX, idM) / aqm(2212, 211);
   return sigmaDiffppi * aqmFactor;
@@ -436,12 +474,6 @@ double LowEnergySigma::sigmaElasticXM(int idX, int idM, double eCM) const {
     return 5.;
 }
 
-double LowEnergySigma::sigmaTotalXM(int idX, int idM, double eCM) const {
-  return lowEnergyResPtr->getResonanceSigma(idX, idM, eCM)
-       + sigmaElasticXM(idX, idM, eCM) + sigmaNondiffXM(idX, idM, eCM);
-}
-
-//--------------------------------------------------------------------------
-
+//==========================================================================
 
 }
