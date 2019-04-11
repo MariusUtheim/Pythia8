@@ -125,22 +125,15 @@ double LowEnergyResonance::getPartialResonanceSigma(int idA, int idB, int idR, d
   double s = pow2(eCM), mR = particleDataPtr->m0(idR),
          mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
 
+  double pCMS2 = 1 / (4 * s) * (s - pow2(mA + mB)) * (s - pow2(mA - mB));
+
   // Calculate the resonance sigma
   double sigma = 
-      4 * M_PI * s / sqrt((s - pow2(mA + mB)) * (s - pow2(mA - mB))) 
+      M_PI / pCMS2
     * particleDataPtr->spinType(idR)
         / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB))
     * branchingRatio * pow2(gammaR) / (pow2(mR - eCM) + 0.25 * pow2(gammaR))
     * GEVINVSQ2MB;
-
-  // If the two particles are the same except for I3, then multiply by 2
-  // (e.g. for pi+pi- --> rho)
-  // @TODO: Check that this test is correct for all cases. What about charm?
-  // @TODO: Is this necessary? Shouldn't it be included in gamma already?
-  int quarksA = (idA / 10) % 1000, quarksB = (idB / 10) % 1000;
-  if (quarksA != quarksB && (idA - 10 * quarksA) == (idB - 10 * quarksB)
-      && particleDataPtr->strangeness(idA) == particleDataPtr->strangeness(idB))
-    sigma *= 2;
 
   return sigma;
 }
