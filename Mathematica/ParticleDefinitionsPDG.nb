@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    133084,       4090]
-NotebookOptionsPosition[    132791,       4077]
-NotebookOutlinePosition[    133125,       4092]
-CellTagsIndexPosition[    133082,       4089]
+NotebookDataLength[    136777,       4214]
+NotebookOptionsPosition[    136485,       4201]
+NotebookOutlinePosition[    136818,       4216]
+CellTagsIndexPosition[    136775,       4213]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1680,9 +1680,8 @@ Cell[BoxData[{
    RowBox[{"{", 
     RowBox[{
     "D1232", ",", "D1600", ",", "D1620", ",", "D1700", ",", "D1900", ",", 
-     "D1905", ",", "D1910", ",", "D1920", ",", "D1930", ",", 
-     RowBox[{"(*", 
-      RowBox[{"D1950", ","}], "*)"}], "D2200"}], 
+     "D1905", ",", "D1910", ",", "D1920", ",", "D1930", ",", "D1950", ",", 
+     "D2200"}], 
     RowBox[{"(*", 
      RowBox[{",", "D2420"}], "*)"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -1725,6 +1724,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "L1405", "]"}], "=", "13002"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "L1405", "]"}], "=", "1.407"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "L1405", "]"}], "=", "0.050"}], ";", 
@@ -1749,6 +1752,10 @@ Cell[BoxData[{
   RowBox[{"(*", " ", 
    RowBox[{"L1520", " ", "aka", " ", "Lambda", "*"}], " ", 
    "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "L1520", "]"}], "=", "3004"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "L1520", "]"}], "=", "1.520"}], ";", 
@@ -1791,6 +1798,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "L1600", "]"}], "=", "23002"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "L1600", "]"}], "=", "1.600"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "L1600", "]"}], "=", "0.150"}], ";", 
@@ -1819,6 +1830,10 @@ Cell[BoxData[{
          RowBox[{"S1190", ",", "pi"}], "}"}], ",", "0.65", ",", "1"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "L1670", "]"}], "=", "33002"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "L1670", "]"}], "=", "1.670"}], ";", 
@@ -1856,6 +1871,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "L1690", "]"}], "=", "13004"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "L1690", "]"}], "=", "1.690"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "L1690", "]"}], "=", "0.060"}], ";", 
@@ -1889,6 +1908,10 @@ Cell[BoxData[{
          RowBox[{"S1385", ",", "pi"}], "}"}], ",", "0.30", ",", "0"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "L1800", "]"}], "=", "43002"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "L1800", "]"}], "=", "1.800"}], ";", 
@@ -1931,6 +1954,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "L1810", "]"}], "=", "53002"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "L1810", "]"}], "=", "1.810"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "L1810", "]"}], "=", "0.150"}], ";", 
@@ -1971,6 +1998,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "L1820", "]"}], "=", "3006"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "L1820", "]"}], "=", "1.820"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "L1820", "]"}], "=", "0.080"}], ";", 
@@ -2006,6 +2037,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "L1830", "]"}], "=", "13006"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "L1830", "]"}], "=", "1.830"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "L1830", "]"}], "=", "0.095"}], ";", 
@@ -2039,6 +2074,10 @@ Cell[BoxData[{
          RowBox[{"S1385", ",", "pi"}], "}"}], ",", "0.20", ",", "2"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "L1890", "]"}], "=", "13006"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "L1890", "]"}], "=", "1.890"}], ";", 
@@ -2079,6 +2118,10 @@ Cell[BoxData[{
          RowBox[{"S1385", ",", "pi"}], "}"}], ",", "0.31", ",", "1"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "L2100", "]"}], "=", "3008"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "L2100", "]"}], "=", "2.100"}], ";", 
@@ -2129,6 +2172,10 @@ Cell[BoxData[{
          RowBox[{"L1116", ",", "omega"}], "}"}], ",", "0.08", ",", "2"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "L2110", "]"}], "=", "23006"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "L2110", "]"}], "=", "2.110"}], ";", 
@@ -2195,22 +2242,29 @@ Cell[BoxData[{
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{
-    RowBox[{"pythiaName", "[", "S1190", "]"}], "=", "\"\<S\>\""}], ";", " ", 
-   RowBox[{"(*", " ", 
-    RowBox[{"S1193", " ", "aka", " ", "Sigma"}], " ", "*)"}], 
-   "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"m0", "[", "S1190", "]"}], "=", "1.192"}], ";", " ", 
-   RowBox[{
-    RowBox[{"\[CapitalGamma]0", "[", "S1190", "]"}], "=", "0."}], ";", 
-   RowBox[{
-    RowBox[{"j", "[", "S1190", "]"}], "=", 
-    RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"pythiaName", "[", "S1190", "]"}], "=", "\"\<S\>\""}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"S1193", " ", "aka", " ", "Sigma"}], " ", "*)"}], 
   "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"m0", "[", "S1190", "]"}], "=", "1.192"}], ";", " ", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "S1190", "]"}], "=", "0."}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "S1190", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"isoSpin", "[", "S1190", "]"}], "=", "1"}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", " ", 
    RowBox[{"S1385", " ", "aka", " ", "Sigma", "*"}], " ", 
    "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "S1385", "]"}], "=", "3004"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "S1385", "]"}], "=", "1.384"}], ";", 
@@ -2241,6 +2295,10 @@ Cell[BoxData[{
          RowBox[{"L1116", ",", "pi"}], "}"}], ",", "0.88", ",", "1"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "S1660", "]"}], "=", "13002"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "S1660", "]"}], "=", "1.660"}], ";", 
@@ -2278,6 +2336,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "S1670", "]"}], "=", "13004"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "S1670", "]"}], "=", "1.670"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "S1670", "]"}], "=", "0.060"}], ";", 
@@ -2313,6 +2375,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "S1750", "]"}], "=", "23002"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "S1750", "]"}], "=", "1.750"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "S1750", "]"}], "=", "0.090"}], ";", 
@@ -2346,6 +2412,10 @@ Cell[BoxData[{
          RowBox[{"S1190", ",", "eta"}], "}"}], ",", "0.55", ",", "0"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "S1775", "]"}], "=", "3006"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "S1775", "]"}], "=", "1.775"}], ";", 
@@ -2393,6 +2463,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "S1915", "]"}], "=", "13006"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "S1915", "]"}], "=", "1.915"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "S1915", "]"}], "=", "0.120"}], ";", 
@@ -2431,6 +2505,10 @@ Cell[BoxData[{
          RowBox[{"L1116", ",", "pi"}], "}"}], ",", "0.40", ",", "3"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "S1940", "]"}], "=", "23004"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "S1940", "]"}], "=", "1.940"}], ";", 
@@ -2486,6 +2564,10 @@ Cell[BoxData[{
          RowBox[{"D1232", ",", "Ka"}], "}"}], ",", "0.15", ",", "0"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "S2030", "]"}], "=", "3008"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "S2030", "]"}], "=", "2.030"}], ";", 
@@ -2564,24 +2646,38 @@ Cell[BoxData[{
        RowBox[{"Ss", ",", "h"}], "]"}]}], "]"}], ":=", "1"}], ";"}], 
   "\[IndentingNewLine]", "\[IndentingNewLine]", 
   RowBox[{"(*", 
-   RowBox[{"*", " ", "Xi", " ", "particles"}], " ", "**)"}], 
-  "\[IndentingNewLine]", " "}], "\[IndentingNewLine]", 
+   RowBox[{"*", " ", "Xi", " ", "particles"}], " ", 
+   "**)"}]}], "\[IndentingNewLine]", 
+ RowBox[{" ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"idMask", "[", "X1315", "]"}], "=", "3302"}], 
+   ";"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"pythiaName", "[", "X1315", "]"}], "=", "\"\<X\>\""}], ";", 
+  RowBox[{"(*", " ", 
+   RowBox[{"X1315", " ", "aka", " ", "Xi"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"m0", "[", "X1315", "]"}], "=", "1.32171"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "X1315", "]"}], "=", "0"}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "X1315", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{
-    RowBox[{"pythiaName", "[", "X1315", "]"}], "=", "\"\<X\>\""}], ";", 
-   RowBox[{"(*", " ", 
-    RowBox[{"X1315", " ", "aka", " ", "Xi"}], " ", "*)"}], 
-   "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"m0", "[", "X1315", "]"}], "=", "1.32171"}], ";", 
-   RowBox[{
-    RowBox[{"\[CapitalGamma]0", "[", "X1315", "]"}], "=", "0"}], ";", 
-   RowBox[{
-    RowBox[{"j", "[", "X1315", "]"}], "=", 
+    RowBox[{"isoSpin", "[", "X1315", "]"}], "=", 
     RowBox[{"1", "/", "2"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "X1530", "]"}], "=", "3304"}], ";", " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{"X1530", " ", "aka", " ", "Xi", "*"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{"m0", "[", "X1530", "]"}], "=", "1.532"}], ";", 
   RowBox[{
@@ -2611,6 +2707,10 @@ Cell[BoxData[{
          RowBox[{"X1315", ",", "gamma"}], "}"}], ",", "0.02", ",", "1"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "X1690", "]"}], "=", "0"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "X1690", "]"}], "=", "1.700"}], ";", 
@@ -2648,6 +2748,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "X1820", "]"}], "=", "13304"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "X1820", "]"}], "=", "1.823"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "X1820", "]"}], "=", "0.024"}], ";", 
@@ -2683,6 +2787,10 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
+   RowBox[{"idMask", "[", "X1950", "]"}], "=", "0"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
    RowBox[{"m0", "[", "X1950", "]"}], "=", "1.950"}], ";", 
   RowBox[{
    RowBox[{"\[CapitalGamma]0", "[", "X1950", "]"}], "=", "0.060"}], ";", 
@@ -2716,6 +2824,10 @@ Cell[BoxData[{
          RowBox[{"S1190", ",", "Ka"}], "}"}], ",", "0.25", ",", "1"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "X1950", "]"}], "=", "0"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"m0", "[", "X2030", "]"}], "=", "2.025"}], ";", 
@@ -2754,8 +2866,7 @@ Cell[BoxData[{
  RowBox[{
   RowBox[{"Xs", "=", 
    RowBox[{"{", 
-    RowBox[{"X1530", ",", "X1690", ",", "X1820", ",", "X1950", ",", "X2030"}],
-     "}"}]}], ";"}], "\[IndentingNewLine]", 
+    RowBox[{"X1530", ",", "X1820"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"isoSpin", "[", 
@@ -2775,6 +2886,10 @@ Cell[BoxData[{
    RowBox[{
     RowBox[{"*", " ", "Non"}], "-", "resonances"}], " ", 
    "**)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "gamma", "]"}], "=", "22"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{
@@ -2991,6 +3106,10 @@ Cell[BoxData[{
    RowBox[{
     RowBox[{"isoSpin", "[", "eta958", "]"}], "=", "0"}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"idMask", "[", "Kstar", "]"}], "=", "303"}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"pythiaName", "[", "Kstar", "]"}], "=", "\"\<K*\>\""}], ";", " ", 
@@ -4071,12 +4190,17 @@ Cell[BoxData[{
    3.763100537727167*^9}, 3.763100642501192*^9, {3.76310070892295*^9, 
    3.763100714061614*^9}, {3.763100766985195*^9, 3.7631007671155567`*^9}, {
    3.763100948327488*^9, 3.763100957056267*^9}, {3.763113857246756*^9, 
-   3.7631138577395287`*^9}, {3.76311392254237*^9, 
-   3.763113948912545*^9}},ExpressionUUID->"2fa6308b-198d-43cd-b214-\
+   3.7631138577395287`*^9}, {3.76311392254237*^9, 3.763113948912545*^9}, {
+   3.763979333818071*^9, 3.7639793420086117`*^9}, {3.76398365891092*^9, 
+   3.763983679565565*^9}, {3.7639844499849663`*^9, 3.763984888221408*^9}, {
+   3.763985171332073*^9, 3.763985173013727*^9}, {3.7639856571194363`*^9, 
+   3.763985671926281*^9}, {3.763986117246282*^9, 3.763986122317266*^9}, {
+   3.7639861609641237`*^9, 
+   3.763986183715804*^9}},ExpressionUUID->"2fa6308b-198d-43cd-b214-\
 0b1a287e6148"]
 },
 WindowSize->{956, 1135},
-WindowMargins->{{Automatic, 76}, {0, Automatic}},
+WindowMargins->{{0, Automatic}, {0, Automatic}},
 FrontEndVersion->"11.3 for Linux x86 (64-bit) (March 6, 2018)",
 StyleDefinitions->"Default.nb"
 ]
@@ -4091,7 +4215,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 132229, 4055, 14039, "Input",ExpressionUUID->"2fa6308b-198d-43cd-b214-0b1a287e6148"]
+Cell[558, 20, 135923, 4179, 14706, "Input",ExpressionUUID->"2fa6308b-198d-43cd-b214-0b1a287e6148"]
 }
 ]
 *)
