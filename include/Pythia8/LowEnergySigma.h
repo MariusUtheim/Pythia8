@@ -63,6 +63,8 @@ private:
   double sigmaElasticBB(int idA, int idB, double eCM) const;
   double sigmaStrEx(int idA, int idB, double eCM) const;
 
+  // @TODO: Rethink the interface here
+
   // BBbar
   double sigmaTotalBBbar(int idA, int idB, double eCM) const;
   map<int, double> sigmaPartialBBbar(int idA, int idB, double eCM) const;
@@ -70,7 +72,7 @@ private:
   // XM
   double sigmaTotalXM(int idX, int idM, double eCM) const;
   double sigmaElasticXM(int idX, int idM, double eCM) const;
-  double sigmaDiffXM(int idX, int idM, double eCM) const;
+  double sigmaInelXM(int idX, int idM, double eCM) const;
 
   // Select process type:
   //  1: baryon-baryon or antibaryon-antibaryon

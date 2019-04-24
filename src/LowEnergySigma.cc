@@ -5,7 +5,7 @@
 namespace Pythia8 {
 
 // @TODO: Move this to a better place
-static double clamp(double min, double max, double x) {
+static double clamp(double x, double min, double max) {
   return (x < min) ? min : (x > max) ? max : x;
 }
 
@@ -38,8 +38,11 @@ int LowEnergySigma::canonicalForm(int& idA, int& idB) const {
     swap(idA, idB);
 
   // Ensure A > 0
-  if (idA < 0)
-  { idA = -idA; idB = -idB; }
+  if (idA < 0) { 
+    idA = -idA;
+    if (particleDataPtr->hasAnti(idB))
+      idB = -idB; 
+  }
 
   // Get id of overall collision type
   if (particleDataPtr->isMeson(idB))
@@ -102,10 +105,10 @@ map<int, double> LowEnergySigma::sigmaPartial(int idA, int idB, double eCM) cons
           result.emplace(idR, partial);
         }
       }
-      double nonDiff = sigmaNondiffXM(idA, idB, eCM);
+      double inel = sigmaInelXM(idA, idB, eCM);
       double elastic = sigmaElasticXM(idA, idB, eCM);
-      result.emplace(0, res + nonDiff + elastic);
-      result.emplace(1, nonDiff);
+      result.emplace(0, res + inel + elastic);
+      result.emplace(1, inel);
       result.emplace(2, elastic);
       result.emplace(7, res);
       return result;
@@ -151,7 +154,7 @@ double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM, int proc) cons
 
     case 3: 
       switch (proc) {
-        case 1: return sigmaNondiffXM(idA, idB, eCM);
+        case 1: return sigmaInelXM(idA, idB, eCM);
         case 2: return sigmaElasticXM(idA, idB, eCM);
         case 7: return lowEnergyResPtr->getResonanceSigma(idA, idB, eCM);
         default:
@@ -170,8 +173,8 @@ double LowEnergySigma::aqm(int idA, int idB) const {
   double mesA = particleDataPtr->isMeson(idA);
   double mesB = particleDataPtr->isMeson(idB);
   return 40 * pow(2./3., mesA + mesB)
-       * (1 - 0.4 * abs(particleDataPtr->strangeness(idA)) / (mesA ? 2 : 3))
-       * (1 - 0.4 * abs(particleDataPtr->strangeness(idB)) / (mesB ? 2 : 3));
+       * (1 - 0.4 * abs(particleDataPtr->nStrangeQuarks(idA)) / (mesA ? 2 : 3))
+       * (1 - 0.4 * abs(particleDataPtr->nStrangeQuarks(idB)) / (mesB ? 2 : 3));
 }
 
 double LowEnergySigma::aqmNN() const {
@@ -287,14 +290,14 @@ double LowEnergySigma::sigmaStrEx(int, int, double) const {
 double LowEnergySigma::sigmaTotalBB(int idA, int idB, double eCM) const {
   // Use parametrisation for pp/nn
   if ((idA == 2212 && idB == 2212) || (idA == 2112 && idB == 2112)) {
-    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
+    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
     return (1 - t) * ppTotalData(eCM) 
                + t * ReggeFit(35.45, 42.53, 33.34, eCM * eCM);
   }
   // Use parametrisation for pn
   else if (idA == 2212 && idB == 2112)
   {
-    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
+    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
     return (1 - t) * pnTotalData(eCM) 
                + t * ReggeFit(35.80, 40.15, 30.00, eCM * eCM);
   }
@@ -398,7 +401,7 @@ map<int, double> LowEnergySigma::sigmaPartialBBbar(int idA, int idB, double eCM)
 
   // Diffractive (string + inelastic)
   double sigmaInelasticNN = sigmaTotNN - sigmaElNN - sigmaAnnNN;
-  double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
+  double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
   double sigmaStringNN = t * sigmaInelasticNN;
   double sigmaDiffNN = (1 - t) * sigmaInelasticNN;
 
@@ -456,10 +459,10 @@ static Interpolator ppiElData(1.975, 3.18545,
 // Total = resonant + elastic + diffractive(including strings)
 double LowEnergySigma::sigmaTotalXM(int idX, int idM, double eCM) const {
   return lowEnergyResPtr->getResonanceSigma(idX, idM, eCM)
-       + sigmaElasticXM(idX, idM, eCM) + sigmaDiffXM(idX, idM, eCM);
+       + sigmaElasticXM(idX, idM, eCM) + sigmaInelXM(idX, idM, eCM);
 }
 
-double LowEnergySigma::sigmaDiffXM(int idX, int idM, double eCM) const {
+double LowEnergySigma::sigmaInelXM(int idX, int idM, double eCM) const {
   double sigmaDiffppi = ppiDiffData(eCM);
   double aqmFactor = aqm(idX, idM) / aqm(2212, 211);
   return sigmaDiffppi * aqmFactor;

@@ -34,7 +34,7 @@ bool LowEnergyResonance::init(string path) {
       continue;
     
     // Signature takes the form BQS
-    int charge = particleDataPtr->chargeType(id), strangeness = particleDataPtr->strangeness(id);
+    int charge = particleDataPtr->chargeType(id), strangeness = particleDataPtr->nStrangeQuarks(id);
     int signature = 100 * (particleDataPtr->isBaryon(id))
                   +  10 * ((charge >= 0) ? charge : (10 + charge))
                   +   1 * ((strangeness >= 0) ? strangeness : (10 + strangeness));
@@ -185,8 +185,8 @@ vector<int> LowEnergyResonance::getPossibleResonances(int idA, int idB) const {
                    + particleDataPtr->isBaryon(idB); // @TODO: What about antiparticles?
   int charge = particleDataPtr->chargeType(idA) 
              + particleDataPtr->chargeType(idB);
-  int strangeness = particleDataPtr->strangeness(idA) 
-                  + particleDataPtr->strangeness(idB);
+  int strangeness = particleDataPtr->nStrangeQuarks(idA) 
+                  + particleDataPtr->nStrangeQuarks(idB);
 
   int signature = 100 * (baryonNumber)
                 +  10 * ((charge >= 0) ? charge : (10 + charge))
