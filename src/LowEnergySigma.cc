@@ -312,7 +312,10 @@ double LowEnergySigma::sigmaTotalBB(int idA, int idB, double eCM) const {
 double LowEnergySigma::sigmaElasticBB(int idA, int idB, double eCM) const {
   // Fit pp/nn/pn
   if ((idA == 2112 || idA == 2212) && (idB == 2112 || idB == 2212)) {
-    double t = clamp(0., 1., (eCM - 3.) / (5. - 3.));
+    if (eCM < 2 * particleDataPtr->m0(2212) + particleDataPtr->m0(211))
+      return sigmaTotalBB(idA, idB, eCM);
+
+    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
 
     double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
     double s = eCM * eCM;
