@@ -25,7 +25,7 @@ static double clamp(double x, double min, double max) {
 //   1) |A| >= |B|, and 2) A > 0.
 // 
 // Implications:
-//  - If both A and B are negative, they will both be negated (BbarBbar --> BB)
+//  - If both A and B are negative, they are replaced by their antiparticles
 //  - In BBbar, A is the particle and B is the antiparticle
 //  - In XM, B is always a meson and X is a baryon (not antibaryon) or meson 
 //
@@ -138,11 +138,35 @@ double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM, int proc) cons
     case 0: return 0.; // @TODO: Probably give an error message?
 
     case 1: // BB
+      sigmaSaSDL.calcDiff(idA, idB, eCM * eCM,
+                          particleDataPtr->m0(idA), particleDataPtr->m0(idB));
       switch (proc) {
-        case 2: return sigmaElasticBB(idA, idB, eCM);
-        case 1: case 3: case 4: case 5:
-          // @TODO: Be more discriminate between cases
+
+        case 0: // Inelastic
           return sigmaTotalBB(idA, idB, eCM) - sigmaElasticBB(idA, idB, eCM);
+
+        case 2: 
+          //sigmaSaSDL.calcTotEl(idA, idB, eCM * eCM,
+          //                particleDataPtr->m0(idA), particleDataPtr->m0(idB));
+          //return sigmaSaSDL.sigEl;
+          return sigmaElasticBB(idA, idB, eCM);
+
+        case 1: case 3: case 4: case 5: {
+          sigmaSaSDL.calcTotEl(idA, idB, eCM * eCM,
+                         particleDataPtr->m0(idA), particleDataPtr->m0(idB));
+          sigmaSaSDL.calcDiff(idA, idB, eCM * eCM,
+                         particleDataPtr->m0(idA), particleDataPtr->m0(idB));
+          double sigND = sigmaSaSDL.sigTot - sigmaSaSDL.sigEl
+            - sigmaSaSDL.sigAX - sigmaSaSDL.sigXB - sigmaSaSDL.sigAXB - sigmaSaSDL.sigXX;
+          double factor = proc == 1 ? sigND
+                        : proc == 3 ? sigmaSaSDL.sigAX 
+                        : proc == 4 ? sigmaSaSDL.sigXB
+                                    : sigmaSaSDL.sigXX;
+          factor /= (sigmaSaSDL.sigTot - sigmaSaSDL.sigEl);
+        
+          return factor * (sigmaTotalBB(idA, idB, eCM) - sigmaElasticBB(idA, idB, eCM));
+        }
+
         default: return 0;
       }
 
@@ -319,7 +343,7 @@ double LowEnergySigma::sigmaElasticBB(int idA, int idB, double eCM) const {
 
     double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
     double s = eCM * eCM;
-    double pLab = sqrt((s - pow2(mA + mB)) * (s - pow2(mA - mB))) / (2. * eCM);
+    double pLab = sqrt((s - pow2(mA + mB)) * (s - pow2(mA - mB))) / (2. * mB);
     
     // HERA fit is the same for others (pp and pn are simlar at high energies)
     double sigmaHERA = HERAFit(11.9, 26.9, -1.21, 0.169, -1.85, pLab);

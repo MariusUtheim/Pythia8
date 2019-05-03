@@ -4,6 +4,7 @@
 #include "Pythia8/Info.h"
 #include "Pythia8/LowEnergyResonance.h"
 #include "Pythia8/ParticleData.h"
+#include "SigmaTotal.h"
 
 namespace Pythia8 {
 
@@ -14,10 +15,11 @@ namespace Pythia8 {
 class LowEnergySigma {
 public:
 
-  void initPtr(Info* infoPtrIn, ParticleData* particleDataPtrIn,
-    LowEnergyResonance* lowEnergyResPtrIn) {
+  void initPtr(Info* infoPtrIn, Settings& settings,
+    ParticleData* particleDataPtrIn, LowEnergyResonance* lowEnergyResPtrIn) {
     infoPtr = infoPtrIn; particleDataPtr = particleDataPtrIn; 
     lowEnergyResPtr = lowEnergyResPtrIn;
+    sigmaSaSDL.init(infoPtrIn, settings, particleDataPtrIn, nullptr);
   }
 
   // Get the total cross section for the specified collision
@@ -46,6 +48,8 @@ private:
   ParticleData* particleDataPtr;
 
   LowEnergyResonance* lowEnergyResPtr;
+
+  mutable SigmaSaSDL sigmaSaSDL;
 
   // Orders the two inputs in a canonical way, and returns an id for the 
   // collision type (see .cc file for a detailed specification)
