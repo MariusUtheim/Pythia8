@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+*.pdf
 
 # Mac
 .DS_Store
@@ -39,7 +40,6 @@
 
 # Sandbox output
 sandbox/*.py
-sandbox/*.pdf
 sandbox/*.dat
 sandbox/*.txt
 sandbox/mymain
