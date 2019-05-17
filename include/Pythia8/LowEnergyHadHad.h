@@ -23,11 +23,15 @@ public:
 
   // Initialize the class.
   bool init(Info* infoPtrIn, Settings& settings,
-    ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
-    ParticleWidths* particleWidthPtrIn);
+    ParticleData* particleDataPtrIn, Rndm* rndmPtrIn);
 
   // Produce outgoing primary hadrons from collision of incoming pair.
   bool collide( int i1, int i2, int type, Event& event, Vec4 vtx = Vec4() );
+
+  // Get total sigma without direct access to lowEnergySigma 
+  double sigmaTotal(int i1In, int i2In, double eCMIn) {
+    return lowEnergySigma.sigmaTotal(i1In, i2In, eCMIn);
+  }
 
   // Event record to handle hadronization.
   Event         leEvent; 
@@ -57,6 +61,13 @@ private:
 
   // Pointer to the random number generator.
   Rndm*         rndmPtr;
+
+  // For cross-section selection
+  LowEnergySigma lowEnergySigma;
+
+  // Needed for resonance decays
+  ParticleWidths particleWidths;
+
 
   // Handle inelastic nondiffractive collision.
   bool nondiff();
@@ -88,10 +99,6 @@ private:
 
   // Pick slope b of exp(b * t) for elastic and diffractive events.
   double bSlope( int type);
-
-  ParticleWidths* particleWidthsPtr;
-
-  LowEnergySigma lowEnergySigma;
 
 };
 

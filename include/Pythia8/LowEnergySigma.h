@@ -23,6 +23,7 @@ public:
   double sigmaTotal(int idA, int idB, double eCM) const;
 
   // Get the partial cross section for the specified collision and process.
+  // @TODO: Decide on exact scheme for process ids
   // 1: non-diffractive | 2: elastic | 3: SD (XB) | 4: SD (AX)
   // 5: DD | 6: annihilation | 7: resonant | 8: excitation
   // >100: resonant through the particle specified by the id
@@ -30,12 +31,8 @@ public:
 
   // Gets all partial cross sections for the specified collision. 
   // This is used when all cross sections are needed to determine which 
-  // process to execute.
-  // Entry 0 gives total cross section. Depending on the collision class,
-  // the following keys will be in the resulting map:
-  //   BB:    1, 2, 3, 4, 5,  8
-  //   BBbar: 1, 2, 3, 4, 5, 6
-  //   XM:    1, 2, 7
+  // process to execute. The keys are process ids, the values are cross 
+  // sections, which give the relative frequency of that process.
   map<int, double> sigmaPartial(int idA, int idB, double eCM) const;
 
 private:
@@ -78,7 +75,7 @@ private:
   double sigmaResPartialXM(int idX, int idM, int idR, double eCM) const;
   map<int, double> sigmaResXM(int idX, int idM, double eCM) const;
   double sigmaStringXM(int idX, int idM, double eCM) const;
-  // @TODO: Make a more intutive system
+  // @TODO: Make a more intutive system?
   // The signature of a particle is the three digit number BQS, where B is 
   // baryon number, Q is charge signature and S is strangeness signature.
   // A resonance can be formed only if it conserves the total signature. 

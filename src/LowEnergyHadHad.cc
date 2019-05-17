@@ -30,15 +30,13 @@ const double LowEnergyHadHad::ALPHAPRIME = 0.25;
 // Initialize the LowEnergyHadHad class as required.
 
 bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
-  ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
-  ParticleWidths* particleWidthsPtrIn) {
+  ParticleData* particleDataPtrIn, Rndm* rndmPtrIn) {
  
   // Save pointers.
   infoPtr           = infoPtrIn;
   particleDataPtr   = particleDataPtrIn;
   rndmPtr           = rndmPtrIn;
-  particleWidthsPtr = particleWidthsPtrIn;
-
+  
   // Mixing for eta and eta'.
   double theta    = settings.parm("StringFlav:thetaPS");
   double alpha    = (theta + 54.7) * M_PI / 180.; 
@@ -58,7 +56,11 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
   leEvent.init( "(low energy event)", particleDataPtr);
 
   // Set up cross sections
-  lowEnergySigma.init(infoPtrIn, settings, particleDataPtrIn, particleWidthsPtrIn);
+  // @TODO We don't want to initialize widths like this, but we need to decide
+  //       where it should be initialized exactly (maybe in the Pythia class)
+  particleWidths.init(infoPtrIn, rndmPtrIn,
+                      "../share/Pythia8/xmldoc/ParticleWidths.xml");
+  lowEnergySigma.init(infoPtrIn, settings, particleDataPtrIn, &particleWidths);
 
   // Done.
   return true;
@@ -142,7 +144,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
         break;
     }
 
-    // Hadronize new strings and move products to standard event record.
+    // @TODO Hadronize new strings and move products to standard event record.
 //    if (!pythiaPtr->simpleHadronization( leEvent)) {
 //      infoPtr->errorMsg( "Error in LowEnergyHadHad::collide: "
 //        "no rescattering since hadronization failed");
@@ -565,6 +567,8 @@ bool LowEnergyHadHad::annihilation() {
 
 //-------------------------------------------------------------------------
 
+// Do an excitation collision.
+
 // Interpolator for branching ratios for each excitation
 struct ExcitationChannel {
   pair<int, int> products;
@@ -602,16 +606,14 @@ static vector<ExcitationChannel> channels = loadExcitationChannels();
 bool LowEnergyHadHad::excitation() {
   
   // Excitations are only implemented for NN
-  // @TODO: should also deal with NbarNbar?
-  if (!(id1 == 2112 || id1 == 2212)
-  ||  !(id2 == 2112 || id2 == 2212))
+  // @TODO: this could also be NbarNbar?
+  if (!(id1 == 2112 || id1 == 2212) || !(id2 == 2112 || id2 == 2212))
     return false;
 
   // Pick an excitation channel at random
   vector<double> sigmas(channels.size());
   for (size_t i = 0; i < sigmas.size(); ++i)
-    sigmas[i] = channels[i].sigma(eCM);
- 
+    sigmas[i] = channels[i].sigma(eCM); 
   int iChannel = rndmPtr->pick(sigmas);
 
   // The channel contains the particle ids without quark contents,
@@ -623,14 +625,13 @@ bool LowEnergyHadHad::excitation() {
   if (rndmPtr->flat() > 0.5)
     swap(prod1, prod2);
 
-  // Construct the specific particles, e.g. p(1535) instead of N(1535)
+  // Construct specific particles, e.g. turn N(1535) into p(1535) or n(1535)
   prod1 = prod1 + (id1 - id1 % 10);
   prod2 = prod2 + (id2 - id2 % 10);
 
-  // @TODO: Particles might not be on shell, use MC to pick mass 
-  vector<double> ms { particleDataPtr->m0(prod1), particleDataPtr->m0(prod2) };
-  
+  // @TODO: Resonance particles might not be on shell
   // @TODO: Angular distribution might not be uniform
+  vector<double> ms { particleDataPtr->m0(prod1), particleDataPtr->m0(prod2) };
   
   vector<Vec4> ps = phaseSpace(eCM, ms, rndmPtr);
   leEvent.append(prod1, 918, 1,2, 0,0, 0,0, ps[0], ms[0]);
@@ -641,18 +642,18 @@ bool LowEnergyHadHad::excitation() {
 
 //-------------------------------------------------------------------------
 
+// Do a resonance formation and decay.
+
 bool LowEnergyHadHad::resonance(int idRes) {
 
   // Create the resonance
   int iNew = leEvent.append(idRes, -917, 1,2, 0,0,
                             0,0, Vec4(0, 0, 0, eCM), eCM);
-  leEvent[1].daughters(iNew, 0);
-  leEvent[1].statusNeg();
-  leEvent[2].daughters(iNew, 0);
-  leEvent[2].statusNeg();
+  leEvent[1].daughters(iNew, 0); leEvent[1].statusNeg();
+  leEvent[2].daughters(iNew, 0); leEvent[2].statusNeg();
   
   // Create decay products
-  vector<int> decayProducts = particleWidthsPtr->pickDecayChannel(idRes, eCM);
+  vector<int> decayProducts = particleWidths.pickDecayChannel(idRes, eCM);
 
   // Pick phase space configuration
   vector<double> ms(decayProducts.size());

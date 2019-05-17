@@ -23,6 +23,7 @@ void LowEnergySigma::init(Info* infoPtrIn, Settings& settings,
   // @TODO: Maybe just copy the relevant parts from sigmaSaSDL
   sigmaSaSDL.init(infoPtrIn, settings, particleDataPtrIn, nullptr);
 
+  // Initialize map of resonance particles
   for (auto id : particleWidthsPtr->getResonances()) {
     //@TODO: If a particle in particleWidths is not a hadron, it's an error
     if (!particleDataPtr->isHadron(id)
@@ -43,8 +44,7 @@ void LowEnergySigma::init(Info* infoPtrIn, Settings& settings,
   }
 }
 
-
-
+//--------------------------------------------------------------------------
 
 // Returns int representing the overall process type:
 //  0 - Collision not implemented (ids will not be ordered)
@@ -458,8 +458,8 @@ double LowEnergySigma::sigmaTotalBBbar(int idA, int idB, double eCM) const {
 }
 
 // @TODO: Consider making separate functions. For now I chose to put them all
-// in one function, since many partial cross sections depend on the same initial
-// computations, such as sNN and sigmaTotal
+// in one function, since many partial cross sections depend on the same
+// initial computations, such as sNN and sigmaTotal
 map<int, double> LowEnergySigma::sigmaPartialBBbar(int idA, int idB, double eCM) const {
   // Calculate effective energy, i.e. energy of protons with the same momenta
   double m0 = particleDataPtr->m0(2212);
@@ -540,8 +540,8 @@ static Interpolator ppiElData(1.975, 3.18545,
     4.92306, 4.95654, 4.9852, 5.00957, 5.03016, 5.04739, 5.06161,
     5.07307, 5.08227, 5.08922, 5.09437, 5.09747, 5.09912, 5.09934,
     5.09824, 5.09596, 5.09174, 5.08824, 5.083, 5.07694, 5.07013, 5.06264,
-    5.05453, 5.04584, 5.03664, 5.02696, 5.01684, 5.00633, 4.99546 });
-
+    5.05453, 5.04584, 5.03664, 5.02696, 5.01684, 5.00633, 4.99546 }
+);
 
 // Total = resonant + elastic + diffractive(including strings)
 double LowEnergySigma::sigmaTotalXM(int idX, int idM, double eCM) const {
@@ -569,7 +569,7 @@ map<int, double> LowEnergySigma::sigmaResXM(int idA, int idB, double eCM) const 
 
   // Get list of possible resonances
   int baryonNumber = particleDataPtr->isBaryon(idA)
-                   + particleDataPtr->isBaryon(idB); // @TODO: What about antiparticles?
+                   + particleDataPtr->isBaryon(idB);
   int charge = particleDataPtr->chargeType(idA) 
              + particleDataPtr->chargeType(idB);
   int strangeness = particleDataPtr->nStrangeQuarks(idA) 
