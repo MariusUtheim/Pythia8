@@ -20,6 +20,7 @@
 #include <vector>
 #include <map>
 #include <deque>
+#include <queue>
 #include <set>
 #include <list>
 
@@ -67,6 +68,7 @@ using std::deque;
 using std::set;
 using std::multiset;
 using std::list;
+using std::priority_queue;
 
 // Input/output streams.
 using std::cin;

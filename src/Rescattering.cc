@@ -16,6 +16,15 @@ namespace Pythia8 {
 
 //--------------------------------------------------------------------------
 
+void Rescattering::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn, ParticleData* particleDataPtrIn)
+  {
+    infoPtr = infoPtrIn;
+    rndmPtr = rndmPtrIn; 
+    particleDataPtr = particleDataPtrIn;
+    
+    leHadHad.init(infoPtrIn, settings, particleDataPtrIn, rndmPtrIn);
+}
+
 // Temporary function for sampling 2D phase space
 static void phaseSpace2(Rndm* rndmPtr, Vec4 pTotIn, double mA, double mB,
                         Vec4& p1Out, Vec4& p2Out) {
@@ -63,17 +72,11 @@ static vector<Vec4> phaseSpace(Rndm* rndmPtr, Vec4 pTotIn, vector<double> msIn) 
 void Rescattering::rescatter(int idA, int idB, 
   Vec4 origin, Event& event) {
 
-  Particle& hadA = event[idA];
-  Particle& hadB = event[idB]; 
+  leHadHad.collide(idA, idB, 0, event, origin);
 
 /*
-  if (!crossSecPtr->isCrossSection(idA, idB)) {
-    infoPtr->errorMsg("Rescattering::rescatter: "
-      "Unable to find cross-section data");
-    return;
-  }
-*/
-  double eCM = (hadA.p() + hadB.p()).mCalc();
+  Particle& hadA = event[idA];
+  Particle& hadB = event[idB]; 
 
   vector<int> products = { hadA.id(), hadB.id() };//= crossSecPtr->pickProducts(hadA.id(), hadB.id(), eCM);
  
@@ -95,7 +98,6 @@ void Rescattering::rescatter(int idA, int idB,
     event.append(newParticle);
   }
 
-
   // Update the interacting particles
   for (int i : { idA, idB }) {
 
@@ -109,6 +111,7 @@ void Rescattering::rescatter(int idA, int idB,
     double t = dot3(origin - event[i].vProd(), beta) / dot3(beta, beta);
     event[i].tau(t / gamma);
   }
+  */
 }
 
 //--------------------------------------------------------------------------
@@ -137,7 +140,7 @@ bool Rescattering::calcRescatterOrigin(int idA, int idB, Event& event,
   pA.rotbst(frame); pB.rotbst(frame);
 
   double eCM = (pA + pB).mCalc();
-  double sigma = 40;//resDataPtr->getTotalSigma(hadA.idAbs(), hadB.idAbs(), eCM);
+  double sigma = leHadHad.sigmaTotal(hadA.idAbs(), hadB.idAbs(), eCM);
 
   // Abort if impact parameter is too large
   if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)

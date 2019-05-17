@@ -21,10 +21,12 @@
 #include "Pythia8/Info.h"
 #include "Pythia8/JunctionSplitting.h"
 #include "Pythia8/LowEnergyHadHad.h"
+#include "Pythia8/LowEnergySigma.h"
 #include "Pythia8/MiniStringFragmentation.h"
 #include "Pythia8/ParticleData.h"
 #include "Pythia8/ParticleDecays.h"
 #include "Pythia8/PythiaStdlib.h"
+#include "Pythia8/Rescattering.h"
 #include "Pythia8/RHadrons.h"
 #include "Pythia8/Settings.h"
 #include "Pythia8/StringFragmentation.h"
@@ -85,6 +87,14 @@ private:
   bool   doHadronScatter, hsAfterDecay;
   int    hadronScatMode;
 
+  // New hadron rescattering
+  class PriorityNode;
+  LowEnergyHadHad leHadHad;
+  Rescattering rescatterings;
+  bool doRescatter, scatterManyTimes;
+  void queueDecResc(Event& event, int iStart, 
+                    priority_queue<HadronLevel::PriorityNode>& queue);
+
   // Pointer to various information on the generation.
   Info*         infoPtr;
 
@@ -122,6 +132,7 @@ private:
 
   // The generator class for low-energy hadron-hadron collisions.
   LowEnergyHadHad lowEnergyHadHad;
+  LowEnergySigma  lowEnergySigma;
 
   // Class for event geometry for Rope Hadronization. Production vertices.
   Ropewalk ropewalk;

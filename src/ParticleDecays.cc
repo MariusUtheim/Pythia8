@@ -345,6 +345,24 @@ bool ParticleDecays::decay( int iDec, Event& event) {
 
 //--------------------------------------------------------------------------
 
+bool ParticleDecays::decayAll(Event& event, double minWidth) {
+  bool gotMoreToDo = false;
+
+  // Loop through all entries to find those that should decay.
+  for (int iDec = 0; iDec < event.size(); ++iDec) {
+    Particle& decayer = event[iDec];
+    if (decayer.isFinal() && decayer.canDecay() && decayer.mayDecay()
+    && (decayer.mWidth() >= minWidth || decayer.idAbs() == 311)) {
+      decay(iDec, event);
+      if (moreToDo()) gotMoreToDo = true;
+    }
+  }
+
+  return gotMoreToDo;
+}
+
+//--------------------------------------------------------------------------
+
 // Check whether a decay is allowed, given the upcoming decay vertex.
 
 bool ParticleDecays::checkVertex(Particle& decayer) {

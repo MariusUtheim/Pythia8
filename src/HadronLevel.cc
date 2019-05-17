@@ -1,5 +1,5 @@
 // HadronLevel.cc is a part of the PYTHIA event generator.
-// Copyright (C) 2019 Torbjorn Sjostrand.
+// Copyright (C) 2018 Torbjorn Sjostrand.
 // PYTHIA is licenced under the GNU GPL v2 or later, see COPYING for details.
 // Please respect the MCnet Guidelines, see GUIDELINES for details.
 
@@ -20,13 +20,38 @@ namespace Pythia8 {
 // Small safety mass used in string-end rapidity calculations.
 const double HadronLevel::MTINY = 0.1;
 
+using std::priority_queue;
+
+//--------------------------------------------------------------------------
+
+// Node for ordering scatterings and decays
+
+class HadronLevel::PriorityNode {
+public:
+  PriorityNode(int iDecayIn, Vec4 originIn)
+    : iFirst(iDecayIn), iSecond(0), origin(originIn) {}
+  PriorityNode(int iFirstIn, int iSecondIn, Vec4 originIn)
+    : iFirst(iFirstIn), iSecond(iSecondIn), origin(originIn) {}
+  
+  bool isDecay() { return iSecond == 0; }
+
+  // Priority comparison to be used by priority_queue
+  // Note that lower t means higher priority!
+  // @TODO: allow the user to pick the comparator
+  bool operator<(const PriorityNode& r) const
+  { return origin.e() > r.origin.e(); }
+
+  int iFirst, iSecond;
+  Vec4 origin;
+};
+
 //--------------------------------------------------------------------------
 
 // Find settings. Initialize HadronLevel classes as required.
 
 bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
-  ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
-  Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
+  ParticleData* particleDataPtrIn,
+  Rndm* rndmPtrIn, Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
   RHadrons* rHadronsPtrIn, DecayHandler* decayHandlePtr,
   vector<int> handledParticles, UserHooks* userHooksPtrIn) {
 
@@ -40,10 +65,9 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
 
   // Main flags.
   doHadronize     = settings.flag("HadronLevel:Hadronize");
-  doHadronScatter = settings.flag("hadronLevel:HadronScatter");
   doDecay         = settings.flag("HadronLevel:Decay");
+  doRescatter     = settings.flag("HadronLevel:Rescatter");
   doBoseEinstein  = settings.flag("HadronLevel:BoseEinstein");
-  doDeuteronProd  = settings.flag("HadronLevel:DeuteronProduction");
 
   // Boundary mass between string and ministring handling.
   mStringMin      = settings.parm("HadronLevel:mStringMin");
@@ -54,15 +78,14 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   // Allow R-hadron formation.
   allowRH         = settings.flag("RHadrons:allow");
 
+  // Allow decayed/rescattered particles to rescatter again
+  // @TODO scatterManyTimes = settings.flag("Rescattering:scatterManyTimes");
+
   // Particles that should decay or not before Bose-Einstein stage.
   widthSepBE      = settings.parm("BoseEinstein:widthSep");
 
   // Need string density information be collected?
-  closePacking     = settings.flag("StringPT:closePacking");
-
-  // Hadron scattering.
-  hadronScatMode  = settings.mode("HadronScatter:mode");
-  hsAfterDecay    = settings.flag("HadronScatter:afterDecay");
+  closePacking    = settings.flag("StringPT:closePacking");
 
   // Rope hadronization. Setting of partonic production vertices.
   doRopes         = settings.flag("Ropewalk:RopeHadronization");
@@ -95,19 +118,19 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   decays.init(infoPtr, settings, particleDataPtr, rndmPtr, couplingsPtr,
     timesDecPtr, &flavSel, decayHandlePtr, handledParticles);
 
+  // Initialize rescatterings.
+  
+  rescatterings.init(infoPtr, settings, rndmPtr, particleDataPtr);
+
+  if (doRescatter && !settings.flag("Fragmentation:setVertices"))
+  {
+    // @TODO Handle error message correctly and at the right location
+    infoPtr->errorMsg("Error in HadronLevel::init: HadronLevel:Rescatter "
+      "is on, but Fragmentation:setVertices is off.");
+  }
+
   // Initialize BoseEinstein.
   boseEinstein.init(infoPtr, settings, *particleDataPtr);
-
-  // Initialize DeuteronProduction.
-  if (doDeuteronProd)
-    deuteronProd.init(infoPtr, settings, particleDataPtr, rndmPtr);
-
-  // Initialize HadronScatter.
-  if (doHadronScatter)
-    hadronScatter.init(infoPtr, settings, rndmPtr, particleDataPtr);
-
-  // Initialize low-energy hadron-hadron collisions.
-  lowEnergyHadHad.init(infoPtr, settings, particleDataPtr, rndmPtr);
 
   // Initialize Hidden-Valley fragmentation, if necessary.
   useHiddenValley = hiddenvalleyFrag.init(infoPtr, settings,
@@ -129,9 +152,39 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
 
 //--------------------------------------------------------------------------
 
+// Calculate possible decays and rescatterings and add all to the queue.
+
+void HadronLevel::queueDecResc(Event& event, int iStart, 
+  priority_queue<HadronLevel::PriorityNode>& queue)
+{
+  // @TODO Stress test and optimise if needed
+  for (int iFirst = iStart; iFirst < event.size(); ++iFirst) 
+  {
+    Particle& hadA = event[iFirst];
+
+    // @TODO Have the right upper mWidth bound here
+    if (doDecay && hadA.isFinal() && hadA.canDecay() && hadA.mayDecay()
+    && (hadA.mWidth() > widthSepBE || hadA.id() == 311))
+      queue.push(PriorityNode(iFirst, hadA.vDec()));
+
+    if (!hadA.isFinal() || !hadA.isHadron()) continue;
+
+    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
+      
+      if (!event[iSecond].isFinal() || !event[iSecond].isHadron()) continue;
+      
+      Vec4 origin;
+      if (rescatterings.calcRescatterOrigin(iFirst, iSecond, event, origin))
+        queue.push(PriorityNode(iFirst, iSecond, origin));
+    }
+  }
+}
+
+//--------------------------------------------------------------------------
+
 // Hadronize and decay the next parton-level.
 
-bool HadronLevel::next( Event& event) {
+bool HadronLevel::next(Event& event) {
 
   // Store current event size to mark Parton Level content.
   event.savePartonLevelSize();
@@ -154,12 +207,10 @@ bool HadronLevel::next( Event& event) {
   }
 
   // Possibility of hadronization inside decay, but then no BE second time.
-  // Hadron scattering, first pass only --rjc
-  bool moreToDo, firstPass = true;
   bool doBoseEinsteinNow = doBoseEinstein;
-  bool doDeuteronProdNow = doDeuteronProd;
+  bool decaysCausedHadronization;
   do {
-    moreToDo = false;
+    decaysCausedHadronization = false;
 
     // First part: string fragmentation.
     if (doHadronize) {
@@ -238,63 +289,61 @@ bool HadronLevel::next( Event& event) {
       }
     }
 
-    // Hadron scattering.
-    if (doHadronScatter) {
-      // New model.
-      if (hadronScatMode < 2) hadronScatter.scatter(event);
-      // Old model, before decays.
-      else if ((hadronScatMode == 2) && !hsAfterDecay && firstPass)
-        hadronScatter.scatterOld(event);
-    }
-
     // Second part: sequential decays of short-lived particles (incl. K0).
-    if (doDecay) {
 
-      // Loop through all entries to find those that should decay.
-      int iDec = 0;
-      do {
-        Particle& decayer = event[iDec];
-        if ( decayer.isFinal() && decayer.canDecay() && decayer.mayDecay()
-          && (decayer.mWidth() > widthSepBE || decayer.idAbs() == 311) ) {
-          decays.decay( iDec, event);
-          if (decays.moreToDo()) moreToDo = true;
-        }
-      } while (++iDec < event.size());
+    // If rescattering is off, we don't care about the order of the decays
+    if (doDecay && !doRescatter) {
+      decaysCausedHadronization = decays.decayAll(event, widthSepBE);
     }
+    // If rescattering is on, decays/rescatterings must happen in order
+    else if (doRescatter) {
+      
+      priority_queue<PriorityNode> candidates; 
 
-    // Hadron scattering, old model, after decays.
-    if (doHadronScatter && (hadronScatMode == 2) && hsAfterDecay && firstPass)
-      hadronScatter.scatterOld(event);
+      queueDecResc(event, 0, candidates);
+
+      while (!candidates.empty()) {
+        PriorityNode node = candidates.top();
+        candidates.pop();
+
+        // Abort if either particle has already interacted elsewhere
+        if (!event[node.iFirst].isFinal() 
+        || (!node.isDecay() && !event[node.iSecond].isFinal()))
+          continue;
+
+        int oldSize = event.size();
+
+        // Perform the queued action
+        if (node.isDecay()) {
+          decays.decay(node.iFirst, event);
+          // @TODO If there is moreToDo, those things should also be handled in order?
+          if (decays.moreToDo()) decaysCausedHadronization = true;
+        }
+        else
+          rescatterings.rescatter(node.iFirst, node.iSecond, node.origin, event);
+
+        // Check for new interactions
+        // @TODO Allow decays of rescattered hadrons without allowing second rescatterings
+        if (scatterManyTimes)
+          queueDecResc(event, oldSize, candidates);
+      }
+    }
 
     // Third part: include Bose-Einstein effects among current particles.
     if (doBoseEinsteinNow) {
       if (!boseEinstein.shiftEvent(event)) return false;
       doBoseEinsteinNow = false;
     }
-
+ 
     // Fourth part: sequential decays also of long-lived particles.
     if (doDecay) {
-
-      // Loop through all entries to find those that should decay.
-      int iDec = 0;
-      do {
-        Particle& decayer = event[iDec];
-        if ( decayer.isFinal() && decayer.canDecay() && decayer.mayDecay() ) {
-          decays.decay( iDec, event);
-          if (decays.moreToDo()) moreToDo = true;
-        }
-      } while (++iDec < event.size());
+      decaysCausedHadronization = decays.decayAll(event);
     }
 
-    // Fifth part: deuteron production.
-    if (doDeuteronProdNow) {
-      if (!deuteronProd.combine(event)) return false;
-      doDeuteronProdNow = false;
-      moreToDo = doDecay;
-    }
-
-  // Normally done first time around, but sometimes not (e.g. Upsilon).
-  } while (moreToDo);
+  // @TODO If not done, the next time around, rescatterings are not in order
+  // Normally done first time around, but sometimes not.
+  // (e.g. Upsilon decay can cause create unstable hadrons).
+  } while (decaysCausedHadronization);
 
   // Done.
   return true;

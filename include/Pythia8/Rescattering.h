@@ -13,10 +13,7 @@ public:
 
   Rescattering() {}
 
-  void init(Info* infoPtrIn, Rndm* rndmPtrIn, ParticleData* particleDataPtrIn,
-    LowEnergyHadHad* resDataPtrIn)
-  { infoPtr = infoPtrIn; rndmPtr = rndmPtrIn; 
-  particleDataPtr = particleDataPtrIn; resDataPtr = resDataPtrIn; }
+  void init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn, ParticleData* particleDataPtrIn);
 
   // @TODO calculate origin in rescatter call?
   void rescatter(int idA, int idB, Vec4 origin, Event& event);
@@ -32,7 +29,7 @@ private:
   ParticleData* particleDataPtr;
 
   // @TODO Better name
-  LowEnergyHadHad* resDataPtr;
+  LowEnergyHadHad leHadHad;
 };
 
 } // end namespace Pythia8
