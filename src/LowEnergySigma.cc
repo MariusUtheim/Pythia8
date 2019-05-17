@@ -64,10 +64,10 @@ double LowEnergySigma::sigmaTotal(int idA, int idB, double eCM) const {
     return 0.;
 
   switch (canonicalForm(idA, idB)) {
-    case 0: return 0.; // @TODO: Probably give an error message?
     case 1: return sigmaTotalBB(idA, idB, eCM);
     case 2: return sigmaTotalBBbar(idA, idB, eCM);
     case 3: return sigmaTotalXM(idA, idB, eCM);
+    case 0: return 0.; // @TODO: Probably give an error message?
     default: return 0.; // @TODO: This should never occur
   }
 }
@@ -82,39 +82,27 @@ map<int, double> LowEnergySigma::sigmaPartial(int idA, int idB, double eCM) cons
     return map<int, double>();
 
   switch (canonicalForm(idA, idB)) {
-    case 1: {
-      double tot = sigmaTotalBB(idA, idB, eCM);
-      double el  = sigmaElasticBB(idA, idB, eCM);
-      return map<int, double>{
-        { 0, tot },
-        { 1, tot - el },
-        { 2, el }
-      };
-    }
+    case 1: 
+      return sigmaPartialBB(idA, idB, eCM);
 
     case 2:
       return sigmaPartialBBbar(idA, idB, eCM);
     
     case 3: {
       map<int, double> result;
-      double res = 0.;
-      for (auto idR : lowEnergyResPtr->getPossibleResonances(idA, idB)) {
-        double partial = lowEnergyResPtr->getPartialResonanceSigma(idA, idB, idR, eCM);
-        if (partial > 0) {
-          res += partial;
-          result.emplace(idR, partial);
-        }
-      }
-      double inel = sigmaInelXM(idA, idB, eCM);
+      double inel = sigmaStringXM(idA, idB, eCM);
       double elastic = sigmaElasticXM(idA, idB, eCM);
-      result.emplace(0, res + inel + elastic);
+      double res = lowEnergyResPtr->getResonanceSigma(idA, idB, eCM);;
       result.emplace(1, inel);
       result.emplace(2, elastic);
       result.emplace(7, res);
       return result;
     }
 
-    default: // @TODO: This should not be possible to reach
+    case 0:
+    default: 
+      infoPtr->errorMsg(" in Pythia8::LowEnergySigma: "
+        " no processes implemented for specified indices");
       return map<int, double>(); 
   }
 }
@@ -137,38 +125,12 @@ double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM, int proc) cons
   switch (canonicalForm(idA, idB)) {
     case 0: return 0.; // @TODO: Probably give an error message?
 
-    case 1: // BB
-      sigmaSaSDL.calcDiff(idA, idB, eCM * eCM,
-                          particleDataPtr->m0(idA), particleDataPtr->m0(idB));
-      switch (proc) {
-
-        case 0: // Inelastic
-          return sigmaTotalBB(idA, idB, eCM) - sigmaElasticBB(idA, idB, eCM);
-
-        case 2: 
-          //sigmaSaSDL.calcTotEl(idA, idB, eCM * eCM,
-          //                particleDataPtr->m0(idA), particleDataPtr->m0(idB));
-          //return sigmaSaSDL.sigEl;
-          return sigmaElasticBB(idA, idB, eCM);
-
-        case 1: case 3: case 4: case 5: {
-          sigmaSaSDL.calcTotEl(idA, idB, eCM * eCM,
-                         particleDataPtr->m0(idA), particleDataPtr->m0(idB));
-          sigmaSaSDL.calcDiff(idA, idB, eCM * eCM,
-                         particleDataPtr->m0(idA), particleDataPtr->m0(idB));
-          double sigND = sigmaSaSDL.sigTot - sigmaSaSDL.sigEl
-            - sigmaSaSDL.sigAX - sigmaSaSDL.sigXB - sigmaSaSDL.sigAXB - sigmaSaSDL.sigXX;
-          double factor = proc == 1 ? sigND
-                        : proc == 3 ? sigmaSaSDL.sigAX 
-                        : proc == 4 ? sigmaSaSDL.sigXB
-                                    : sigmaSaSDL.sigXX;
-          factor /= (sigmaSaSDL.sigTot - sigmaSaSDL.sigEl);
-        
-          return factor * (sigmaTotalBB(idA, idB, eCM) - sigmaElasticBB(idA, idB, eCM));
-        }
-
-        default: return 0;
-      }
+    case 1: { // BB
+      auto sigmas = sigmaPartialBB(idA, idB, eCM);
+      auto iter = sigmas.find(proc);
+      return (iter == sigmas.end()) ? 0. : iter->second;
+    }
+      
 
     case 2: { // BBbar
       auto sigmas = sigmaPartialBBbar(idA, idB, eCM);
@@ -178,7 +140,7 @@ double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM, int proc) cons
 
     case 3: 
       switch (proc) {
-        case 1: return sigmaInelXM(idA, idB, eCM);
+        case 1: return sigmaStringXM(idA, idB, eCM);
         case 2: return sigmaElasticXM(idA, idB, eCM);
         case 7: return lowEnergyResPtr->getResonanceSigma(idA, idB, eCM);
         default:
@@ -305,11 +267,27 @@ static Interpolator pnElasticData(2.0, 4.0, {
   12.0672, 10.7543, 8.17421
 });
 
-// Strangeness exchange
-double LowEnergySigma::sigmaStrEx(int, int, double) const {
-  // @TODO Implement this
-  return 0.;
-}
+constexpr double NNExciteThreshold = 3.8;
+static Interpolator NNExciteData(3.8, 14.3, {
+  28.623, 28.4801, 28.2446, 27.9334, 27.566, 27.1519, 26.709, 26.2366, 
+  25.7466, 25.2436, 24.7344, 24.2218, 23.7088, 23.198, 22.6918, 
+  22.1911, 21.698, 21.2129, 20.7364, 20.2698, 19.8131, 19.3665, 
+  18.9308, 18.5055, 18.0907, 17.6866, 17.293, 16.9094, 16.5365, 
+  16.1737, 15.8204, 15.4772, 15.1432, 14.8184, 14.5037, 14.1978, 
+  13.933, 13.6465, 13.3713, 13.1129, 13.0205, 12.7895, 12.677, 12.4801, 
+  12.2832, 12.0863, 11.8894, 11.6925, 11.4956, 11.2987, 11.1018, 
+  10.9048, 10.7079, 10.511, 10.3141, 10.1172, 9.92031, 9.7234, 9.52649, 
+  9.32958, 9.13268, 8.93577, 8.73886, 8.54195, 8.34504, 8.14814, 
+  7.95123, 7.75432, 7.55741, 7.36051, 7.1636, 6.96669, 6.76978, 
+  6.57287, 6.37597, 6.17906, 5.98215, 5.78524, 5.58833, 5.39143, 
+  5.19452, 4.99761, 4.8007, 4.60379, 4.40689, 4.20998, 4.01307, 
+  3.81616, 3.61925, 3.42235, 3.22544, 3.02853, 2.83162, 2.63471, 
+  2.43781, 2.2409, 2.04399, 1.84708, 1.65018, 1.45327, 1.25636, 
+  1.05945, 0.862544, 0.665636, 0.468728, 0.27182
+});
+
+constexpr double SaSDLThreshold = 8.;
+
 
 double LowEnergySigma::sigmaTotalBB(int idA, int idB, double eCM) const {
   // Use parametrisation for pp/nn
@@ -359,6 +337,56 @@ double LowEnergySigma::sigmaElasticBB(int idA, int idB, double eCM) const {
     return 0.039 * pow(aqm(idA, idB), 2./3.);
   }
 }
+
+map<int, double> LowEnergySigma::sigmaPartialBB(int idA, int idB, double eCM) const {
+  double tot = sigmaTotalBB(idA, idB, eCM);
+  double el = sigmaElasticBB(idA, idB, eCM);
+
+  if ((idA == 2112 || idA == 2212) && (idB == 2112 || idB == 2212)) {
+    double ex, sdAX, sdXB, sdXX, nd;
+    if (eCM < NNExciteThreshold) {
+      ex = tot - el;
+      sdAX = sdXB = sdXX = nd = 0;
+    }
+    else {
+      ex = (eCM < NNExciteData.right()) ? NNExciteData(eCM) : 0;
+
+      if (eCM < SaSDLThreshold) {
+        double t = (eCM - NNExciteThreshold) / (SaSDLThreshold - NNExciteThreshold);
+        sigmaSaSDL.calcDiff(idA, idB, pow2(SaSDLThreshold),
+                          particleDataPtr->m0(idA), particleDataPtr->m0(idB));
+
+        sdAX = t * sigmaSaSDL.sigAX;
+        sdXB = t * sigmaSaSDL.sigXB;
+        sdXX = t * sigmaSaSDL.sigXX;
+        nd = tot - el - ex - sdAX - sdXB - sdXX;
+      }
+      else {
+        sigmaSaSDL.calcDiff(idA, idB, eCM * eCM,
+                          particleDataPtr->m0(idA), particleDataPtr->m0(idB));
+        sdAX = sigmaSaSDL.sigAX;
+        sdXB = sigmaSaSDL.sigXB;
+        sdXX = sigmaSaSDL.sigXX;
+        nd = tot - el - ex - sdAX - sdXB - sdXX;
+      }
+    }
+
+    return {
+      { 1, nd }, { 2, el }, 
+      { 3, sdAX }, { 4, sdXB }, { 5, sdXX }, { 8, ex }
+    };
+  }
+  else // Not NN
+    // @TODO: Something more advanced?
+    return {  { 1, tot - el }, { 2, el } };
+}
+
+// Strangeness exchange
+double LowEnergySigma::sigmaStrEx(int, int, double) const {
+  // @TODO Implement this
+  return 0.;
+}
+
 
 //--------------------------------------------------------------------------
 
@@ -462,7 +490,7 @@ map<int, double> LowEnergySigma::sigmaPartialBBbar(int idA, int idB, double eCM)
  *  Compare a lot of cases to UrQMD
  **/
 
-static Interpolator ppiDiffData(1.9, 3.19642, {
+static Interpolator ppiStringData(1.9, 3.19642, {
     0., 0.597966, 1.6208, 2.64363, 3.66647, 4.6893, 5.71213, 6.67697,
     7.63029, 8.79865, 10.016, 11.3516, 12.4208, 13.3126, 13.984, 14.5885,
     15.0755, 15.4614, 15.7966, 16.0741, 16.3701, 16.6786, 16.9763,
@@ -486,11 +514,11 @@ static Interpolator ppiElData(1.975, 3.18545,
 // Total = resonant + elastic + diffractive(including strings)
 double LowEnergySigma::sigmaTotalXM(int idX, int idM, double eCM) const {
   return lowEnergyResPtr->getResonanceSigma(idX, idM, eCM)
-       + sigmaElasticXM(idX, idM, eCM) + sigmaInelXM(idX, idM, eCM);
+       + sigmaElasticXM(idX, idM, eCM) + sigmaStringXM(idX, idM, eCM);
 }
 
-double LowEnergySigma::sigmaInelXM(int idX, int idM, double eCM) const {
-  double sigmaDiffppi = ppiDiffData(eCM);
+double LowEnergySigma::sigmaStringXM(int idX, int idM, double eCM) const {
+  double sigmaDiffppi = ppiStringData(eCM);
   double aqmFactor = aqm(idX, idM) / aqm(2212, 211);
   return sigmaDiffppi * aqmFactor;
 }
