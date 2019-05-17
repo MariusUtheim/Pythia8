@@ -136,4 +136,20 @@ vector<pair<double, vector<int>>> ParticleWidths::getWeightedProducts(int id, do
   }
 }
 
+vector<int> ParticleWidths::pickDecayChannel(int idRes, double eCM) {
+
+  auto brs = getWeightedProducts(idRes, eCM);
+  if (brs.size() == 0) {
+    // @TODO: This would be a bug
+    cout << "Got no decay modes" << endl;
+    return vector<int>();
+  }
+
+  vector<double> weights(brs.size());
+  for (size_t i = 0; i < brs.size(); ++i)
+    weights[i] = brs[i].first;
+
+  return brs[rndmPtr->pick(weights)].second;
+}
+
 }

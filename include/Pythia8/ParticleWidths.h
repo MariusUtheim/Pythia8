@@ -38,9 +38,10 @@ class ParticleWidths {
 
 public:
 
-  bool init(Info* infoPtrIn, string path) 
+  bool init(Info* infoPtrIn, Rndm* rndmPtrIn, string path) 
   {
     infoPtr = infoPtrIn;
+    rndmPtr = rndmPtrIn;
     ifstream stream(path);
     if (!stream.is_open()) {
       infoPtr->errorMsg( "Warning in ParticleWidths::init: "
@@ -71,9 +72,13 @@ public:
 
   vector<pair<double, vector<int>>> getWeightedProducts(int id, double eCM) const;
 
+  vector<int> pickDecayChannel(int idRes, double eCM);
+
 private:
 
   Info* infoPtr;
+
+  Rndm* rndmPtr;
 
   map<int, ParticleWidthEntry> entries;
 };

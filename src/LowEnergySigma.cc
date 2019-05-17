@@ -15,6 +15,37 @@ static double clamp(double x, double min, double max) {
 
 //--------------------------------------------------------------------------
 
+void LowEnergySigma::init(Info* infoPtrIn, Settings& settings,
+    ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn) {
+  infoPtr = infoPtrIn; particleDataPtr = particleDataPtrIn; 
+  particleWidthsPtr = particleWidthsPtrIn;
+
+  // @TODO: Maybe just copy the relevant parts from sigmaSaSDL
+  sigmaSaSDL.init(infoPtrIn, settings, particleDataPtrIn, nullptr);
+
+  for (auto id : particleWidthsPtr->getResonances()) {
+    //@TODO: If a particle in particleWidths is not a hadron, it's an error
+    if (!particleDataPtr->isHadron(id)
+        || particleDataPtr->heaviestQuark(id) > 3)
+      continue;
+    
+    // Signature takes the form BQS
+    int charge = particleDataPtr->chargeType(id), strangeness = particleDataPtr->nStrangeQuarks(id);
+    int signature = 100 * (particleDataPtr->isBaryon(id))
+                  +  10 * ((charge >= 0) ? charge : (10 + charge))
+                  +   1 * ((strangeness >= 0) ? strangeness : (10 + strangeness));
+
+    auto iter = signatureToParticles.find(signature);
+    if (iter != signatureToParticles.end())
+      iter->second.push_back(id);
+    else
+      signatureToParticles.emplace(signature, vector<int>{id});
+  }
+}
+
+
+
+
 // Returns int representing the overall process type:
 //  0 - Collision not implemented (ids will not be ordered)
 //  1 - BB
@@ -92,10 +123,11 @@ map<int, double> LowEnergySigma::sigmaPartial(int idA, int idB, double eCM) cons
       map<int, double> result;
       double inel = sigmaStringXM(idA, idB, eCM);
       double elastic = sigmaElasticXM(idA, idB, eCM);
-      double res = lowEnergyResPtr->getResonanceSigma(idA, idB, eCM);;
+      auto resonances = sigmaResXM(idA, idB, eCM);;
       result.emplace(1, inel);
       result.emplace(2, elastic);
-      result.emplace(7, res);
+      for (auto channel : resonances)
+        result.emplace(channel.first, channel.second);
       return result;
     }
 
@@ -142,10 +174,10 @@ double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM, int proc) cons
       switch (proc) {
         case 1: return sigmaStringXM(idA, idB, eCM);
         case 2: return sigmaElasticXM(idA, idB, eCM);
-        case 7: return lowEnergyResPtr->getResonanceSigma(idA, idB, eCM);
+        case 7: return sigmaResTotalXM(idA, idB, eCM);
         default:
           return (abs(proc) <= 100) ? 0. 
-              : lowEnergyResPtr->getPartialResonanceSigma(idA, idB, proc, eCM);
+              : sigmaResPartialXM(idA, idB, proc, eCM);
       }
 
     default: // @TODO: This should not be possible to reach
@@ -513,7 +545,7 @@ static Interpolator ppiElData(1.975, 3.18545,
 
 // Total = resonant + elastic + diffractive(including strings)
 double LowEnergySigma::sigmaTotalXM(int idX, int idM, double eCM) const {
-  return lowEnergyResPtr->getResonanceSigma(idX, idM, eCM)
+  return sigmaResTotalXM(idX, idM, eCM)
        + sigmaElasticXM(idX, idM, eCM) + sigmaStringXM(idX, idM, eCM);
 }
 
@@ -530,6 +562,79 @@ double LowEnergySigma::sigmaElasticXM(int idX, int idM, double eCM) const {
     return ppiElData(eCM) * pow(aqm(idX, idM) / aqm(2212, 211), 2./3.);
   else
     return 5.;
+}
+
+
+map<int, double> LowEnergySigma::sigmaResXM(int idA, int idB, double eCM) const {
+
+  // Get list of possible resonances
+  int baryonNumber = particleDataPtr->isBaryon(idA)
+                   + particleDataPtr->isBaryon(idB); // @TODO: What about antiparticles?
+  int charge = particleDataPtr->chargeType(idA) 
+             + particleDataPtr->chargeType(idB);
+  int strangeness = particleDataPtr->nStrangeQuarks(idA) 
+                  + particleDataPtr->nStrangeQuarks(idB);
+
+  int signature = 100 * (baryonNumber)
+                +  10 * ((charge >= 0) ? charge : (10 + charge))
+                +   1 * ((strangeness >= 0) ? strangeness : (10 + strangeness));
+
+  // Get the resonances that conserve the signature
+  auto iter = signatureToParticles.find(signature);
+  if (iter == signatureToParticles.end())
+    return map<int, double>();
+
+  map<int, double> result;
+  // Sum the partial resonances
+  for (auto idR : iter->second) 
+    result.emplace(idR, sigmaResPartialXM(idA, idB, idR, eCM));
+
+  return result;
+}
+
+double LowEnergySigma::sigmaResPartialXM(int idA, int idB, int idR, double eCM) const {
+
+  // @TODO K_S and K_L
+
+  // Get mass dependent width. If it is zero, the resonance cannot be formed
+  double gammaR = particleWidthsPtr->width(idR, eCM);
+  if (gammaR == 0)
+    return 0.;
+
+  // @TODO: Ordering matters, make sure the ordering of ids is canonical.
+  double branchingRatio = particleWidthsPtr->branchingRatio(idR, vector<int>{idA, idB}, eCM);
+  if (branchingRatio == 0)
+    return 0.;
+
+  double s = pow2(eCM), mR = particleDataPtr->m0(idR),
+         mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
+
+  double pCMS2 = 1 / (4 * s) * (s - pow2(mA + mB)) * (s - pow2(mA - mB));
+
+  // Calculate the resonance sigma
+  double sigma = 
+      M_PI / pCMS2
+    * particleDataPtr->spinType(idR)
+        / (particleDataPtr->spinType(idA) * particleDataPtr->spinType(idB))
+    * branchingRatio * pow2(gammaR) / (pow2(mR - eCM) + 0.25 * pow2(gammaR))
+    * GEVINVSQ2MB;
+
+  return sigma;
+}
+
+double LowEnergySigma::sigmaResTotalXM(int idA, int idB, double eCM) const {
+
+  // For K_S and K_L, take average of K and Kbar
+  if (idA == 310 || idA == 130)
+    return 0.5 * (sigmaResTotalXM(311, idB, eCM) + sigmaResTotalXM(-311, idB, eCM));
+  if (idB == 310 || idB == 130)
+    return 0.5 * (sigmaResTotalXM(idA, 311, eCM) + sigmaResTotalXM(idA, -311, eCM));
+
+  double sigmaRes = 0.;
+  for (auto channel : sigmaResXM(idA, idB, eCM)) 
+    sigmaRes += channel.second;
+
+  return sigmaRes;
 }
 
 //==========================================================================

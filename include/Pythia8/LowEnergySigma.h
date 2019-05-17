@@ -2,7 +2,7 @@
 #define Pythia8_LowEnergySigma_H
 
 #include "Pythia8/Info.h"
-#include "Pythia8/LowEnergyResonance.h"
+#include "Pythia8/ParticleWidths.h"
 #include "Pythia8/ParticleData.h"
 #include "SigmaTotal.h"
 
@@ -15,12 +15,9 @@ namespace Pythia8 {
 class LowEnergySigma {
 public:
 
-  void initPtr(Info* infoPtrIn, Settings& settings,
-    ParticleData* particleDataPtrIn, LowEnergyResonance* lowEnergyResPtrIn) {
-    infoPtr = infoPtrIn; particleDataPtr = particleDataPtrIn; 
-    lowEnergyResPtr = lowEnergyResPtrIn;
-    sigmaSaSDL.init(infoPtrIn, settings, particleDataPtrIn, nullptr);
-  }
+  void init(Info* infoPtrIn, Settings& settings,
+    ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn);
+
 
   // Get the total cross section for the specified collision
   double sigmaTotal(int idA, int idB, double eCM) const;
@@ -46,8 +43,6 @@ private:
   Info* infoPtr;
 
   ParticleData* particleDataPtr;
-
-  LowEnergyResonance* lowEnergyResPtr;
 
   mutable SigmaSaSDL sigmaSaSDL;
 
@@ -76,16 +71,21 @@ private:
   map<int, double> sigmaPartialBBbar(int idA, int idB, double eCM) const;
   
   // XM
+  ParticleWidths* particleWidthsPtr;
   double sigmaTotalXM(int idX, int idM, double eCM) const;
   double sigmaElasticXM(int idX, int idM, double eCM) const;
+  double sigmaResTotalXM(int idX, int idM, double eCM) const;
+  double sigmaResPartialXM(int idX, int idM, int idR, double eCM) const;
+  map<int, double> sigmaResXM(int idX, int idM, double eCM) const;
   double sigmaStringXM(int idX, int idM, double eCM) const;
-
-  // Select process type:
-  //  1: baryon-baryon or antibaryon-antibaryon
-  //  2: baryon-antibaryon
-  //  3: hadron-meson
-  int selectProcess(int idA, int idB) const;
-
+  // @TODO: Make a more intutive system
+  // The signature of a particle is the three digit number BQS, where B is 
+  // baryon number, Q is charge signature and S is strangeness signature.
+  // A resonance can be formed only if it conserves the total signature. 
+  // The charge signature of a particle with charge q is given by chargeType if
+  // charge is positive and 10 + chargeType if it is negative. This way, charge
+  // signature is always positive. Strangeness signature is defined similarly.
+  map<int, vector<int>> signatureToParticles;
 
 };
 

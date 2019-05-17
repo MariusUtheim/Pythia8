@@ -30,12 +30,14 @@ const double LowEnergyHadHad::ALPHAPRIME = 0.25;
 // Initialize the LowEnergyHadHad class as required.
 
 bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
-  ParticleData* particleDataPtrIn, Rndm* rndmPtrIn) {
+  ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
+  ParticleWidths* particleWidthsPtrIn) {
  
   // Save pointers.
-  infoPtr         = infoPtrIn;
-  particleDataPtr = particleDataPtrIn;
-  rndmPtr         = rndmPtrIn;
+  infoPtr           = infoPtrIn;
+  particleDataPtr   = particleDataPtrIn;
+  rndmPtr           = rndmPtrIn;
+  particleWidthsPtr = particleWidthsPtrIn;
 
   // Mixing for eta and eta'.
   double theta    = settings.parm("StringFlav:thetaPS");
@@ -55,17 +57,8 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
   // Initialize collision event record.
   leEvent.init( "(low energy event)", particleDataPtr);
 
-  // Set up resonance handler
-  lowEnergyResonance.initPtr(rndmPtrIn, particleDataPtrIn);
-  if (!lowEnergyResonance.init("../share/Pythia8/xmldoc/ParticleWidths.xml")) {
-    infoPtr->errorMsg(" In LowEnergyHadHad::init: "
-      "failed to initialize resonance handler.");
-    return false;
-  }
-
   // Set up cross sections
-  lowEnergySigma.initPtr(infoPtrIn, settings, particleDataPtrIn,
-    &lowEnergyResonance);
+  lowEnergySigma.init(infoPtrIn, settings, particleDataPtrIn, particleWidthsPtrIn);
 
   // Done.
   return true;
@@ -76,7 +69,7 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
 
 // Produce outgoing primary hadrons from collision of incoming pair.
 // type | 0: mix | 1: nondiff | 2: el | 3: SD (XB) | 4: SD (AX); 
-//      | 5: DD | 6: annihilation | 7: resonance
+//      | 5: DD | 6: annihilation | 7: resonance | 8 : excitation
 
 bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   Vec4 vtx) {
@@ -111,6 +104,10 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
     
     type = indices[rndmPtr->pick(sigmas)];
   } 
+
+  // @TODO: If typeIn == 7, then pick a random resonance
+  if (typeIn == 7)
+    return false;
 
   // Reset leEvent event record. Add incoming hadrons as beams in rest frame.
   leEvent.reset();
@@ -154,20 +151,20 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
     for (int i = 3; i < leEvent.size(); ++i) if (leEvent[i].isFinal()) 
       event.append( leEvent[i]);
   }
-  else if (type == 7) {
-    if (!resonance()) return false;
+  else {
+    if (!particleDataPtr->isParticle(type)) {
+      cout << "Invalid type " << type << endl;
+      infoPtr->errorMsg(" In LowEnergyHadHad::collide: "
+        "unhandled process type.");
+      return false;
+    }
+    
+    if (!resonance(type)) return false;
+
     for (int i = 3; i < leEvent.size(); ++i)
       event.append( leEvent[i]);
   }
-  else {
-    cout << "Invalid type " << type << endl;
-    infoPtr->errorMsg(" In LowEnergyHadHad::collide: "
-      "unhandled process type.");
-    return false;
-  }
   
-
-
   // Boost from collision rest frame to event frame. 
   // Set status and mothers. Offset vertex info to collision vertex.
   RotBstMatrix MfromCM = fromCMframe( event[i1].p(), event[i2].p());
@@ -180,7 +177,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
     //  Status set to 91x; so that when we one day decide exactly what status
     //  codes to use, any '9' in the output indicates that we forgot to change
     //  one of the codes somewhere
-    event[i].status( sign * (910 + type));
+    event[i].status( sign * (type < 10 ? 910 + type : 917));
     event[i].mothers( mother2, mother1 );
     event[i].vProdAdd( vtx); 
   }
@@ -644,10 +641,7 @@ bool LowEnergyHadHad::excitation() {
 
 //-------------------------------------------------------------------------
 
-bool LowEnergyHadHad::resonance() {
-
-  // Find possible resonances and their relative probabilities
-  int idRes = lowEnergyResonance.pickResonance(id1, id2, eCM);
+bool LowEnergyHadHad::resonance(int idRes) {
 
   // Create the resonance
   int iNew = leEvent.append(idRes, -917, 1,2, 0,0,
@@ -658,7 +652,7 @@ bool LowEnergyHadHad::resonance() {
   leEvent[2].statusNeg();
   
   // Create decay products
-  vector<int> decayProducts = lowEnergyResonance.pickDecayProducts(idRes, eCM);
+  vector<int> decayProducts = particleWidthsPtr->pickDecayChannel(idRes, eCM);
 
   // Pick phase space configuration
   vector<double> ms(decayProducts.size());

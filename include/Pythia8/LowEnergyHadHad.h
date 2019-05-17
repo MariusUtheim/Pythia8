@@ -5,8 +5,8 @@
 #include "Pythia8/Event.h"
 #include "Pythia8/Info.h"
 #include "Pythia8/LowEnergySigma.h"
-#include "Pythia8/LowEnergyResonance.h"
 #include "Pythia8/ParticleData.h"
+#include "Pythia8/ParticleWidths.h"
 
 namespace Pythia8 {
 
@@ -23,7 +23,8 @@ public:
 
   // Initialize the class.
   bool init(Info* infoPtrIn, Settings& settings,
-    ParticleData* particleDataPtrIn, Rndm* rndmPtrIn);
+    ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
+    ParticleWidths* particleWidthPtrIn);
 
   // Produce outgoing primary hadrons from collision of incoming pair.
   bool collide( int i1, int i2, int type, Event& event, Vec4 vtx = Vec4() );
@@ -70,7 +71,7 @@ private:
   bool excitation();
 
   // Handle resonance formation collisions.
-  bool resonance();
+  bool resonance(int idRes);
 
   // Split up hadron A or B into a colour pair, with masses and pT values.
   bool splitA( double redMpT);
@@ -88,8 +89,9 @@ private:
   // Pick slope b of exp(b * t) for elastic and diffractive events.
   double bSlope( int type);
 
+  ParticleWidths* particleWidthsPtr;
+
   LowEnergySigma lowEnergySigma;
-  LowEnergyResonance lowEnergyResonance;
 
 };
 
