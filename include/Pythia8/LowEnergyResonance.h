@@ -24,9 +24,6 @@ public:
   //settings.addWord( "xmlPath", xmlPath); 
   bool init(string path);
 
-  // Form a resonance between two particles, then decay it
-  bool collide(int i1, int i2, Event& event, Vec4 origin = Vec4());
-
   // Get sigma for resonance scattering through the specified resonance
   double getPartialResonanceSigma(int idA, int idB, int idR, double eCM) const;
 
@@ -38,6 +35,9 @@ public:
   // a resonance conserves quantum numbers, it does not mean it can actually
   // decay into the specified products.
   vector<int> getPossibleResonances(int idA, int idB) const;
+
+  int pickResonance(int idA, int idB, double eCM);
+  vector<int> pickDecayProducts(int idRes, double eCM);
 
 private:
 

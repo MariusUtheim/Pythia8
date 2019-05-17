@@ -63,6 +63,10 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
     return false;
   }
 
+  // Set up cross sections
+  lowEnergySigma.initPtr(infoPtrIn, settings, particleDataPtrIn,
+    &lowEnergyResonance);
+
   // Done.
   return true;
  
@@ -79,14 +83,8 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
 
   // Check that incoming hadrons. Store current event size.
   if (!event[i1].isHadron() || !event[i2].isHadron()) return false;
-  if (typeIn < 0 || typeIn > 7) return false;
+  if (typeIn < 0 || typeIn > 8) return false;
   sizeOld = event.size();
-
-  // Pick event type for typeIn = 0.
-  int type = typeIn;
-  if (typeIn == 0) {
-    // To be done?? Requires access to partial cross sections.
-  } 
 
   //  Hadron type and meson/baryon distinction.
   id1       = event[i1].id();
@@ -100,6 +98,20 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   eCM       = (event[i1].p() + event[i2].p()).mCalc();
   sCM       = eCM * eCM;
 
+  // Pick event type for typeIn = 0.
+  int type = typeIn;
+  if (typeIn == 0) {
+    auto sigmaMap = lowEnergySigma.sigmaPartial(id1, id2, eCM);
+    vector<int> indices;
+    vector<double> sigmas;
+    for (auto ts : sigmaMap) {
+      indices.push_back(ts.first);
+      sigmas.push_back(ts.second);
+    }
+    
+    type = indices[rndmPtr->pick(sigmas)];
+  } 
+
   // Reset leEvent event record. Add incoming hadrons as beams in rest frame.
   leEvent.reset();
   leEvent.append( event[i1]);
@@ -109,15 +121,29 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   RotBstMatrix MtoCM = toCMframe( leEvent[1].p(), leEvent[2].p());
   leEvent.rotbst( MtoCM);
 
-  if (type >= 1 && type <= 6) {
-    // Do inelastic nondiffractive collision.
-    if (type == 1 && !nondiff()) return false;
+  // @TODO: Unify with case type==7.
+  //  The only difference is that type==7 wants to add all particles, not only
+  //  isFinal particles. Perhaps set status = 0 for particles in leEvent that
+  //  shouldn't be added to the actual event?
+  if ((type >= 1 && type <= 6) || (type == 8)) {
 
-    // Do elastic or diffractive collision.
-    if (type > 1 && type < 6 && !eldiff( type)) return false;
+    switch (type) {
+      case 1: 
+        if (!nondiff()) return false;
+        break;
+      
+      case 2: case 3: case 4: case 5:
+        if (!eldiff(type)) return false;
+        break;
 
-    // Do annihilation collision.
-    if (type == 6 && !annihilation()) return false;
+      case 6:
+        if (!annihilation()) return false;
+        break;
+
+      case 8:
+        if (!excitation()) return false;
+        break;
+    }
 
     // Hadronize new strings and move products to standard event record.
 //    if (!pythiaPtr->simpleHadronization( leEvent)) {
@@ -129,10 +155,19 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
       event.append( leEvent[i]);
   }
   else if (type == 7) {
-    cout << "Doing low energy resonance..." << endl;
-    lowEnergyResonance.collide(1, 2, leEvent);
+    if (!resonance()) return false;
+    for (int i = 3; i < leEvent.size(); ++i)
+      event.append( leEvent[i]);
+  }
+  else {
+    cout << "Invalid type " << type << endl;
+    infoPtr->errorMsg(" In LowEnergyHadHad::collide: "
+      "unhandled process type.");
+    return false;
   }
   
+
+
   // Boost from collision rest frame to event frame. 
   // Set status and mothers. Offset vertex info to collision vertex.
   RotBstMatrix MfromCM = fromCMframe( event[i1].p(), event[i2].p());
@@ -140,7 +175,12 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   int mother2 = max(i1, i2);
   for (int i = sizeOld; i < event.size(); ++i) {
     event[i].rotbst( MfromCM); 
-    event[i].status( 110 + type); 
+    int sign = event[i].status() > 0 ? 1 : -1;
+    // @TODO: 
+    //  Status set to 91x; so that when we one day decide exactly what status
+    //  codes to use, any '9' in the output indicates that we forgot to change
+    //  one of the codes somewhere
+    event[i].status( sign * (910 + type));
     event[i].mothers( mother2, mother1 );
     event[i].vProdAdd( vtx); 
   }
@@ -528,6 +568,113 @@ bool LowEnergyHadHad::annihilation() {
 
 //-------------------------------------------------------------------------
 
+// Interpolator for branching ratios for each excitation
+struct ExcitationChannel {
+  pair<int, int> products;
+  Interpolator sigma;
+};
+
+static vector<Vec4> phaseSpace(double eCM, vector<double> ms, Rndm* rndmPtr) {
+  
+  if (ms.size() == 2) {
+    double mA = ms[0], mB = ms[1];
+    double phi = 2 * M_PI * rndmPtr->flat();
+    double theta = acos(2 * rndmPtr->flat() - 1);
+    
+    double px = sin(theta) * cos(phi);
+    double py = sin(theta) * sin(phi);
+    double pz = cos(theta);
+
+    double pcms = sqrt((eCM * eCM - pow2(mA + mB)) 
+                    * (eCM * eCM - pow2(mA - mB))) / (2. * eCM);
+    px *= pcms; py *= pcms; pz *= pcms;
+
+    Vec4 pA( px,  py,  pz, sqrt(pcms * pcms + mA * mA));
+    Vec4 pB(-px, -py, -pz, sqrt(pcms * pcms + mB * mB));
+
+    return { pA, pB };
+  }
+  else 
+    return vector<Vec4>(ms.size());
+}
+
+// @TODO Load excitation channels from an XML
+#include "Pythia8/LowEnergyExcitationChannels.h"
+static vector<ExcitationChannel> channels = loadExcitationChannels();
+
+bool LowEnergyHadHad::excitation() {
+  
+  // Excitations are only implemented for NN
+  // @TODO: should also deal with NbarNbar?
+  if (!(id1 == 2112 || id1 == 2212)
+  ||  !(id2 == 2112 || id2 == 2212))
+    return false;
+
+  // Pick an excitation channel at random
+  vector<double> sigmas(channels.size());
+  for (size_t i = 0; i < sigmas.size(); ++i)
+    sigmas[i] = channels[i].sigma(eCM);
+ 
+  int iChannel = rndmPtr->pick(sigmas);
+
+  // The channel contains the particle ids without quark contents,
+  // e.g. p(1535) = 102212, so N(1535) = 100002
+  int prod1 = channels[iChannel].products.first, 
+      prod2 = channels[iChannel].products.second;
+
+  // The two nucleons have equal chance of becoming excited
+  if (rndmPtr->flat() > 0.5)
+    swap(prod1, prod2);
+
+  // Construct the specific particles, e.g. p(1535) instead of N(1535)
+  prod1 = prod1 + (id1 - id1 % 10);
+  prod2 = prod2 + (id2 - id2 % 10);
+
+  // @TODO: Particles might not be on shell, use MC to pick mass 
+  vector<double> ms { particleDataPtr->m0(prod1), particleDataPtr->m0(prod2) };
+  
+  // @TODO: Angular distribution might not be uniform
+  
+  vector<Vec4> ps = phaseSpace(eCM, ms, rndmPtr);
+  leEvent.append(prod1, 918, 1,2, 0,0, 0,0, ps[0], ms[0]);
+  leEvent.append(prod2, 918, 1,2, 0,0, 0,0, ps[1], ms[1]);
+
+  return true;
+}
+
+//-------------------------------------------------------------------------
+
+bool LowEnergyHadHad::resonance() {
+
+  // Find possible resonances and their relative probabilities
+  int idRes = lowEnergyResonance.pickResonance(id1, id2, eCM);
+
+  // Create the resonance
+  int iNew = leEvent.append(idRes, -917, 1,2, 0,0,
+                            0,0, Vec4(0, 0, 0, eCM), eCM);
+  leEvent[1].daughters(iNew, 0);
+  leEvent[1].statusNeg();
+  leEvent[2].daughters(iNew, 0);
+  leEvent[2].statusNeg();
+  
+  // Create decay products
+  vector<int> decayProducts = lowEnergyResonance.pickDecayProducts(idRes, eCM);
+
+  // Pick phase space configuration
+  vector<double> ms(decayProducts.size());
+  for (size_t i = 0; i < decayProducts.size(); ++i) 
+    ms[i] = particleDataPtr->m0(decayProducts[i]);
+  vector<Vec4> ps = phaseSpace(eCM, ms, rndmPtr);
+
+  // Append new particles
+  for (size_t i = 0; i < decayProducts.size(); ++i)
+    leEvent.append(decayProducts[i], 917, 3,0, 0,0, 0,0, ps[i],ms[i]);
+
+  return true;
+}
+
+//-------------------------------------------------------------------------
+
 // Split up hadron A into a colour-anticolour pair, with masses and pT values.
   
 bool LowEnergyHadHad::splitA( double redMpT) {
@@ -788,6 +935,7 @@ double LowEnergyHadHad::bSlope( int type) {
   return 2. * ALPHAPRIME * log(exp(4.) + sCM / (ALPHAPRIME * pow2(mA * mB)) ); 
 
 }
+
 
 //==========================================================================
 /*

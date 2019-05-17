@@ -51,61 +51,34 @@ bool LowEnergyResonance::init(string path) {
 
 //--------------------------------------------------------------------------
 
-bool LowEnergyResonance::collide(int i1, int i2, Event& event, Vec4 origin) {
-  Particle& hA = event[i1];
-  Particle& hB = event[i2];
-
-  double eCM = (hA.p() + hB.p()).mCalc();
+int LowEnergyResonance::pickResonance(int idA, int idB, double eCM) {
 
   // Find possible resonances and their relative probabilities
-  vector<int> candidates = getPossibleResonances(hA.id(), hB.id());
+  vector<int> candidates = getPossibleResonances(idA, idB);
   if (candidates.size() == 0) 
-    return (cout << "Got no resonances" << endl), false;
+    return (cout << "Got no resonances" << endl), -1;
 
-  vector<double> probabilities(candidates.size());
-
+  vector<double> probs(candidates.size());
   for (size_t i = 0; i < candidates.size(); ++i)
-    //TS?? Lines should not be 80 or more characters long for consistency.
-    (probabilities[i] = getPartialResonanceSigma(hA.id(), hB.id(), candidates[i], eCM)), (cout << probabilities[i] << " ");
+    probs[i] = getPartialResonanceSigma(idA, idB, candidates[i], eCM);
 
-  // Create the resonance
-  int iNew = event.append(candidates[rndmPtr->pick(probabilities)],
-                          999, max(i1, i2), min(i1, i2),
-                          0, 0, 0, 0, hA.p() + hB.p(), eCM);
-  event[iNew].vProd(origin);
+  return candidates[rndmPtr->pick(probs)];
+}
 
-  for (int i : { i1, i2 }) {
-    event[i].daughters(iNew, 0);
-    event[i].statusNeg();
-  }
+vector<int> LowEnergyResonance::pickDecayProducts(int idRes, double eCM) {
 
-  // Decay the resonance
-  // @TODO: Do this properly
-  auto brs = particleWidths.getWeightedProducts(event[iNew].id(), eCM);
-
+  auto brs = particleWidths.getWeightedProducts(idRes, eCM);
   if (brs.size() == 0) {
+    // @TODO: This would be a bug
     cout << "Got no decay modes" << endl;
-    return false;
-  }
-  for (auto prpr : brs) {
-    for (auto prod : prpr.second)
-      cout << prod << " ";
-    cout << ": " << prpr.first << endl;
+    return vector<int>();
   }
 
-  //TS?? Are you sure the BR sum = 1 always? If not what do?
-  double threshold = rndmPtr->flat();
-  double cumulativeSum = 0.;
-  for (auto br : brs) {
-    cumulativeSum += br.first;
-    if (cumulativeSum >= threshold) {
-      for (int id : br.second)
-        event.append(id, 999, iNew, 0, 0, 0, 0, 0, Vec4());
-      break;
-    }
-  }
+  vector<double> weights(brs.size());
+  for (size_t i = 0; i < brs.size(); ++i)
+    weights[i] = brs[i].first;
 
-  return true;
+  return brs[rndmPtr->pick(weights)].second;
 }
 
 //--------------------------------------------------------------------------

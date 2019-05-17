@@ -1,11 +1,12 @@
 #ifndef Low_Energy_Controller_H
 #define Low_Energy_Controller_H
 
-#include "Basics.h"
-#include "Event.h"
-#include "Info.h"
-#include "LowEnergyResonance.h"
-#include "ParticleData.h"
+#include "Pythia8/Basics.h"
+#include "Pythia8/Event.h"
+#include "Pythia8/Info.h"
+#include "Pythia8/LowEnergySigma.h"
+#include "Pythia8/LowEnergyResonance.h"
+#include "Pythia8/ParticleData.h"
 
 namespace Pythia8 {
 
@@ -65,6 +66,12 @@ private:
   // Handle annihilation collisions.
   bool annihilation();
 
+  // Handle excitation collisions.
+  bool excitation();
+
+  // Handle resonance formation collisions.
+  bool resonance();
+
   // Split up hadron A or B into a colour pair, with masses and pT values.
   bool splitA( double redMpT);
   bool splitB( double redMpT); 
@@ -81,6 +88,7 @@ private:
   // Pick slope b of exp(b * t) for elastic and diffractive events.
   double bSlope( int type);
 
+  LowEnergySigma lowEnergySigma;
   LowEnergyResonance lowEnergyResonance;
 
 };
