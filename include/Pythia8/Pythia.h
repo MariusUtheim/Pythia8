@@ -193,6 +193,9 @@ public:
   // Generate the next event.
   bool next();
 
+  // Generate the next event, using the low energy framework.
+  bool nextLowEnergy();
+
   // Generate only a single timelike shower as in a decay.
   int forceTimeShower( int iBeg, int iEnd, double pTmax, int nBranchMax = 0)
     {  partonSystems.clear(); info.setScalup( 0, pTmax);
@@ -208,8 +211,8 @@ public:
   bool forceRHadronDecays() {return doRHadronDecays();}
 
   // Do a low-energy collision between two hadrons in the event record.
-  bool doLowEnergyHadHad(int i1, int i2, int type) {
-    return hadronLevel.doLowEnergyHadHad( i1, i2, type, event); }
+  bool doLowEnergyHadHad(int i1, int i2) {
+    return hadronLevel.doLowEnergyHadHad( i1, i2, event); }
 
   // List the current Les Houches event.
   void LHAeventList() { if (lhaUpPtr != 0) lhaUpPtr->listEvent();}
@@ -293,8 +296,8 @@ private:
 
   // Initialization data, extracted from database.
   string xmlPath;
-  bool   doProcessLevel, doPartonLevel, doHadronLevel, doSoftQCDall,
-         doSoftQCDinel, doCentralDiff, doDiffraction,
+  bool   doProcessLevel, doPartonLevel, doHadronLevel, doLowEnergy,
+         doSoftQCDall, doSoftQCDinel, doCentralDiff, doDiffraction,
          doSoftQCD, doVMDsideA, doVMDsideB, doHardDiff, doResDec,
          doFSRinRes, decayRHadrons, abortIfVeto, checkEvent, checkHistory;
   int    nErrList;

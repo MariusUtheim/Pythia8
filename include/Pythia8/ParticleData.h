@@ -121,28 +121,31 @@ public:
   ParticleDataEntry(int idIn = 0, string nameIn = " ",
     int spinTypeIn = 0, int chargeTypeIn = 0, int colTypeIn = 0,
     double m0In = 0., double mWidthIn = 0., double mMinIn = 0.,
-    double mMaxIn = 0., double tau0In = 0.) : idSave(abs(idIn)),
-    nameSave(nameIn), antiNameSave("void"),  spinTypeSave(spinTypeIn),
-    chargeTypeSave(chargeTypeIn), colTypeSave(colTypeIn), m0Save(m0In),
-    mWidthSave (mWidthIn), mMinSave(mMinIn), mMaxSave(mMaxIn),
-    tau0Save(tau0In), constituentMassSave(), hasAntiSave(false),
-    isResonanceSave(), mayDecaySave(), doExternalDecaySave(), isVisibleSave(),
-    doForceWidthSave(), hasChangedSave(true), hasChangedMMinSave(false),
-    hasChangedMMaxSave(false), modeBWnow(), modeTau0now(), atanLow(),
-    atanDif(), mThr(), currentBRSum(), resonancePtr(0), particleDataPtr() {
-    setDefaults();}
+    double mMaxIn = 0., double tau0In = 0., bool useMDWIn = false) :
+    idSave(abs(idIn)), nameSave(nameIn), antiNameSave("void"), 
+    spinTypeSave(spinTypeIn), chargeTypeSave(chargeTypeIn),
+    colTypeSave(colTypeIn), m0Save(m0In), mWidthSave(mWidthIn),
+    mMinSave(mMinIn), mMaxSave(mMaxIn), tau0Save(tau0In),
+    constituentMassSave(), hasAntiSave(false), isResonanceSave(),
+    useMDWSave(useMDWIn), mayDecaySave(), doExternalDecaySave(),
+    isVisibleSave(), doForceWidthSave(), hasChangedSave(true),
+    hasChangedMMinSave(false), hasChangedMMaxSave(false), modeBWnow(),
+    modeTau0now(), atanLow(), atanDif(), mThr(), currentBRSum(),
+    resonancePtr(0), particleDataPtr() { setDefaults();}
   ParticleDataEntry(int idIn, string nameIn, string antiNameIn,
     int spinTypeIn = 0, int chargeTypeIn = 0, int colTypeIn = 0,
     double m0In = 0., double mWidthIn = 0., double mMinIn = 0.,
-    double mMaxIn = 0., double tau0In = 0.) : idSave(abs(idIn)),
-    nameSave(nameIn), antiNameSave(antiNameIn), spinTypeSave(spinTypeIn),
-    chargeTypeSave(chargeTypeIn), colTypeSave(colTypeIn), m0Save(m0In),
-    mWidthSave (mWidthIn), mMinSave(mMinIn), mMaxSave(mMaxIn),
-    tau0Save(tau0In), constituentMassSave(), hasAntiSave(true),
-    isResonanceSave(), mayDecaySave(), doExternalDecaySave(), isVisibleSave(),
-    doForceWidthSave(), hasChangedSave(true), hasChangedMMinSave(false),
-    hasChangedMMaxSave(false), modeBWnow(), modeTau0now(), atanLow(),
-    atanDif(), mThr(), currentBRSum(), resonancePtr(0), particleDataPtr() {
+    double mMaxIn = 0., double tau0In = 0., bool useMDWIn = false)
+     : idSave(abs(idIn)), nameSave(nameIn), antiNameSave(antiNameIn),
+    spinTypeSave(spinTypeIn), chargeTypeSave(chargeTypeIn),
+    colTypeSave(colTypeIn), m0Save(m0In), mWidthSave (mWidthIn), 
+    mMinSave(mMinIn), mMaxSave(mMaxIn), tau0Save(tau0In),
+    constituentMassSave(), hasAntiSave(true), isResonanceSave(),
+    useMDWSave(useMDWIn), mayDecaySave(), doExternalDecaySave(),
+    isVisibleSave(), doForceWidthSave(), hasChangedSave(true),
+    hasChangedMMinSave(false), hasChangedMMaxSave(false), modeBWnow(),
+    modeTau0now(), atanLow(), atanDif(), mThr(), currentBRSum(),
+    resonancePtr(0), particleDataPtr() {
     setDefaults(); if (toLower(antiNameIn) == "void") hasAntiSave = false;}
 
   // Copy constructor.
@@ -254,6 +257,7 @@ public:
          return (modeBWnow == 0) ? m0Save : mMaxSave; }
   double tau0()                   const { return tau0Save; }
   bool   isResonance()            const { return isResonanceSave; }
+  bool   useMassDependentWidth()  const { return useMDWSave; }
   bool   mayDecay()               const { return mayDecaySave; }
   bool   doExternalDecay()        const { return doExternalDecaySave; }
   bool   isVisible()              const { return isVisibleSave; }
@@ -345,9 +349,9 @@ private:
   int    spinTypeSave, chargeTypeSave, colTypeSave;
   double m0Save, mWidthSave, mMinSave, mMaxSave, tau0Save,
          constituentMassSave;
-  bool   hasAntiSave, isResonanceSave, mayDecaySave, doExternalDecaySave,
-         isVisibleSave, doForceWidthSave, hasChangedSave, hasChangedMMinSave,
-         hasChangedMMaxSave;
+  bool   hasAntiSave, isResonanceSave, useMDWSave, mayDecaySave,
+         doExternalDecaySave, isVisibleSave, doForceWidthSave, hasChangedSave,
+         hasChangedMMinSave, hasChangedMMaxSave;
 
   // Extra data for mass selection according to a Breit-Wigner and lifetime.
   int    modeBWnow, modeTau0now;
@@ -470,15 +474,16 @@ public:
   void addParticle(int idIn, string nameIn = " ", int spinTypeIn = 0,
     int chargeTypeIn = 0, int colTypeIn = 0, double m0In = 0.,
     double mWidthIn = 0., double mMinIn = 0., double mMaxIn = 0.,
-    double tau0In = 0.) { pdt[abs(idIn)] = ParticleDataEntry(idIn,
-    nameIn, spinTypeIn, chargeTypeIn, colTypeIn, m0In, mWidthIn,
-    mMinIn, mMaxIn, tau0In); pdt[abs(idIn)].initPtr(this); }
+    double tau0In = 0., bool useMDWIn = false) { 
+    pdt[abs(idIn)] = ParticleDataEntry(idIn, nameIn, spinTypeIn, chargeTypeIn,
+    colTypeIn, m0In, mWidthIn, mMinIn, mMaxIn, tau0In, useMDWIn);
+    pdt[abs(idIn)].initPtr(this); }
   void addParticle(int idIn, string nameIn, string antiNameIn,
     int spinTypeIn = 0, int chargeTypeIn = 0, int colTypeIn = 0,
     double m0In = 0., double mWidthIn = 0., double mMinIn = 0.,
-    double mMaxIn = 0., double tau0In = 0.) { pdt[abs(idIn)]
-    = ParticleDataEntry(idIn, nameIn, antiNameIn, spinTypeIn,
-    chargeTypeIn, colTypeIn, m0In, mWidthIn, mMinIn, mMaxIn, tau0In);
+    double mMaxIn = 0., double tau0In = 0., bool useMDWIn = false) { 
+    pdt[abs(idIn)] = ParticleDataEntry(idIn, nameIn, antiNameIn, spinTypeIn,
+    chargeTypeIn, colTypeIn, m0In, mWidthIn, mMinIn, mMaxIn, tau0In, useMDWIn);
     pdt[abs(idIn)].initPtr(this); }
 
   // Reset all the properties of an entry in one go.

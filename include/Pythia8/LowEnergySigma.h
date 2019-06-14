@@ -15,7 +15,7 @@ namespace Pythia8 {
 class LowEnergySigma {
 public:
 
-  void init(Info* infoPtrIn, Settings& settings,
+  void init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
     ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn);
 
 
@@ -23,23 +23,33 @@ public:
   double sigmaTotal(int idA, int idB, double eCM) const;
 
   // Get the partial cross section for the specified collision and process.
-  // @TODO: Decide on exact scheme for process ids
-  // 1: non-diffractive | 2: elastic | 3: SD (XB) | 4: SD (AX)
-  // 5: DD | 6: annihilation | 7: resonant | 8: excitation
-  // >100: resonant through the particle specified by the id
-  double sigmaPartial(int idA, int idB, double eCM, int process) const;
+  // type | 0: mix; | 1: nondiff; | 2 : el; | 3: SD (XB); | 4: SD (AX);
+  //      | 5: DD;  | 6: CD (AXB, not implemented) 
+  //      | 7: excitation | 8: annihilation | 9: resonant
+  //      | >100: resonant through the specified resonance particle
+  double sigmaPartial(int idA, int idB, double eCM, int type) const;
 
   // Gets all partial cross sections for the specified collision. 
   // This is used when all cross sections are needed to determine which 
-  // process to execute. The keys are process ids, the values are cross 
-  // sections, which give the relative frequency of that process.
-  map<int, double> sigmaPartial(int idA, int idB, double eCM) const;
+  // process to execute. Returns false if no processes are available.
+  //map<int, double> sigmaPartial(int idA, int idB, double eCM) const; 
+  
+  bool sigmaPartial(int idA, int idB, double eCM, 
+    vector<int>& typesOut, vector<double>& sigmasOut) const;
+
+  // Picks a process randomly according to their partial cross sections
+  int pickProcess(int idA, int idB, double eCM);
+
+  // Picks a resonance according to their partial cross sections
+  int pickResonance(int idA, int idB, double eCM);
 
 private:
 
   Info* infoPtr;
 
   ParticleData* particleDataPtr;
+
+  Rndm* rndmPtr;
 
   mutable SigmaSaSDL sigmaSaSDL;
 
@@ -55,20 +65,38 @@ private:
   double aqmNN() const;
 
   // BB
-  double sigmaTotalBB(int idA, int idB, double eCM) const;
-  double sigmaElasticBB(int idA, int idB, double eCM) const;
-  double sigmaStrEx(int idA, int idB, double eCM) const;
+  double BBTotal(int idA, int idB, double eCM) const;
+  double BBElastic(int idA, int idB, double eCM) const;
+  double BBStrEx(int idA, int idB, double eCM) const;
+  double BBNonDiff(int idA, int idB, double eCM) const;
+  double BBDiffractiveAX(int idA, int idB, double eCM) const;
+  double BBDiffractiveXB(int idA, int idB, double eCM) const;
+  double BBDiffractiveXX(int idA, int idB, double eCM) const;
+  double BBExcite(int idA, int idB, double eCM) const;
+
   map<int, double> sigmaPartialBB(int idA, int idB, double eCM) const;
 
 
   // @TODO: Rethink the interface here
 
   // BBbar
-  double sigmaTotalBBbar(int idA, int idB, double eCM) const;
+  double BBbarTotal(int idA, int idB, double eCM) const;
+  double BBbarElastic(int idA, int idB, double eCM) const;
+  double BBbarNonDiff(int idA, int idB, double eCM) const;
+  double BBbarDiffractiveAX(int idA, int idB, double eCM) const;
+  double BBbarDiffractiveXB(int idA, int idB, double eCM) const;
+  double BBbarDiffractiveXX(int idA, int idB, double eCM) const;
+  double BBbarAnnihilation(int idA, int idB, double eCM) const;
+
   map<int, double> sigmaPartialBBbar(int idA, int idB, double eCM) const;
   
   // XM
   ParticleWidths* particleWidthsPtr;
+  double XMTotal(int idX, int idM, double eCM) const;
+  double XMElastic(int idX, int idM, double eCM) const;
+  double XMResonant(int idX, int idM, double eCM) const;
+
+
   double sigmaTotalXM(int idX, int idM, double eCM) const;
   double sigmaElasticXM(int idX, int idM, double eCM) const;
   double sigmaResTotalXM(int idX, int idM, double eCM) const;

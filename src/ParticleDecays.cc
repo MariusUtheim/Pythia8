@@ -45,16 +45,17 @@ const double ParticleDecays::WTCORRECTION[11] = { 1., 1., 1.,
 
 void ParticleDecays::init(Info* infoPtrIn, Settings& settings,
   ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
-  Couplings* couplingsPtrIn, TimeShower* timesDecPtrIn,
-  StringFlav* flavSelPtrIn, DecayHandler* decayHandlePtrIn,
-  vector<int> handledParticles) {
+  ParticleWidths* particleWidthsPtrIn, Couplings* couplingsPtrIn,
+  TimeShower* timesDecPtrIn, StringFlav* flavSelPtrIn, 
+  DecayHandler* decayHandlePtrIn, vector<int> handledParticles) {
 
   // Save pointers to error messages handling and flavour generation.
-  infoPtr         = infoPtrIn;
-  particleDataPtr = particleDataPtrIn;
-  rndmPtr         = rndmPtrIn;
-  couplingsPtr    = couplingsPtrIn;
-  flavSelPtr      = flavSelPtrIn;
+  infoPtr           = infoPtrIn;
+  particleDataPtr   = particleDataPtrIn;
+  particleWidthsPtr = particleWidthsPtrIn;
+  rndmPtr           = rndmPtrIn;
+  couplingsPtr      = couplingsPtrIn;
+  flavSelPtr        = flavSelPtrIn;
 
   // Save pointer to timelike shower, as needed in some few decays.
   timesDecPtr     = timesDecPtrIn;
@@ -191,8 +192,43 @@ bool ParticleDecays::decay( int iDec, Event& event) {
     if (doneExternally) return true;
   }
 
+  // Perform decay using ParticleWidths
+  if (!doneExternally && decDataPtr->useMassDependentWidth()) {
+    double m0 = decayer.m();
+
+    int id1, id2;
+    double m1, m2;
+    if (!particleWidthsPtr->pickDecay(idDec, m0, id1, id2, m1, m2))
+      return false;
+
+    // Calculate phase space configuration.
+    double e1   = 0.5 * (m0*m0 + m1*m1 - m2*m2) / m0;
+    double e2   = 0.5 * (m0*m0 + m2*m2 - m1*m1) / m0;
+    double pAbs = 0.5 * sqrtpos( (m0 - m1 - m2) * (m0 + m1 + m2)
+      * (m0 + m1 - m2) * (m0 - m1 + m2) ) / m0;
+
+    // Isotropic angles give three-momentum.
+    double cosTheta = 2. * rndmPtr->flat() - 1.;
+    double sinTheta = sqrt(1. - cosTheta*cosTheta);
+    double phi      = 2. * M_PI * rndmPtr->flat();
+    double pX       = pAbs * sinTheta * cos(phi);
+    double pY       = pAbs * sinTheta * sin(phi);
+    double pZ       = pAbs * cosTheta;
+
+    mult = 2;
+    iProd.resize(3);
+    iProd[1] = event.append(id1, 91, iDec,0, 0,0, 0,0,  pX,  pY,  pZ, e1, m1);
+    iProd[2] = event.append(id2, 91, iDec,0, 0,0, 0,0, -pX, -pY, -pZ, e2, m2);
+
+    // Fill four-momenta and boost them away from mother rest frame.
+    event[iProd[1]].bst( decayer.p(), decayer.m() );
+    event[iProd[2]].bst( decayer.p(), decayer.m() );
+
+    event[iDec].statusNeg();
+    event[iDec].daughters(iProd[1], iProd[2]);
+  }
   // Now begin normal internal decay treatment.
-  if (!doneExternally) {
+  else if (!doneExternally) {
 
     // Allow up to ten tries to pick a channel.
     if (!decDataPtr->preparePick(idDec, decayer.m())) return false;

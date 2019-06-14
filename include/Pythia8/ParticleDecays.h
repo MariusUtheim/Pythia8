@@ -15,6 +15,7 @@
 #include "Pythia8/FragmentationFlavZpT.h"
 #include "Pythia8/Info.h"
 #include "Pythia8/ParticleData.h"
+#include "Pythia8/ParticleWidths.h"
 #include "Pythia8/PythiaStdlib.h"
 #include "Pythia8/Settings.h"
 #include "Pythia8/TimeShower.h"
@@ -67,9 +68,9 @@ public:
   // Initialize: store pointers and find settings
   void init(Info* infoPtrIn, Settings& settings,
     ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
-    Couplings* couplingsPtrIn, TimeShower* timesDecPtrIn,
-    StringFlav* flavSelPtrIn, DecayHandler* decayHandlePtrIn,
-    vector<int> handledParticles);
+    ParticleWidths* particleWidthsPtrIn, Couplings* couplingsPtrIn,
+    TimeShower* timesDecPtrIn, StringFlav* flavSelPtrIn,
+    DecayHandler* decayHandlePtrIn, vector<int> handledParticles);
 
   // Perform a decay of a single particle.
   bool decay(int iDec, Event& event);
@@ -86,25 +87,28 @@ private:
   static const double MSAFEDALITZ, WTCORRECTION[11];
 
   // Pointer to various information on the generation.
-  Info*         infoPtr;
+  Info*           infoPtr;
 
   // Pointer to the particle data table.
-  ParticleData* particleDataPtr;
+  ParticleData*   particleDataPtr;
+
+  // Pointer to the particle widths table.
+  ParticleWidths* particleWidthsPtr;
 
   // Pointer to the random number generator.
-  Rndm*         rndmPtr;
+  Rndm*           rndmPtr;
 
   // Pointers to Standard Model couplings.
-  Couplings*    couplingsPtr;
+  Couplings*      couplingsPtr;
 
   // Pointers to timelike showers, for decays to partons (e.g. Upsilon).
-  TimeShower*   timesDecPtr;
+  TimeShower*     timesDecPtr;
 
   // Pointer to class for flavour generation; needed when to pick hadrons.
-  StringFlav*   flavSelPtr;
+  StringFlav*     flavSelPtr;
 
   // Pointer to a handler of external decays.
-  DecayHandler* decayHandlePtr;
+  DecayHandler*   decayHandlePtr;
 
   // Initialization data, read from Settings.
   bool   limitTau0, limitTau, limitRadius, limitCylinder, limitDecay,

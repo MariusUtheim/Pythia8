@@ -1042,6 +1042,7 @@ bool Pythia::init() {
   // Initialize data members extracted from database.
   doPartonLevel    = settings.flag("PartonLevel:all");
   doHadronLevel    = settings.flag("HadronLevel:all");
+  doLowEnergy      = settings.flag("LowEnergy:all");
   doCentralDiff    = settings.flag("SoftQCD:centralDiffractive");
   doSoftQCDall     = settings.flag("SoftQCD:all");
   doSoftQCDinel    = settings.flag("SoftQCD:inelastic");
@@ -1196,7 +1197,7 @@ bool Pythia::init() {
   }
 
   // Do not set up beam kinematics when no process level.
-  if (!doProcessLevel) boostType = 1;
+  if (!doProcessLevel && !doLowEnergy) boostType = 1;
   else {
 
     // Set up beam kinematics.
@@ -1264,7 +1265,7 @@ bool Pythia::init() {
   }
 
   // Send info/pointers to process level for initialization.
-  if ( doProcessLevel && !processLevel.init( &info, settings, &particleData,
+  if ( doProcessLevel && !doLowEnergy && !processLevel.init( &info, settings, &particleData,
     &rndm, &beamA, &beamB, &beamGamA, &beamGamB, &beamVMDA, &beamVMDB,
     couplingsPtr, &sigmaTot, doLHA, &slhaInterface, userHooksPtr,
     sigmaPtrs, phaseSpacePtrs) ) {
@@ -1377,7 +1378,7 @@ bool Pythia::init() {
 //--------------------------------------------------------------------------
 
 // Check that combinations of settings are allowed; change if not.
-
+// @TODO: Rescattering and setVertices
 void Pythia::checkSettings() {
 
   // Double rescattering not allowed if ISR or FSR.
@@ -1429,6 +1430,15 @@ void Pythia::checkSettings() {
 
   }
 
+  // Low energy with other processes on
+  if (doLowEnergy) {
+    if (doProcessLevel) {
+      info.errorMsg("Warning in Pythia::checkSettings: "
+        "Process level turned off for low energy collisions");
+      settings.flag("ProcessLevel:all", false);
+      doProcessLevel = false;
+    }
+  }
 }
 
 //--------------------------------------------------------------------------
@@ -1616,6 +1626,11 @@ bool Pythia::initKinematics() {
   pzBcm    = -pzAcm;
   eA       = sqrt(mA*mA + pzAcm*pzAcm);
   eB       = sqrt(mB*mB + pzBcm*pzBcm);
+
+  if (boostType == 1) {
+    pzA = pzAcm;
+    pzB = pzBcm;
+  }
 
   // If in CM frame then store beam four-vectors (else already done above).
   if (boostType != 2 && boostType != 3) {
@@ -1915,6 +1930,34 @@ bool Pythia::next() {
   // Set/reset info counters specific to each event.
   info.addCounter(3);
   for (int i = 10; i < 13; ++i) info.setCounter(i);
+
+  if (doLowEnergy) {
+    // Set/reset info counters specific to each event.
+    info.addCounter(3);
+    for (int i = 10; i < 13; ++i) info.setCounter(i);
+  
+    event.clear();
+
+    event.append(90, -11, 0,0, 0.,0.,0.,eCM,eCM);
+    event.append(idA, 1, 0,0, pxA,pyA,pzA,eA,mA);
+    event.append(idB, 1, 0,0, pxB,pyB,pzB,eB,mB);
+
+    if (!hadronLevel.doLowEnergyHadHad(1, 2, event)) {
+      cout << "In Pythia::next: doLowEnergyHadHad returned false " << endl;
+      return false;
+    }
+
+    // List events.
+    if (doLHA && nPrevious < nShowLHA) lhaUpPtr->listEvent();
+    if (nPrevious < nShowInfo) info.list();
+    if (nPrevious < nShowProc) process.list(showSaV,showMaD);
+    if (nPrevious < nShowEvt)  event.list(showSaV, showMaD);
+
+    info.addCounter(4);
+
+    return true;
+  }
+
 
   // Simpler option when no hard process, i.e. mainly hadron level.
   if (!doProcessLevel) {

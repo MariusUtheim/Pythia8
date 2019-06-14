@@ -114,13 +114,19 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
   ministringFrag.init(infoPtr, settings, particleDataPtr, rndmPtr,
     &flavSel, &pTSel, &zSel);
 
-  // Initialize particle decays.
-  decays.init(infoPtr, settings, particleDataPtr, rndmPtr, couplingsPtr,
-    timesDecPtr, &flavSel, decayHandlePtr, handledParticles);
 
-  // Initialize rescatterings.
-  
-  rescatterings.init(infoPtr, settings, rndmPtr, particleDataPtr);
+  // Initialize low energy.
+  if (!lowEnergyHadHad.init(infoPtr, settings, particleDataPtr, rndmPtr, 
+    &stringFrag, &ministringFrag))
+    return false;
+
+  // Initialize particle decays.
+  decays.init(infoPtr, settings, particleDataPtr, rndmPtr,
+    &lowEnergyHadHad.particleWidths, couplingsPtr, timesDecPtr, &flavSel,
+    decayHandlePtr, handledParticles);
+
+  // Initialize rescatterings
+  rescatterings.init(infoPtr, settings, &lowEnergyHadHad);
 
   if (doRescatter && !settings.flag("Fragmentation:setVertices"))
   {

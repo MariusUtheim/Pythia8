@@ -16,14 +16,11 @@ namespace Pythia8 {
 
 //--------------------------------------------------------------------------
 
-void Rescattering::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn, ParticleData* particleDataPtrIn)
+void Rescattering::init(Info* infoPtrIn, Settings& settings, LowEnergyHadHad* leHadHadPtrIn)
   {
     infoPtr = infoPtrIn;
-    rndmPtr = rndmPtrIn; 
-    particleDataPtr = particleDataPtrIn;
-    
-    leHadHad.init(infoPtrIn, settings, particleDataPtrIn, rndmPtrIn);
-}
+    leHadHadPtr = leHadHadPtrIn;
+  }
 
 // Temporary function for sampling 2D phase space
 static void phaseSpace2(Rndm* rndmPtr, Vec4 pTotIn, double mA, double mB,
@@ -72,7 +69,7 @@ static vector<Vec4> phaseSpace(Rndm* rndmPtr, Vec4 pTotIn, vector<double> msIn) 
 void Rescattering::rescatter(int idA, int idB, 
   Vec4 origin, Event& event) {
 
-  leHadHad.collide(idA, idB, 0, event, origin);
+  leHadHadPtr->collide(idA, idB, 0, event, origin);
 
 /*
   Particle& hadA = event[idA];
@@ -140,7 +137,7 @@ bool Rescattering::calcRescatterOrigin(int idA, int idB, Event& event,
   pA.rotbst(frame); pB.rotbst(frame);
 
   double eCM = (pA + pB).mCalc();
-  double sigma = leHadHad.sigmaTotal(hadA.idAbs(), hadB.idAbs(), eCM);
+  double sigma = leHadHadPtr->sigmaTotal(hadA.idAbs(), hadB.idAbs(), eCM);
 
   // Abort if impact parameter is too large
   if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)

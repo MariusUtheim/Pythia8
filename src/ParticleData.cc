@@ -1050,13 +1050,15 @@ bool ParticleData::processXML(bool reset) {
       double mMinTmp     = doubleAttributeValue( line, "mMin");
       double mMaxTmp     = doubleAttributeValue( line, "mMax");
       double tau0Tmp     = doubleAttributeValue( line, "tau0");
+      bool useMDWTmp     = boolAttributeValue( line, "useMassDependentWidth");
 
       // Erase if particle already exists.
       if (isParticle(idTmp)) pdt.erase(idTmp);
 
       // Store new particle. Save pointer, to be used for decay channels.
       addParticle( idTmp, nameTmp, antiNameTmp, spinTypeTmp, chargeTypeTmp,
-                   colTypeTmp, m0Tmp, mWidthTmp, mMinTmp, mMaxTmp, tau0Tmp);
+                   colTypeTmp, m0Tmp, mWidthTmp, mMinTmp, mMaxTmp, tau0Tmp,
+                   useMDWTmp);
       particlePtr = particleDataEntryPtr(idTmp);
 
       // Check for occurence of a decay channel. Add any continuation lines.
@@ -1239,6 +1241,7 @@ bool ParticleData::readFF(istream& is, bool reset) {
       if (isParticle(idTmp)) pdt.erase(idTmp);
 
       // Store new particle. Save pointer, to be used for decay channels.
+      // @TODO: Include MDW
       addParticle( idTmp, nameTmp, antiNameTmp, spinTypeTmp, chargeTypeTmp,
         colTypeTmp, m0Tmp, mWidthTmp, mMinTmp, mMaxTmp, tau0Tmp);
       particlePtr = particleDataEntryPtr(idTmp);
@@ -1526,6 +1529,7 @@ void ParticleData::listFF(string outFile) {
     // Else start over completely from scratch.
     } else {
       if (isParticle(idTmp)) pdt.erase(idTmp);
+      // @TODO: Include useMDW
       addParticle( idTmp, nameTmp, antiNameTmp, spinTypeTmp, chargeTypeTmp,
         colTypeTmp, m0Tmp, mWidthTmp, mMinTmp, mMaxTmp, tau0Tmp);
     }
