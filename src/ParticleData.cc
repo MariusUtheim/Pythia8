@@ -263,26 +263,29 @@ int ParticleDataEntry::baryonNumberType(int idIn) const {
 
 // Calculate the number of strange quarks
 
-int ParticleDataEntry::nStrangeQuarks() const {
+int ParticleDataEntry::strangeness() const {
 
   int idNow = abs(idSave);
+  int idSign = idSave > 0 ? 1 : -1;
   int nS    = 0;
 
   // Quarks
-  if (isQuark()) return (idNow == 3);
+  if (isQuark()) {
+    return (idNow == 3) ? idSign : 0;
+  }
 
   // Diquarks
   if (isDiquark()) {
     if ( (idNow/100) % 10 == 3) ++nS;
     if ( (idNow/10)  % 10 == 3) ++nS;
-    return nS;
+    return idSign * nS;
   }
 
   // Mesons
   if (isMeson()) {
     if ( (idNow/100) % 10 == 3) ++nS;
-    if ( (idNow/10)  % 10 == 3) ++nS; // decrement becuase this is antiparticle
-    return nS;
+    if ( (idNow/10)  % 10 == 3) --nS; // decrement because this is antiparticle
+    return idSign * nS;
   }
 
   // Baryons
@@ -290,7 +293,7 @@ int ParticleDataEntry::nStrangeQuarks() const {
     if ( (idNow/1000) % 10 == 3) ++nS;
     if ( (idNow/100)  % 10 == 3) ++nS;
     if ( (idNow/10)   % 10 == 3) ++nS;
-      return nS;    
+    return idSign * nS;    
   }
   
   // Done.

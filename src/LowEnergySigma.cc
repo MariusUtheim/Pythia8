@@ -46,7 +46,7 @@ void LowEnergySigma::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
     
     // Insert id in signature map
     int signature = getSignature(particleDataPtr->isHadron(id), 
-      particleDataPtr->chargeType(id), particleDataPtr->nStrangeQuarks(id));
+      particleDataPtr->chargeType(id), particleDataPtr->strangeness(id));
     auto iter = signatureToParticles.find(signature);
     if (iter != signatureToParticles.end())
       iter->second.push_back(id);
@@ -273,8 +273,8 @@ double LowEnergySigma::aqm(int idA, int idB) const {
   double mesA = particleDataPtr->isMeson(idA);
   double mesB = particleDataPtr->isMeson(idB);
   return 40 * pow(2./3., mesA + mesB)
-       * (1 - 0.4 * abs(particleDataPtr->nStrangeQuarks(idA)) / (mesA ? 2 : 3))
-       * (1 - 0.4 * abs(particleDataPtr->nStrangeQuarks(idB)) / (mesB ? 2 : 3));
+       * (1 - 0.4 * abs(particleDataPtr->strangeness(idA)) / (mesA ? 2 : 3))
+       * (1 - 0.4 * abs(particleDataPtr->strangeness(idB)) / (mesB ? 2 : 3));
 }
 
 double LowEnergySigma::aqmNN() const {
@@ -702,8 +702,8 @@ vector<int> LowEnergySigma::possibleResonances(int idX, int idM) const {
                    + particleDataPtr->isBaryon(idM);
   int charge = particleDataPtr->chargeType(idX) 
              + particleDataPtr->chargeType(idM);
-  int strangeness = particleDataPtr->nStrangeQuarks(idX) 
-                  + particleDataPtr->nStrangeQuarks(idM);
+  int strangeness = particleDataPtr->strangeness(idX) 
+                  + particleDataPtr->strangeness(idM);
 
   int signature = getSignature(baryonNumber, charge, strangeness);
   auto iter = signatureToParticles.find(signature);
