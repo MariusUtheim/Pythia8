@@ -69,8 +69,8 @@ public:
   bool moreDecays(Event& event);
 
   // Special routine to do a low-energy hadron-hadron scattering.
-  bool doLowEnergyHadHad(int i1, int i2, Event& event) {
-    if (!lowEnergyHadHad.collide( i1, i2, 0, event)) {
+  bool doLowEnergyHadHad(int i1, int i2, int type, Event& event) {
+    if (!lowEnergyHadHad.collide( i1, i2, type, event)) {
       infoPtr->errorMsg("Error in HadronLevel::doLowEnergyHadHad: "
         "Low energy collision did not resolve");
       return false;

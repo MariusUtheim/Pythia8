@@ -1763,6 +1763,42 @@ void Settings::resetWVec(string keyIn) {
 
 //--------------------------------------------------------------------------
 
+// Check whether any other processes than SoftQCD are switched on.
+
+bool Settings::onlySoftQCD() {
+
+  // List of (most?) process name groups, in lowercase. Special cases.
+  string flagList[26] = { "hardqcd", "promptphoton", "weakbosonexchange",
+    "weaksingleboson", "weakdoubleboson", "weakbosonandparton",
+    "photoncollision", "photonparton", "onia:all", "charmonium:all",
+    "bottomonium:all", "top", "fourthbottom", "fourthtop", "fourthpair",
+    "higgssm", "higgsbsm", "susy", "newgaugeboson", "leftrightsymmetry",
+    "leptoquark", "excitedfermion", "contactinteractions", "hiddenvalley",
+    "extradimensions", "dm:" };
+  int sizeList = 26;
+  string flagExclude[2] = { "extradimensionsg*:vlvl", "higgssm:nlowidths"};
+  int sizeExclude = 2;
+
+  // Loop over the flag map (using iterator), and process names.
+  for (map<string,Flag>::iterator flagEntry = flags.begin();
+    flagEntry != flags.end(); ++flagEntry) {
+    string flagName = flagEntry->first;
+    bool doExclude = false;
+    for (int i = 0; i < sizeExclude; ++i)
+      if (flagName.find( flagExclude[i]) != string::npos) doExclude = true;
+    if (doExclude) continue;
+    for (int i = 0; i < sizeList; ++i)
+      if (flagName.find( flagList[i]) != string::npos
+      && flagEntry->second.valNow == true) return false;
+  }
+
+  // Done without having found a non-SoftQCD process on.
+  return true;
+
+}
+
+//--------------------------------------------------------------------------
+
 // Regulate level of printout by overall change of settings.
 
 void Settings::printQuiet(bool quiet) {

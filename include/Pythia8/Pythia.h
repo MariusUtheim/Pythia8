@@ -193,8 +193,11 @@ public:
   // Generate the next event.
   bool next();
 
-  // Generate the next event, using the low energy framework.
-  bool nextLowEnergy();
+  // Generate the next event, either with new energies or new beam momenta.
+  bool next(double eCMin);
+  bool next(double eAin, double eBin);
+  bool next(double pxAin, double pyAin, double pzAin,
+            double pxBin, double pyBin, double pzBin);
 
   // Generate only a single timelike shower as in a decay.
   int forceTimeShower( int iBeg, int iEnd, double pTmax, int nBranchMax = 0)
@@ -211,8 +214,8 @@ public:
   bool forceRHadronDecays() {return doRHadronDecays();}
 
   // Do a low-energy collision between two hadrons in the event record.
-  bool doLowEnergyHadHad(int i1, int i2) {
-    return hadronLevel.doLowEnergyHadHad( i1, i2, event); }
+  bool doLowEnergyHadHad(int i1, int i2, int type) {
+    return hadronLevel.doLowEnergyHadHad( i1, i2, type, event); }
 
   // List the current Les Houches event.
   void LHAeventList() { if (lhaUpPtr != 0) lhaUpPtr->listEvent();}
@@ -280,7 +283,6 @@ public:
   BeamParticle beamA;
   BeamParticle beamB;
 
-
   // The total cross section class is used both on process and parton level.
   SigmaTotal sigmaTot;
 
@@ -296,10 +298,11 @@ private:
 
   // Initialization data, extracted from database.
   string xmlPath;
-  bool   doProcessLevel, doPartonLevel, doHadronLevel, doLowEnergy,
-         doSoftQCDall, doSoftQCDinel, doCentralDiff, doDiffraction,
+  bool   doProcessLevel, doPartonLevel, doHadronLevel, doSoftQCDall,
+         doSoftQCDinel, doCentralDiff, doDiffraction,
          doSoftQCD, doVMDsideA, doVMDsideB, doHardDiff, doResDec,
-         doFSRinRes, decayRHadrons, abortIfVeto, checkEvent, checkHistory;
+         doFSRinRes, decayRHadrons, abortIfVeto, checkEvent, checkHistory,
+         doNonPert;
   int    nErrList;
   double epTolErr, epTolWarn, mTolErr, mTolWarn;
 
@@ -388,7 +391,8 @@ private:
 
   // Pointer to BeamShape object for beam momentum and interaction vertex.
   BeamShape* beamShapePtr;
-  bool       useNewBeamShape, doMomentumSpread, doVertexSpread;
+  bool       useNewBeamShape, doMomentumSpread, doVertexSpread, doVarEcm;
+  double     eMinPert, eWidthPert;
 
   // Pointers to external processes derived from the Pythia base classes.
   vector<SigmaProcess*> sigmaPtrs;
@@ -461,6 +465,9 @@ private:
 
   // Recalculate kinematics for each event when beam momentum has a spread.
   void nextKinematics();
+
+  // Simplified treatment for low-energy nonperturbative collisions.
+  bool nextNonPert();
 
   // Boost from CM frame to lab frame, or inverse. Set production vertex.
   void boostAndVertex(bool toLab, bool setVertex);

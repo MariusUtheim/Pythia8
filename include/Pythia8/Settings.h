@@ -349,6 +349,9 @@ public:
   // Check whether input openend with { not yet closed with }.
   bool unfinishedInput() {return lineSaved;}
 
+  // Check whether any other processes than SoftQCD are switched on.
+  bool onlySoftQCD();
+
  private:
 
   // Pointer to various information on the generation.

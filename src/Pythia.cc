@@ -47,7 +47,8 @@ Pythia::Pythia(string xmlDir, bool printBanner) :
   doPartonLevel(), doHadronLevel(), doSoftQCDall(), doSoftQCDinel(),
   doCentralDiff(), doDiffraction(), doSoftQCD(), doVMDsideA(), doVMDsideB(),
   doHardDiff(), doResDec(), doFSRinRes(), decayRHadrons(), abortIfVeto(),
-  checkEvent(), checkHistory(), nErrList(), epTolErr(), epTolWarn(), mTolErr(),
+  checkEvent(), checkHistory(), doNonPert(), 
+  nErrList(), epTolErr(), epTolWarn(), mTolErr(),
   mTolWarn(), beamHasGamma(), beamAisResGamma(), beamBisResGamma(),
   beamAhasResGamma(), beamBhasResGamma(), gammaMode(), isUnresolvedA(),
   isUnresolvedB(), showSaV(), showMaD(), doReconnect(), forceHadronLevelCR(),
@@ -65,10 +66,11 @@ Pythia::Pythia(string xmlDir, bool printBanner) :
   hasUserHooksVector(), doLHA(), useNewLHA(), lhaUpPtr(), decayHandlePtr(),
   userHooksPtr(), hasUserHooks(), doVetoProcess(), doVetoPartons(),
   retryPartonLevel(), beamShapePtr(), useNewBeamShape(), doMomentumSpread(),
-  doVertexSpread(), timesDecPtr(), timesPtr(), spacePtr(), useNewTimesDec(),
-  useNewTimes(), useNewSpace(), partonVertexPtr(), useNewPartonVertex(),
-  hasMerging(), hasOwnMerging(), hasMergingHooks(), hasOwnMergingHooks(),
-  doMerging(), hasHeavyIons(), hasOwnHeavyIons(), doHeavyIons() {
+  doVertexSpread(), doVarEcm(), eMinPert(), eWidthPert(), timesDecPtr(), 
+  timesPtr(), spacePtr(), useNewTimesDec(), useNewTimes(), useNewSpace(),
+  partonVertexPtr(), useNewPartonVertex(), hasMerging(), hasOwnMerging(),
+  hasMergingHooks(), hasOwnMergingHooks(), doMerging(), hasHeavyIons(),
+  hasOwnHeavyIons(), doHeavyIons() {
 
   // Initialise / reset pointers and global variables.
   initPtrs();
@@ -137,7 +139,8 @@ Pythia::Pythia(Settings& settingsIn, ParticleData& particleDataIn,
   doHadronLevel(), doSoftQCDall(), doSoftQCDinel(), doCentralDiff(),
   doDiffraction(), doSoftQCD(), doVMDsideA(), doVMDsideB(), doHardDiff(),
   doResDec(), doFSRinRes(), decayRHadrons(), abortIfVeto(), checkEvent(),
-  checkHistory(), nErrList(), epTolErr(), epTolWarn(), mTolErr(), mTolWarn(),
+  checkHistory(), doNonPert(), nErrList(), epTolErr(), epTolWarn(), 
+  mTolErr(), mTolWarn(),
   beamHasGamma(), beamAisResGamma(), beamBisResGamma(), beamAhasResGamma(),
   beamBhasResGamma(), gammaMode(), isUnresolvedA(), isUnresolvedB(),
   showSaV(), showMaD(), doReconnect(), forceHadronLevelCR(), idA(), idB(),
@@ -155,10 +158,11 @@ Pythia::Pythia(Settings& settingsIn, ParticleData& particleDataIn,
   hasUserHooksVector(), doLHA(), useNewLHA(), lhaUpPtr(), decayHandlePtr(),
   userHooksPtr(), hasUserHooks(), doVetoProcess(), doVetoPartons(),
   retryPartonLevel(), beamShapePtr(), useNewBeamShape(), doMomentumSpread(),
-  doVertexSpread(), timesDecPtr(), timesPtr(), spacePtr(), useNewTimesDec(),
-  useNewTimes(), useNewSpace(), partonVertexPtr(), useNewPartonVertex(),
-  hasMerging(), hasOwnMerging(), hasMergingHooks(), hasOwnMergingHooks(),
-  doMerging(),hasHeavyIons(), hasOwnHeavyIons(), doHeavyIons() {
+  doVertexSpread(), doVarEcm(), eMinPert(), eWidthPert(), timesDecPtr(), 
+  timesPtr(), spacePtr(), useNewTimesDec(), useNewTimes(), useNewSpace(),
+  partonVertexPtr(), useNewPartonVertex(), hasMerging(), hasOwnMerging(),
+  hasMergingHooks(), hasOwnMergingHooks(), doMerging(),hasHeavyIons(),
+  hasOwnHeavyIons(), doHeavyIons() {
 
   // Initialise / reset pointers and global variables.
   initPtrs();
@@ -207,6 +211,7 @@ Pythia::Pythia( istream& settingsStrings, istream& particleDataStrings,
   doSoftQCDall(), doSoftQCDinel(), doCentralDiff(), doDiffraction(),
   doSoftQCD(), doVMDsideA(), doVMDsideB(), doHardDiff(), doResDec(),
   doFSRinRes(), decayRHadrons(), abortIfVeto(), checkEvent(), checkHistory(),
+  doNonPert(),
   nErrList(), epTolErr(), epTolWarn(), mTolErr(), mTolWarn(), beamHasGamma(),
   beamAisResGamma(), beamBisResGamma(), beamAhasResGamma(), beamBhasResGamma(),
   gammaMode(), isUnresolvedA(), isUnresolvedB(), showSaV(), showMaD(),
@@ -224,11 +229,12 @@ Pythia::Pythia( istream& settingsStrings, istream& particleDataStrings,
   useNewPdfVMDA(), useNewPdfVMDB(), hasUserHooksVector(), doLHA(),
   useNewLHA(), lhaUpPtr(), decayHandlePtr(), userHooksPtr(), hasUserHooks(),
   doVetoProcess(), doVetoPartons(), retryPartonLevel(), beamShapePtr(),
-  useNewBeamShape(), doMomentumSpread(), doVertexSpread(), timesDecPtr(),
-  timesPtr(), spacePtr(), useNewTimesDec(), useNewTimes(), useNewSpace(),
-  partonVertexPtr(), useNewPartonVertex(), hasMerging(), hasOwnMerging(),
-  hasMergingHooks(), hasOwnMergingHooks(), doMerging(), hasHeavyIons(),
-  hasOwnHeavyIons(), doHeavyIons() {
+  useNewBeamShape(), doMomentumSpread(), doVertexSpread(), doVarEcm(),
+  eMinPert(), eWidthPert(), timesDecPtr(), timesPtr(), spacePtr(), 
+  useNewTimesDec(), useNewTimes(), useNewSpace(), partonVertexPtr(), 
+  useNewPartonVertex(), hasMerging(), hasOwnMerging(), hasMergingHooks(), 
+  hasOwnMergingHooks(), doMerging(), hasHeavyIons(), hasOwnHeavyIons(), 
+  doHeavyIons() {
 
   // Initialise / reset pointers and global variables.
   initPtrs();
@@ -1042,7 +1048,6 @@ bool Pythia::init() {
   // Initialize data members extracted from database.
   doPartonLevel    = settings.flag("PartonLevel:all");
   doHadronLevel    = settings.flag("HadronLevel:all");
-  doLowEnergy      = settings.flag("LowEnergy:all");
   doCentralDiff    = settings.flag("SoftQCD:centralDiffractive");
   doSoftQCDall     = settings.flag("SoftQCD:all");
   doSoftQCDinel    = settings.flag("SoftQCD:inelastic");
@@ -1059,14 +1064,31 @@ bool Pythia::init() {
   decayRHadrons    = settings.flag("RHadrons:allowDecay");
   doMomentumSpread = settings.flag("Beams:allowMomentumSpread");
   doVertexSpread   = settings.flag("Beams:allowVertexSpread");
+  doVarEcm         = settings.flag("Beams:allowVariableEnergy");
+  eMinPert         = settings.parm("Beams:eMinPert");
+  eWidthPert       = settings.parm("Beams:eWidthPert");
   abortIfVeto      = settings.flag("Check:abortIfVeto");
   checkEvent       = settings.flag("Check:event");
   checkHistory     = settings.flag("Check:history");
+  doNonPert        = settings.flag("NonPerturbative:all");
   nErrList         = settings.mode("Check:nErrList");
   epTolErr         = settings.parm("Check:epTolErr");
   epTolWarn        = settings.parm("Check:epTolWarn");
   mTolErr          = settings.parm("Check:mTolErr");
   mTolWarn         = settings.parm("Check:mTolWarn");
+
+  // Warn/abort for unallowed process and beam combinations.
+  bool doHardProc  = !settings.onlySoftQCD() || doLHA;
+  if (doSoftQCD && doHardProc) {
+    info.errorMsg("Warning from Pythia::init: "
+      "should not combine softQCD processes with hard ones");
+  }
+  if (doVarEcm) doMomentumSpread = false;
+  if (doVarEcm && doHardProc) {
+    info.errorMsg("Abort from Pythia::init: "
+      "variable energy only works for softQCD processes");
+    return false;
+  }
 
   // Find out if beam is or has a resolved photon beam.
   beamHasGamma     = settings.flag("PDF:lepton2gamma");
@@ -1197,7 +1219,7 @@ bool Pythia::init() {
   }
 
   // Do not set up beam kinematics when no process level.
-  if (!doProcessLevel && !doLowEnergy) boostType = 1;
+  if (!doProcessLevel) boostType = 1;
   else {
 
     // Set up beam kinematics.
@@ -1265,7 +1287,7 @@ bool Pythia::init() {
   }
 
   // Send info/pointers to process level for initialization.
-  if ( doProcessLevel && !doLowEnergy && !processLevel.init( &info, settings, &particleData,
+  if ( doProcessLevel && !processLevel.init( &info, settings, &particleData,
     &rndm, &beamA, &beamB, &beamGamA, &beamGamB, &beamVMDA, &beamVMDB,
     couplingsPtr, &sigmaTot, doLHA, &slhaInterface, userHooksPtr,
     sigmaPtrs, phaseSpacePtrs) ) {
@@ -1378,7 +1400,7 @@ bool Pythia::init() {
 //--------------------------------------------------------------------------
 
 // Check that combinations of settings are allowed; change if not.
-// @TODO: Rescattering and setVertices
+
 void Pythia::checkSettings() {
 
   // Double rescattering not allowed if ISR or FSR.
@@ -1430,15 +1452,6 @@ void Pythia::checkSettings() {
 
   }
 
-  // Low energy with other processes on
-  if (doLowEnergy) {
-    if (doProcessLevel) {
-      info.errorMsg("Warning in Pythia::checkSettings: "
-        "Process level turned off for low energy collisions");
-      settings.flag("ProcessLevel:all", false);
-      doProcessLevel = false;
-    }
-  }
 }
 
 //--------------------------------------------------------------------------
@@ -1626,11 +1639,6 @@ bool Pythia::initKinematics() {
   pzBcm    = -pzAcm;
   eA       = sqrt(mA*mA + pzAcm*pzAcm);
   eB       = sqrt(mB*mB + pzBcm*pzBcm);
-
-  if (boostType == 1) {
-    pzA = pzAcm;
-    pzB = pzBcm;
-  }
 
   // If in CM frame then store beam four-vectors (else already done above).
   if (boostType != 2 && boostType != 3) {
@@ -1931,34 +1939,6 @@ bool Pythia::next() {
   info.addCounter(3);
   for (int i = 10; i < 13; ++i) info.setCounter(i);
 
-  if (doLowEnergy) {
-    // Set/reset info counters specific to each event.
-    info.addCounter(3);
-    for (int i = 10; i < 13; ++i) info.setCounter(i);
-  
-    event.clear();
-
-    event.append(90, -11, 0,0, 0.,0.,0.,eCM,eCM);
-    event.append(idA, 1, 0,0, pxA,pyA,pzA,eA,mA);
-    event.append(idB, 1, 0,0, pxB,pyB,pzB,eB,mB);
-
-    if (!hadronLevel.doLowEnergyHadHad(1, 2, event)) {
-      cout << "In Pythia::next: doLowEnergyHadHad returned false " << endl;
-      return false;
-    }
-
-    // List events.
-    if (doLHA && nPrevious < nShowLHA) lhaUpPtr->listEvent();
-    if (nPrevious < nShowInfo) info.list();
-    if (nPrevious < nShowProc) process.list(showSaV,showMaD);
-    if (nPrevious < nShowEvt)  event.list(showSaV, showMaD);
-
-    info.addCounter(4);
-
-    return true;
-  }
-
-
   // Simpler option when no hard process, i.e. mainly hadron level.
   if (!doProcessLevel) {
 
@@ -2022,7 +2002,11 @@ bool Pythia::next() {
   if (doMomentumSpread || doVertexSpread) beamShapePtr->pick();
 
   // Recalculate kinematics when beam momentum spread.
-  if (doMomentumSpread) nextKinematics();
+  if (doMomentumSpread || doVarEcm) nextKinematics();
+
+  // Simplified special treatment for low-energy nonperturbative collisions.
+  if ((doVarEcm && exp( -(eCM - eMinPert) / eWidthPert ) > rndm.flat()) 
+    || doNonPert ) return nextNonPert();
 
   // Outer loop over hard processes; only relevant for user-set vetoes.
   for ( ; ; ) {
@@ -2260,6 +2244,106 @@ bool Pythia::next() {
 
 //--------------------------------------------------------------------------
 
+// Variant of the main event-generation routine, for variable CM energies.
+
+bool Pythia::next(double eCMin) {
+
+  // Check that constructor worked.
+  if (!isConstructed) return false;
+
+  // Check that generation has been initialized for variable energy.
+  if (!doVarEcm) {
+    info.errorMsg("Abort from Pythia::next: "
+      "generation not initialized for variable energies");
+    return false;
+  }
+
+  // Check that the frameType matches the input provided.
+  if (frameType != 1) {
+    info.errorMsg("Abort from Pythia::next: "
+      "input parameters do not match frame type");
+    return false;
+  }
+
+  // Save input value.
+  eCM = eCMin;
+
+  // Call regular next method for event generation.
+  return next();
+
+}
+
+//--------------------------------------------------------------------------
+
+// Variant of the main event-generation routine, for variable beam energies.
+
+bool Pythia::next(double eAin, double eBin) {
+
+  // Check that constructor worked.
+  if (!isConstructed) return false;
+
+  // Check that generation has been initialized for variable energy.
+  if (!doVarEcm) {
+    info.errorMsg("Abort from Pythia::next: "
+      "generation not initialized for variable energies");
+    return false;
+  }
+
+  // Check that the frameType matches the input provided.
+  if (frameType != 2) {
+    info.errorMsg("Abort from Pythia::next: "
+      "input parameters do not match frame type");
+    return false;
+  }
+
+  // Save input values.
+  eA = eAin;
+  eB = eBin;
+
+  // Call regular next method for event generation.
+  return next();
+
+}
+
+//--------------------------------------------------------------------------
+
+// Variant of the main event-generation routine, for variable beam momenta.
+
+bool Pythia::next(double pxAin, double pyAin, double pzAin,
+                  double pxBin, double pyBin, double pzBin) {
+
+  // Check that constructor worked.
+  if (!isConstructed) return false;
+
+  // Check that generation has been initialized for variable energy.
+  if (!doVarEcm) {
+    info.errorMsg("Abort from Pythia::next: "
+      "generation not initialized for variable energies");
+    return false;
+  }
+
+  // Check that the frameType matches the input provided.
+  if (frameType != 3) {
+    info.errorMsg("Abort from Pythia::next: "
+      "input parameters do not match frame type");
+    return false;
+  }
+
+  // Save input value.
+  pxA = pxAin;
+  pyA = pyAin;
+  pzA = pzAin;
+  pxB = pxBin;
+  pyB = pyBin;
+  pzB = pzBin;
+
+  // Call regular next method for event generation.
+  return next();
+
+}
+
+//--------------------------------------------------------------------------
+
 // Generate only the hadronization/decay stage, using internal machinery.
 // The "event" instance should already contain a parton-level configuration.
 
@@ -2383,14 +2467,36 @@ bool Pythia::forceHadronLevel(bool findJunctions) {
 
 void Pythia::nextKinematics() {
 
-  // Read out momentum shift to give current beam momenta.
-  pAnow = pAinit + beamShapePtr->deltaPA();
-  pAnow.e( sqrt(pAnow.pAbs2() + mA * mA) );
-  pBnow = pBinit + beamShapePtr->deltaPB();
-  pBnow.e( sqrt(pBnow.pAbs2() + mB * mB) );
+  // Momentum spread: read out momentum shift to give current beam momenta.
+  if (doMomentumSpread) {
+    pAnow = pAinit + beamShapePtr->deltaPA();
+    pAnow.e( sqrt(pAnow.pAbs2() + mA*mA) );
+    pBnow = pBinit + beamShapePtr->deltaPB();
+    pBnow.e( sqrt(pBnow.pAbs2() + mB*mB) );
+    eCM   = (pAnow + pBnow).mCalc();
+
+  // For variable energy in rest frame only need new eCM value, already set.
+  } else if (frameType == 1) {
+
+  // Variable energy but collinear beams: give current beam momenta.
+  } else if (frameType == 2) {
+    pAnow = Vec4( 0., 0.,  sqrtpos( eA*eA - mA*mA), eA);
+    pBnow = Vec4( 0., 0., -sqrtpos( eB*eB - mB*mB), eB);
+    eCM   = (pAnow + pBnow).mCalc();
+
+  // Variable three-momenta stored and energy calculated.
+  } else if (frameType == 3) {
+    pAnow = Vec4( pxA, pyA, pzA, sqrt(pxA*pxA + pyA*pyA + pzA*pzA + mA*mA) );
+    pBnow = Vec4( pxB, pyB, pzB, sqrt(pxB*pxB + pyB*pyB + pzB*pzB + mB*mB) );
+    eCM   = (pAnow + pBnow).mCalc();
+
+  // Other possibilites not supported.
+  } else {
+    info.errorMsg("Error from Pythia::nextKinematics: unsupported frameType");
+    return;
+  }
 
   // Construct CM frame kinematics.
-  eCM   = (pAnow + pBnow).mCalc();
   pzAcm = 0.5 * sqrtpos( (eCM + mA + mB) * (eCM - mA - mB)
         * (eCM - mA + mB) * (eCM + mA - mB) ) / eCM;
   pzBcm = -pzAcm;
@@ -2405,10 +2511,51 @@ void Pythia::nextKinematics() {
   beamB.newPzE( pzBcm, eB);
 
   // Set boost/rotation matrices from/to CM frame.
-  MfromCM.reset();
-  MfromCM.fromCMframe( pAnow, pBnow);
-  MtoCM = MfromCM;
-  MtoCM.invert();
+  if (frameType != 1) {
+    MfromCM.reset();
+    MfromCM.fromCMframe( pAnow, pBnow);
+    MtoCM = MfromCM;
+    MtoCM.invert();
+  }
+
+}
+
+//--------------------------------------------------------------------------
+
+// Simplified treatment for low-energy nonperturbative collisions.
+// WARNING: still under development. Cross-sections do not work,
+// neither subdivision into event classes.
+
+bool Pythia::nextNonPert() {
+
+  // Fill collision instate.
+  process.append( 90, -11, 0, 0, 0, 0, 0, 0,  Vec4(0., 0., 0., eCM), eCM, 0. );
+  process.append(idA, -12, 0, 0, 0, 0, 0, 0, Vec4(0., 0., pzAcm, eA), mA, 0. );
+  process.append(idB, -12, 0, 0, 0, 0, 0, 0, Vec4(0., 0., pzBcm, eB), mB, 0. );
+  for (int i = 0; i < 3; ++i) event.append( process[i] );
+
+  // Do a low-energy collision, for now inelastic nondiffractive only.
+  if (!doLowEnergyHadHad( 1, 2, 1)) {
+    info.errorMsg("Error from Pythia::nextNonPert: fragmentation failed");
+    return false;
+  }
+
+  // Decay hadrons produced in the collision.
+  if (!moreDecays()) {
+    info.errorMsg("Error from Pythia::nextNonPert: decays failed");
+    return false;
+  }
+
+  // List events.
+  int nPrevious = info.getCounter(3) - 1;
+  if (doLHA && nPrevious < nShowLHA) lhaUpPtr->listEvent();
+  if (nPrevious < nShowInfo) info.list();
+  if (nPrevious < nShowProc) process.list(showSaV,showMaD);
+  if (nPrevious < nShowEvt)  event.list(showSaV, showMaD);
+
+  // Done.
+  info.addCounter(4);
+  return true;
 
 }
 

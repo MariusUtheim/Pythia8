@@ -82,6 +82,9 @@ bool ProcessLevel::init( Info* infoPtrIn, Settings& settings,
   // Send on some input pointers.
   resonanceDecays.init( infoPtr, particleDataPtr, rndmPtr);
 
+  // Option with nonperturbative processes.
+  doNonPert      = settings.flag("NonPerturbative:all");
+
   // Set up SigmaTotal. Store sigma_nondiffractive for future use.
   sigmaTotPtr->init( infoPtr, settings, particleDataPtr, rndmPtr);
   int    idA = infoPtr->idA();
@@ -165,8 +168,11 @@ bool ProcessLevel::init( Info* infoPtrIn, Settings& settings,
     containerPtrs[iLHACont]->setLHAPtr(lhaUpPtr);
   }
 
+  // Check if low-energy nonperturbative processes are allowed.
+  bool hasLowE = settings.flag("NonPerturbative:all");
+
   // If no processes found then refuse to do anything.
-  if ( int(containerPtrs.size()) == 0) {
+  if ( int(containerPtrs.size()) == 0 && !hasLowE) {
     infoPtr->errorMsg("Error in ProcessLevel::init: "
       "no process switched on");
     return false;
@@ -320,7 +326,7 @@ bool ProcessLevel::init( Info* infoPtrIn, Settings& settings,
   }
 
   // If sum of maxima vanishes then refuse to do anything.
-  if ( numberOn == 0  || sigmaMaxSum <= 0.) {
+  if ( (numberOn == 0  || sigmaMaxSum <= 0.) && !doNonPert) {
     infoPtr->errorMsg("Error in ProcessLevel::init: "
       "all processes have vanishing cross sections");
     return false;
