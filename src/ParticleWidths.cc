@@ -55,6 +55,21 @@ pair<int, int> ParticleWidths::getKey(int& idR, int idA, int idB) const {
 }
 
 
+bool ParticleWidths::init(Info* infoPtrIn, Rndm* rndmPtrIn,
+  ParticleData* particleDataPtrIn, string path) {
+  infoPtr = infoPtrIn;
+  rndmPtr = rndmPtrIn;
+  particleDataPtr = particleDataPtrIn;
+
+  ifstream stream(path);
+  if (!stream.is_open()) {
+    infoPtr->errorMsg( "Error in ParticleWidths::init: "
+        "unable to open file");
+    return false;
+  }
+  return readXML(stream);
+}
+
 bool ParticleWidths::readXML(istream& stream) {
 
   string line;
@@ -70,9 +85,27 @@ bool ParticleWidths::readXML(istream& stream) {
       int id = intAttributeValue(line, "id");
       if (id < 0) {
         infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
-          "Got negative id (antiparticles should be described by symmetry)");
+          "Got negative id:", std::to_string(id));
         continue;
       }
+      auto* entry = particleDataPtr->findParticle(id);
+      if (!entry) {
+        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
+          "Particle is not defined:", std::to_string(id));
+        continue;
+      }
+      if (!entry->isHadron()) {
+        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
+          "Particle is not defined as hadron:", std::to_string(id));
+        continue;
+      }
+      if (particleDataPtr->heaviestQuark(id) > 3) {
+        infoPtr->errorMsg("Warning in ParticleWidths:readXML: "
+          "Particle contains a charmed or bottom hadron:",
+          std::to_string(id));
+        continue;
+      }
+
 
       double left = doubleAttributeValue(line, "left");
       double right = doubleAttributeValue(line, "right");
@@ -90,15 +123,16 @@ bool ParticleWidths::readXML(istream& stream) {
       completeTag(stream, line);
 
       int id = intAttributeValue(line, "id");
-      if (id < 0) {
+      auto iter = entries.find(id);
+      if (iter == entries.end()) {
         infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
-          "Got negative id (antiparticles should be described by symmetry)");
+          "got br for a particle with undefined or ill-defined width");
         continue;
       }
 
       int lType = intAttributeValue(line, "lType");
       if (lType == 0) {
-        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
           "lType is not defined");
         lType = 1;
       }
@@ -116,17 +150,10 @@ bool ParticleWidths::readXML(istream& stream) {
         data.push_back(currentData);
 
       auto prods = getKey(id, products[0], products[1]);
-      auto iter = entries.find(id);
-      if (iter == entries.end()) {
-        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
-          "got br for a particle with undefined width");
-        return false;
-      }
-      else {
-        ParticleWidthEntry& entry = iter->second;
-        Interpolator br(entry.widths.left(), entry.widths.right(), data);
-        entry.addProducts(prods, br, lType);
-      }
+      
+      ParticleWidthEntry& entry = iter->second;
+      Interpolator br(entry.widths.left(), entry.widths.right(), data);
+      entry.addProducts(prods, br, lType);
     }
   }
 
@@ -270,7 +297,7 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   if (mMin > m0 || mMin > mPeak) {
     infoPtr->errorMsg("Error in ParticleWidths::pickMass: "
       "mass ordering did not make sense. This indicates an error with the configuration files");
-    return 0.;
+    return false;
   }
 
   double gamma = channel.widths(mPeak);
@@ -356,7 +383,11 @@ bool ParticleWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
     idDec = -idDec;
 
   auto entriesIter = entries.find(idDec);
-  if (entriesIter == entries.end()) return false;
+  if (entriesIter == entries.end()) {
+    infoPtr->errorMsg("Error in ParticleWidths::pickDecay: "
+      "particle not found:", std::to_string(idDec));
+    return false;
+  }
   const auto& entry = entriesIter->second;
 
   // Pick decay channel
@@ -369,8 +400,12 @@ bool ParticleWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
     if (br > 0) gotAny = true;
     brs.push_back(br);
   }
-  if (!gotAny)
+
+  if (!gotAny) {
+    infoPtr->errorMsg("Warning in ParticleWidths::pickDecay: "
+      "no channels have positive branching ratios");
     return false;
+  }
   
   auto prods = prodss[rndmPtr->pick(brs)];
   auto lType = entry.decayChannels.at(prods).lType;

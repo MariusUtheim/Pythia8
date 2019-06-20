@@ -56,20 +56,12 @@ class ParticleWidths {
 
 public:
 
-  bool init(Info* infoPtrIn, Rndm* rndmPtrIn, ParticleData* particleDataPtrIn,
-    string path) {
-    infoPtr = infoPtrIn;
-    rndmPtr = rndmPtrIn;
-    particleDataPtr = particleDataPtrIn;
+  ParticleWidths() = default;
+  ParticleWidths(const ParticleWidths&) = delete;
+  ParticleWidths(ParticleWidths&&) = delete;
 
-    ifstream stream(path);
-    if (!stream.is_open()) {
-      infoPtr->errorMsg( "Warning in ParticleWidths::init: "
-          "unable to open file");
-      return false;
-    }
-    return readXML(stream);
-  }
+  bool init(Info* infoPtrIn, Rndm* rndmPtrIn, ParticleData* particleDataPtrIn,
+    string path);
 
   bool readXML(istream& stream);
 

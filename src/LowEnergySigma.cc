@@ -29,21 +29,7 @@ void LowEnergySigma::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
 
   // Initialize map of resonance particles
   for (int id : particleWidthsPtr->getResonances()) {
-    
-    // Can only handle hadrons
-    if (!particleDataPtr->isHadron(id)) {
-      infoPtr->errorMsg("Error in LowEnergySigma::init: "
-        "ParticleWidths contains a particle that is not a hadron.");
-      continue;
-    }
 
-    // Cannot handle charm or bottom quarks
-    if (particleDataPtr->heaviestQuark(id) > 3) {
-      infoPtr->errorMsg("Error in LowEnergySigma::init: "
-        "ParticleWidths contains a charmed or bottom hadron.");
-      continue;
-    }
-    
     // Insert id in signature map
     int signature = getSignature(particleDataPtr->isHadron(id), 
       particleDataPtr->chargeType(id), particleDataPtr->strangeness(id));

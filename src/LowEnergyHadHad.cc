@@ -50,7 +50,7 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
   ministringFragPtr = ministringFragPtrIn;
 
   // Whether the full intermediate process should be shown
-  verbose         = settings.flag("LowEnergy:verbose");
+  verbose         = settings.flag("NonPerturbative:verbose");
 
   // Relative fraction of s quark production in strin breaks.
   probStoUD       = settings.parm("StringFlav:probStoUD");
@@ -73,15 +73,6 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
   // Boundary mass between string and ministring handling.
   mStringMin      = settings.parm("HadronLevel:mStringMin");
 
-  // Set up cross sections
-  // @TODO We don't want to initialize widths like this, but we need to decide
-  //       where it should be initialized exactly (maybe in the Pythia class)
-  if (!particleWidths.init(infoPtrIn, rndmPtrIn, particleDataPtrIn,
-                      "../share/Pythia8/xmldoc/ParticleWidths.xml")) {
-    infoPtr->errorMsg("In Pythia8::LowEnergyHadHad: failed to initialize particle widths");
-    return false;
-  }
-
   // Initialize collision event record.
   leEvent.init( "(low energy event)", particleDataPtr);
 
@@ -93,7 +84,7 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
 //--------------------------------------------------------------------------
 
 // Produce outgoing primary hadrons from collision of incoming pair.
-// type | 0: mix; | 1: nondiff; | 2 : el; | 3: SD (XB); | 4: SD (AX);
+// type | 1: nondiff; | 2 : el; | 3: SD (XB); | 4: SD (AX);
 //      | 5: DD;  | 6: CD (AXB, not implemented) 
 //      | 7: excitation | 8: annihilation | 9: resonant
 //      | >100: resonant through the specified resonance particle
@@ -103,7 +94,6 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
 
   // Check that incoming hadrons. Store current event size.
   if (!event[i1].isHadron() || !event[i2].isHadron()) return false;
-  if (typeIn < 0 || typeIn > 6) return false;
   sizeOld = event.size();
 
   //  Hadron type and meson/baryon distinction.
@@ -186,6 +176,8 @@ int type = typeIn;
   for (int i = 3; i < leEvent.size(); ++i) 
     if (leEvent[i].isFinal() || verbose)
       event.append( leEvent[i]);
+
+printf("LEHH: [3] %s tau = %f\n", event[3].name().c_str(), event[3].tau());
 
   // Boost from collision rest frame to event frame.
   // Set status and mothers. Offset vertex info to collision vertex.
@@ -468,7 +460,7 @@ bool LowEnergyHadHad::excitation() {
 
   // Pick masses
   double m1Ex, m2Ex;
-  if (!particleWidths.pickMasses(prod1, prod2, eCM, m1Ex, m2Ex))
+  if (!particleWidthsPtr->pickMasses(prod1, prod2, eCM, m1Ex, m2Ex))
     return false;
 
   // @TODO: Angular distribution might not be uniform
@@ -487,32 +479,11 @@ bool LowEnergyHadHad::excitation() {
 bool LowEnergyHadHad::resonance(int idRes) {
 
   // Create the resonance
-  
-
   int iNew = leEvent.append(idRes, 919, 1,2,0,0, 0,0, Vec4(0,0,0,eCM), eCM);
-  leEvent[iNew].tau(1./leEvent[iNew].mWidth() * rndmPtr->exp());
+  leEvent[iNew].tau(HBARC * FM2MM / leEvent[iNew].mWidth() * rndmPtr->exp());
 
   leEvent[1].daughters(iNew, 0); leEvent[1].statusNeg();
   leEvent[2].daughters(iNew, 0); leEvent[2].statusNeg();
-
-//  // Create decay products
-//  vector<int> decayProducts = particleWidths.pickDecayChannel(idRes, eCM);
-//
-//  // Pick phase space configuration
-//  double mTot = 0.;
-//  vector<double> ms(decayProducts.size());
-//  for (size_t i = 0; i < decayProducts.size(); ++i)
-//    mTot += (ms[i] = particleDataPtr->m0(decayProducts[i]));
-//
-//  // @TODO: decay products can contain resonances that are off shell
-//  if (mTot > eCM)
-//    return false;
-//  
-//  vector<Vec4> ps = phaseSpace(eCM, ms, rndmPtr);
-//
-//  // Append new particles
-//  for (size_t i = 0; i < decayProducts.size(); ++i)
-//    leEvent.append(decayProducts[i], 917, 3,0, 0,0, 0,0, ps[i],ms[i]);
 
   return true;
 }

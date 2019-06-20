@@ -116,7 +116,6 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
   ministringFrag.init(infoPtr, settings, particleDataPtr, rndmPtr,
     &flavSel, &pTSel, &zSel);
 
-
   // Initialize low energy.
   if (!lowEnergyHadHad.init(infoPtr, settings, rndmPtr, 
     particleDataPtr, particleWidthsPtrIn,
@@ -125,7 +124,7 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
 
   // Initialize particle decays.
   decays.init(infoPtr, settings, particleDataPtr, rndmPtr,
-    &lowEnergyHadHad.particleWidths, couplingsPtr, timesDecPtr, &flavSel,
+    particleWidthsPtrIn, couplingsPtr, timesDecPtr, &flavSel,
     decayHandlePtr, handledParticles);
 
   // Initialize rescatterings
@@ -206,7 +205,7 @@ bool HadronLevel::next(Event& event) {
 
   // Set lifetimes for already existing hadrons, like onia.
   for (int i = 0; i < event.size(); ++i) if (event[i].isHadron())
-    event[i].tau( event[i].tau0() * rndmPtr->exp() );
+      event[i].tau( event[i].tau0() * rndmPtr->exp() );
 
   // Remove junction structures.
   if (!junctionSplitting.checkColours(event)) {
@@ -365,6 +364,13 @@ bool HadronLevel::next(Event& event) {
 // Note: does not do sequential hadronization, e.g. for Upsilon.
 
 bool HadronLevel::moreDecays( Event& event) {
+
+  // @TODO: It so happens that HadronLevel::moreDecays is called from 
+  //   Pythia::nextNonPert, and there is no other check to whether doDecays 
+  //   is set. Perhaps there should be such a case somewhere, or perhaps 
+  //   this function should not actually be called at that point.
+  if (!doDecay)
+    return true;
 
   // Colour-octet onia states must be decayed to singlet + gluon.
   if (!decayOctetOnia(event)) return false;
