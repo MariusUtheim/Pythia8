@@ -75,7 +75,7 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
   // Set up cross sections
   // @TODO We don't want to initialize widths like this, but we need to decide
   //       where it should be initialized exactly (maybe in the Pythia class)
-  if (!particleWidths.init(infoPtrIn, rndmPtrIn,
+  if (!particleWidths.init(infoPtrIn, rndmPtrIn, particleDataPtrIn,
                       "../share/Pythia8/xmldoc/ParticleWidths.xml")) {
     infoPtr->errorMsg("In Pythia8::LowEnergyHadHad: failed to initialize particle widths");
     return false;
@@ -166,14 +166,14 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
       break;
 
     default:
-      if (type > 100) {
+      if (abs(type) > 100) {
         if (!resonance(type)) return false;
         needHadronize = false;
         break;
       }
       else {
         infoPtr->errorMsg( "Error in LowEnergyHadHad::collide: "
-          "invalid type code");
+          "invalid type code ", std::to_string(type));
         return false;
       }
   }
@@ -196,7 +196,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   for (int i = sizeOld; i < event.size(); ++i) {
     event[i].rotbst( MfromCM);
     event[i].mothers( mother2, mother1 );
-    event[i].status(910 + (type < 10 ? type : 9));
+    event[i].status(910 + (abs(type) < 10 ? type : 9));
     event[i].vProdAdd( vtx);
   }
 
@@ -454,7 +454,6 @@ bool LowEnergyHadHad::excitation() {
     sigmas[i] = channels[i].sigma(eCM); 
   int iChannel = rndmPtr->pick(sigmas);
 
-
   // The channel contains the particle ids without quark contents,
   // e.g. p(1535) = 102212, so N(1535) = 100002
   int prod1 = channels[iChannel].products.first, 
@@ -469,32 +468,15 @@ bool LowEnergyHadHad::excitation() {
   prod2 = prod2 + (id2 - id2 % 10);
 
   // Pick masses
-  double m1, m2;
-  bool isRes1 = particleWidths.hasData(prod1),
-       isRes2 = particleWidths.hasData(prod2);
-
-  // If neither particle has mass-dependent width
-  if (!isRes1 && !isRes2) {
-    m1 = particleDataPtr->m0(prod1); m2 = particleDataPtr->m0(prod2);
-  }
-  // If both particles have mass-dependent widths
-  else if (isRes1 && isRes2) {
-    auto masses = particleWidths.pickMass2(prod1, prod2, eCM);
-    m1 = masses.first; m2 = masses.second;
-  }
-  // If exactly one particle has mass-dependent width
-  else {
-    // Make sure the resonance particle is first
-    if (isRes2) swap(prod1, prod2);
-    m2 = particleDataPtr->m0(prod2);
-    m1 = particleWidths.pickMass(prod1, eCM, m2);
-  }
+  double m1Ex, m2Ex;
+  if (!particleWidths.pickMasses(prod1, prod2, eCM, m1Ex, m2Ex))
+    return false;
 
   // @TODO: Angular distribution might not be uniform
   // Generate phase space
-  vector<Vec4> ps = phaseSpace(eCM, { m1, m2 }, rndmPtr);
-  leEvent.append(prod1, 918, 1,2, 0,0, 0,0, ps[0], m1);
-  leEvent.append(prod2, 918, 1,2, 0,0, 0,0, ps[1], m2);
+  vector<Vec4> ps = phaseSpace(eCM, { m1Ex, m2Ex }, rndmPtr);
+  leEvent.append(prod1, 918, 1,2, 0,0, 0,0, ps[0], m1Ex);
+  leEvent.append(prod2, 918, 1,2, 0,0, 0,0, ps[1], m2Ex);
 
   return true;
 }
@@ -507,10 +489,10 @@ bool LowEnergyHadHad::resonance(int idRes) {
 
   // Create the resonance
   
-  Particle res(idRes, 919, 1,2, 0,0, 0,0, Vec4(0, 0, 0, eCM), eCM);
-  res.tau(res.tau0() * rndmPtr->exp());
 
-  int iNew = leEvent.append(res);
+  int iNew = leEvent.append(idRes, 919, 1,2,0,0, 0,0, Vec4(0,0,0,eCM), eCM);
+  leEvent[iNew].tau(1./leEvent[iNew].mWidth() * rndmPtr->exp());
+
   leEvent[1].daughters(iNew, 0); leEvent[1].statusNeg();
   leEvent[2].daughters(iNew, 0); leEvent[2].statusNeg();
 

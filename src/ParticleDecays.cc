@@ -123,7 +123,6 @@ void ParticleDecays::init(Info* infoPtrIn, Settings& settings,
 // Decay a particle; main method.
 
 bool ParticleDecays::decay( int iDec, Event& event) {
-
   // Check whether a decay is allowed, given the upcoming decay vertex.
   Particle& decayer = event[iDec];
   hasPartons  = false;
@@ -192,7 +191,7 @@ bool ParticleDecays::decay( int iDec, Event& event) {
     if (doneExternally) return true;
   }
 
-  // Perform decay using ParticleWidths
+  // Perform decay using mass dependent widths if possible
   if (!doneExternally && decDataPtr->useMassDependentWidth()) {
     double m0 = decayer.m();
 
@@ -202,8 +201,6 @@ bool ParticleDecays::decay( int iDec, Event& event) {
       return false;
 
     // Calculate phase space configuration.
-    double e1   = 0.5 * (m0*m0 + m1*m1 - m2*m2) / m0;
-    double e2   = 0.5 * (m0*m0 + m2*m2 - m1*m1) / m0;
     double pAbs = 0.5 * sqrtpos( (m0 - m1 - m2) * (m0 + m1 + m2)
       * (m0 + m1 - m2) * (m0 - m1 + m2) ) / m0;
 
@@ -214,6 +211,8 @@ bool ParticleDecays::decay( int iDec, Event& event) {
     double pX       = pAbs * sinTheta * cos(phi);
     double pY       = pAbs * sinTheta * sin(phi);
     double pZ       = pAbs * cosTheta;
+    double e1   = sqrt(pAbs * pAbs + m1 * m1);
+    double e2   = sqrt(pAbs * pAbs + m2 * m2);
 
     mult = 2;
     iProd.resize(3);

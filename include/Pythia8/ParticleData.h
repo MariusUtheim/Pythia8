@@ -158,11 +158,11 @@ public:
     mMaxSave = oldPDE.mMaxSave;  tau0Save = oldPDE.tau0Save;
     constituentMassSave = oldPDE.constituentMassSave;
     hasAntiSave = oldPDE.hasAntiSave; isResonanceSave = oldPDE.isResonanceSave;
-    mayDecaySave = oldPDE.mayDecaySave; doExternalDecaySave
-    = oldPDE.doExternalDecaySave; isVisibleSave = oldPDE.isVisibleSave;
-    doForceWidthSave = oldPDE.doForceWidthSave; hasChangedSave
-    = oldPDE.hasChangedSave; hasChangedMMinSave = oldPDE.hasChangedMMinSave;
-    hasChangedMMaxSave = oldPDE.hasChangedMMaxSave;
+    useMDWSave = oldPDE.useMDWSave; mayDecaySave = oldPDE.mayDecaySave;
+    doExternalDecaySave = oldPDE.doExternalDecaySave; isVisibleSave 
+    = oldPDE.isVisibleSave; doForceWidthSave = oldPDE.doForceWidthSave;
+    hasChangedSave = oldPDE.hasChangedSave; hasChangedMMinSave 
+    = oldPDE.hasChangedMMinSave;hasChangedMMaxSave = oldPDE.hasChangedMMaxSave;
     modeBWnow = oldPDE.modeBWnow; atanLow = oldPDE.atanLow;
     atanDif = oldPDE.atanDif; mThr = oldPDE.mThr;
     for (int i = 0; i < int(oldPDE.channels.size()); ++i) {
@@ -277,7 +277,7 @@ public:
 
   // Give back other quantities.
   bool   useBreitWigner() const { return (modeBWnow > 0); }
-  bool   canDecay()       const { return (channels.size() > 0);}
+  bool   canDecay()       const { return (channels.size() > 0) || useMDWSave;}
   bool   isLepton()       const { return (idSave > 10 && idSave < 19);}
   bool   isQuark()        const { return (idSave != 0 && idSave < 9);}
   bool   isGluon()        const { return (idSave == 21);}
@@ -579,6 +579,8 @@ public:
   bool hasAnti(int idIn) const {
     const ParticleDataEntry* ptr = findParticle(idIn);
     return ( ptr ) ? ptr->hasAnti() : false; }
+  int antiId(int idIn) const {
+    return ( hasAnti(idIn) ) ? -idIn : idIn; }
   string name(int idIn) const {
     const ParticleDataEntry* ptr = findParticle(idIn);
     return ( ptr ) ? ptr->name(idIn) : " "; }
@@ -700,6 +702,10 @@ public:
   int nQuarksInCode(int idIn, int idQIn) {
     const ParticleDataEntry* ptr = findParticle(idIn);
     return ( ptr ) ? ptr->nQuarksInCode(idQIn) : 0 ; }
+  bool useMassDependentWidth(int idIn) const {
+    const ParticleDataEntry* ptr = findParticle(idIn);
+    return ( ptr ) ? ptr->useMassDependentWidth() : false;
+  }
 
   // Change branching ratios.
   void rescaleBR(int idIn, double newSumBR = 1.) {

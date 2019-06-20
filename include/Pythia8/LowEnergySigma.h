@@ -32,8 +32,6 @@ public:
   // Gets all partial cross sections for the specified collision. 
   // This is used when all cross sections are needed to determine which 
   // process to execute. Returns false if no processes are available.
-  //map<int, double> sigmaPartial(int idA, int idB, double eCM) const; 
-  
   bool sigmaPartial(int idA, int idB, double eCM, 
     vector<int>& typesOut, vector<double>& sigmasOut) const;
 
@@ -51,11 +49,12 @@ private:
 
   Rndm* rndmPtr;
 
+  // @TODO Just put the actual formulas in there
   mutable SigmaSaSDL sigmaSaSDL;
 
   // Orders the two inputs in a canonical way, and returns an id for the 
   // collision type (see .cc file for a detailed specification)
-  // 1: BB |  2: BBbar |  3: XM
+  // 1: BB |  2: BBbar |  3: XM |  4: -XM
   int canonicalForm(int& idA, int& idB) const;
 
   // Get cross section according to additive quark model.
@@ -64,7 +63,7 @@ private:
   // Get AQM nucleon-nucleon cross section (always 40 mb). For scale factors
   double aqmNN() const;
 
-  // BB
+  // BB partial cross sections
   double BBTotal(int idA, int idB, double eCM) const;
   double BBElastic(int idA, int idB, double eCM) const;
   double BBStrEx(int idA, int idB, double eCM) const;
@@ -74,12 +73,7 @@ private:
   double BBDiffractiveXX(int idA, int idB, double eCM) const;
   double BBExcite(int idA, int idB, double eCM) const;
 
-  map<int, double> sigmaPartialBB(int idA, int idB, double eCM) const;
-
-
-  // @TODO: Rethink the interface here
-
-  // BBbar
+  // BBbar partial cross sections
   double BBbarTotal(int idA, int idB, double eCM) const;
   double BBbarElastic(int idA, int idB, double eCM) const;
   double BBbarNonDiff(int idA, int idB, double eCM) const;
@@ -88,21 +82,15 @@ private:
   double BBbarDiffractiveXX(int idA, int idB, double eCM) const;
   double BBbarAnnihilation(int idA, int idB, double eCM) const;
 
-  map<int, double> sigmaPartialBBbar(int idA, int idB, double eCM) const;
-  
-  // XM
+  // XM partial cross sections
   ParticleWidths* particleWidthsPtr;
   double XMTotal(int idX, int idM, double eCM) const;
+  double XMNonDiffractive(int idX, int idM, double eCM) const;
   double XMElastic(int idX, int idM, double eCM) const;
   double XMResonant(int idX, int idM, double eCM) const;
+  double XMResonantPartial(int idX, int idM, int idR, double eCM) const;
+  vector<int> possibleResonances(int idX, int idM) const;
 
-
-  double sigmaTotalXM(int idX, int idM, double eCM) const;
-  double sigmaElasticXM(int idX, int idM, double eCM) const;
-  double sigmaResTotalXM(int idX, int idM, double eCM) const;
-  double sigmaResPartialXM(int idX, int idM, int idR, double eCM) const;
-  map<int, double> sigmaResXM(int idX, int idM, double eCM) const;
-  double sigmaStringXM(int idX, int idM, double eCM) const;
   // @TODO: Make a more intutive system?
   // The signature of a particle is the three digit number BQS, where B is 
   // baryon number, Q is charge signature and S is strangeness signature.
@@ -111,6 +99,7 @@ private:
   // charge is positive and 10 + chargeType if it is negative. This way, charge
   // signature is always positive. Strangeness signature is defined similarly.
   map<int, vector<int>> signatureToParticles;
+  int getSignature(int baryon, int charge, int strangeness) const;
 
 };
 

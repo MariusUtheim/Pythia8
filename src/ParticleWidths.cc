@@ -39,6 +39,21 @@ static void completeTag(istream& stream, string& line) {
   } 
 }
 
+// Gets key for the decay and flips idR if necessary
+pair<int, int> ParticleWidths::getKey(int& idR, int idA, int idB) const {
+
+  if (idR < 0) {
+    idR = -idR;
+    idA = particleDataPtr->antiId(idA);
+    idB = particleDataPtr->antiId(idB);
+  }
+
+  if (abs(idA) < abs(idB))
+    return { idB, idA };
+  else
+    return { idA, idB };
+}
+
 
 bool ParticleWidths::readXML(istream& stream) {
 
@@ -53,8 +68,15 @@ bool ParticleWidths::readXML(istream& stream) {
       completeTag(stream, line);
 
       int id = intAttributeValue(line, "id");
+      if (id < 0) {
+        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
+          "Got negative id (antiparticles should be described by symmetry)");
+        continue;
+      }
+
       double left = doubleAttributeValue(line, "left");
       double right = doubleAttributeValue(line, "right");
+      double m0 = doubleAttributeValue(line, "m0");
 
       istringstream dataStr(attributeValue(line, "data"));
       vector<double> data;
@@ -62,12 +84,24 @@ bool ParticleWidths::readXML(istream& stream) {
       while (dataStr >> currentData)
         data.push_back(currentData);
 
-      this->entries.emplace(id, ParticleWidthEntry(Interpolator(left, right, data)));
+      this->entries.emplace(id, ParticleWidthEntry(m0, Interpolator(left, right, data)));
     }
     else if (word1 == "<br") {
       completeTag(stream, line);
 
       int id = intAttributeValue(line, "id");
+      if (id < 0) {
+        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
+          "Got negative id (antiparticles should be described by symmetry)");
+        continue;
+      }
+
+      int lType = intAttributeValue(line, "lType");
+      if (lType == 0) {
+        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+          "lType is not defined");
+        lType = 1;
+      }
 
       istringstream productStr(attributeValue(line, "products"));
       vector<int> products;
@@ -80,7 +114,8 @@ bool ParticleWidths::readXML(istream& stream) {
       double currentData;
       while (dataStr >> currentData)
         data.push_back(currentData);
-      
+
+      auto prods = getKey(id, products[0], products[1]);
       auto iter = entries.find(id);
       if (iter == entries.end()) {
         infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
@@ -90,14 +125,15 @@ bool ParticleWidths::readXML(istream& stream) {
       else {
         ParticleWidthEntry& entry = iter->second;
         Interpolator br(entry.widths.left(), entry.widths.right(), data);
-        // @TODO: Don't stream to a vector; get it directly into a pair
-        entry.addProducts(make_pair(products[0], products[1]), br);
+        entry.addProducts(prods, br, lType);
       }
     }
   }
 
   return true;
 }
+
+
 
 vector<int> ParticleWidths::getResonances() const {
   vector<int> resonances;
@@ -106,53 +142,97 @@ vector<int> ParticleWidths::getResonances() const {
   return resonances;
 }
 
-
 double ParticleWidths::width(int id, double eCM) const {
+  if (id < 0) id = -id;
   auto iter = entries.find(id);
   return (iter != entries.end()) ? iter->second.widths(eCM) : 0.;
 }
 
-double ParticleWidths::partialWidth(int id, pair<int, int> prods, double eCM) const {
-  auto iter = entries.find(id);
-  return (iter != entries.end()) ? iter->second.getWidth(prods, eCM) : 0.;
+double ParticleWidths::partialWidth(int idR, int idA, int idB, double m) const {
+  auto prods = getKey(idR, idA, idB);
+  auto iter = entries.find(idR);
+  return (iter != entries.end()) ? iter->second.getWidth(prods, m) : 0.;
+}
+
+double ParticleWidths::branchingRatio(int idR, int idA, int idB, double m) const {
+  auto prods = getKey(idR, idA, idB);
+  auto iter = entries.find(idR);
+  return (iter != entries.end()) ? iter->second.getBR(prods, m) : 0.;
+}
+
+double ParticleWidths::resonanceSigma(int idR, int idA, int idB,
+  double eCM) const {
+  
+  // Ensure canonical ordering
+  auto prods = getKey(idR, idA, idB);
+
+  // Get width entry
+  auto entryIter = entries.find(idR);
+  if (entryIter == entries.end())
+    return 0.;
+  auto& entry = entryIter->second;
+
+  // Find decay channel
+  auto channelIter = entry.decayChannels.find(prods);
+  if (channelIter == entry.decayChannels.end())
+    return 0.;
+  auto& channel = channelIter->second;
+
+  // Get mass dependent width and branching ratios
+  double gammaR = entry.widths(eCM);
+  if (gammaR == 0) return 0.;
+
+  double br = channel.br(eCM);
+  if (br == 0) return 0.;
+
+  // Calculate the resonance sigma
+  double s = pow2(eCM), mR = particleDataPtr->m0(idR),
+         mA = particleDataPtr->m0(prods.first),
+         mB = particleDataPtr->m0(prods.second);
+  double pCMS2 = 1 / (4 * s) * (s - pow2(mA + mB)) * (s - pow2(mA - mB));
+
+  return GEVINVSQ2MB * M_PI / pCMS2
+    * particleDataPtr->spinType(idR)
+        / (particleDataPtr->spinType(prods.first) 
+         * particleDataPtr->spinType(prods.second))
+    * br * pow2(gammaR) / (pow2(mR - eCM) + 0.25 * pow2(gammaR));
 }
 
 
-double ParticleWidths::branchingRatio(int id, pair<int, int> prods, double eCM) const {
-  // @TODO Ordering of products?
-  auto iter = entries.find(id);
-  return (iter != entries.end()) ? iter->second.getBR(prods, eCM) : 0.;
+
+bool ParticleWidths::pickMasses(int idA, int idB, double eCM, double& mAOut, double& mBOut) {
+  return _pickMasses(idA, idB, eCM, mAOut, mBOut, 1);
 }
 
-vector<pair<double, pair<int, int>>> ParticleWidths::getWeightedProducts(int id, double eCM) const {
-  auto iter = entries.find(id);
-  if (iter == entries.end()) 
-    return vector<pair<double, pair<int, int>>>();
+bool ParticleWidths::_pickMasses(int idA, int idB, double eCM,
+  double& mAOut, double& mBOut, int lType) {
+
+  bool isResA = hasData(idA), isResB = hasData(idB);
+
+  // If neither particle has mass-dependent width
+  if (isResA && isResB) {
+    return _pickMass2(idA, idB, eCM, lType, mAOut, mBOut);
+  }
+  else if (isResA) {
+    double mA, mB = particleDataPtr->m0(idB);
+    if (!_pickMass1(idA, eCM, mB, lType, mA))
+      return false;
+    mAOut = mA; mBOut = mB;
+    return true;
+  }
+  else if (isResB) {
+    double mB, mA = particleDataPtr->m0(idA);
+    if (!_pickMass1(idB, eCM, mA, lType, mB))
+      return false;
+    mAOut = mA; mBOut = mB;
+    return true;
+  }
   else {
-    const ParticleWidthEntry& entry = iter->second;
-    vector<pair<double, pair<int, int>>> result;
-    for (auto prodBRs : entry.branchingRatios) 
-      result.push_back(make_pair(prodBRs.second(eCM), prodBRs.first));
-    return result;
+    mAOut = particleDataPtr->m0(idA);
+    mBOut = particleDataPtr->m0(idB);
+    return true;
   }
 }
-
-pair<int, int> ParticleWidths::pickDecayChannel(int idRes, double eCM) {
-
-  auto brs = getWeightedProducts(idRes, eCM);
-  if (brs.size() == 0) {
-    // @TODO: This would be a bug
-    cout << "Got no decay modes" << endl;
-    return make_pair(0, 0);
-  }
-
-  vector<double> weights(brs.size());
-  for (size_t i = 0; i < brs.size(); ++i)
-    weights[i] = brs[i].first;
-
-  return brs[rndmPtr->pick(weights)].second;
-}
-
 
 static double pCMS(double eCM, double mA, double mB) {
   double sCM = eCM * eCM;
@@ -163,20 +243,36 @@ static double breitWigner(double gamma, double dm) {
   return 1. / (2. * M_PI) * gamma / (dm * dm + 0.25 * gamma * gamma);
 }
 
-static constexpr double MAX_LOOPS = 100;
+static constexpr double MAX_LOOPS = 200;
 
-double ParticleWidths::pickMass(int idRes, double eCM, double mB, int lType) {
+bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
+  double& mAOut) {
+
   auto iter = entries.find(idRes);
-  if (iter == entries.end())
-    return 0.;
+  if (iter == entries.end()) {
+    infoPtr->errorMsg("Error in ParticleWidths::pickMass: "
+      "mass distribution for particle is not defined");
+    return false;
+  }
 
   ParticleWidthEntry& channel(iter->second);
 
   // @TODO: Maybe an mPeak that is different from m0 will be more efficient
   double mMin = channel.widths.left(), 
          mMax = min(channel.widths.right(), eCM - mB),
-         mPeak = channel.m0,
-         m0 = channel.m0;
+         mPeak = particleDataPtr->m0(idRes),
+         m0 = particleDataPtr->m0(idRes);
+
+  // This can happen due to interpolation imprecision if eCM - mB is near mMin
+  if (mMax < mMin)
+    return false;
+
+  if (mMin > m0 || mMin > mPeak) {
+    infoPtr->errorMsg("Error in ParticleWidths::pickMass: "
+      "mass ordering did not make sense. This indicates an error with the configuration files");
+    return 0.;
+  }
+
   double gamma = channel.widths(mPeak);
 
   // Scale factor is chosen based on what empirically gives sufficient
@@ -218,55 +314,89 @@ double ParticleWidths::pickMass(int idRes, double eCM, double mB, int lType) {
     double yDistr = pow(pCMS(eCM, mCand, mB), lType) 
                   * breitWigner(channel.widths(mCand), mCand - m0);
   
-    if (rndmPtr->flat() * envelope < yDistr)
-      return mCand;
+    if (rndmPtr->flat() * envelope < yDistr) {
+      mAOut = mCand;
+      return true;
+    }
   }
 
-  //// Alternative implementation using lambda functions
-  //auto sampler = [&]() {
-  //  if (rndmPtr->pick(ps) == 0) {
-  //    double r = (0.5 - cdfLow) + rndmPtr->flat() * cdfLow;
-  //    return mPeak + 0.5 * gamma * tan(M_PI * (r - 0.5));
-  //  }
-  //  else {
-  //    double r = 0.5 + rndmPtr->flat() * cdfHigh;
-  //    return mPeak + gamma * tan(M_PI * (r - 0.5));
-  //  }
-  //};
-//
-  //auto accepter = [&](double m) {
-  //  double overestimate = m < m0 ? scale * breitWigner(gamma, m - mPeak)
-  //                      : scale * 2. * breitWigner(2. * gamma, m - mPeak);
-  //  double distr = pow(pCMS(eCM, m, mB), lType) 
-  //             * breitWigner(channel.widths(m), m - m0);
-  //  return distr / overestimate;
-  //};
-  //if (!rndmPtr->hitAndMiss(distribution, accepter, mCand)) {
-  //  infoPtr->errorMsg("Warning in ParticleWidths::pickMass: "
-  //    "Could not choose mass within the prescribed number of iterations");
-  //  return m0;
-  //}
-  //
-  //return mCand;
-
   infoPtr->errorMsg("Warning in ParticleWidths::pickMass: "
-    "Could not choose mass within the prescribed number of iterations");
-  return m0;
+    "Could not choose mass within the prescribed number of iterations for ",
+    std::to_string(idRes) + " + " + std::to_string(mB) + " @ " + std::to_string(eCM));
+  
+  mAOut = mMin + rndmPtr->flat() * (mMax - mMin);
+  return true;
 }
 
 // @TODO: Implement this properly
-//        For the first iteration, we just pick one particle on shell
-pair<double, double> ParticleWidths::pickMass2(int id1, int id2, double eCM, int lType) {
-  if (id1 > id2)
-    swap(id1, id2);
+//        For the first iteration, we just pick id2 on shell
+bool ParticleWidths::_pickMass2(int id1, int id2, double eCM, int lType,
+  double& m1Out, double& m2Out) {
+  
+  double m2 = particleDataPtr->m0(id2);
 
   auto iter = entries.find(id2);
-  if (iter == entries.end()) return make_pair(0., 0.);
+  if (iter == entries.end()) return false;
 
-  double m2 = iter->second.m0;
-  double m1 = pickMass(id1, eCM, m2, lType);
+  double m1;
+  if (!_pickMass1(id1, eCM, m2, lType, m1))
+    return false;
 
-  return make_pair(m1, m2);
+  m1Out = m1; m2Out = m2;
+  return true;
 }
+
+
+
+bool ParticleWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
+    double& mAOut, double& mBOut) {
+
+  bool isAnti = (idDec < 0);
+  if (isAnti)
+    idDec = -idDec;
+
+  auto entriesIter = entries.find(idDec);
+  if (entriesIter == entries.end()) return false;
+  const auto& entry = entriesIter->second;
+
+  // Pick decay channel
+  vector<pair<int, int>> prodss;
+  vector<double> brs;
+  bool gotAny = false;
+  for (const auto& channel : entry.decayChannels) {
+    prodss.push_back(channel.first);
+    double br = channel.second.br(m);
+    if (br > 0) gotAny = true;
+    brs.push_back(br);
+  }
+  if (!gotAny)
+    return false;
+  
+  auto prods = prodss[rndmPtr->pick(brs)];
+  auto lType = entry.decayChannels.at(prods).lType;
+
+  if (lType == 0) {
+    infoPtr->errorMsg("Warning in ParticleWidths::pickDecay: "
+      "channel does not set its angular momentum for ",
+      std::to_string(idDec) + " -> " + std::to_string(prods.first) + " + " + std::to_string(prods.second));
+    return false;
+  }
+
+  double mA, mB;
+  if (!_pickMasses(prods.first, prods.second, m, mA, mB, lType))
+    return false;
+
+  idAOut = isAnti ? particleDataPtr->antiId(prods.first)  : prods.first;
+  idBOut = isAnti ? particleDataPtr->antiId(prods.second) : prods.second;
+  mAOut = mA; mBOut = mB;
+  return true;
+}
+
+
+
+
+
+
+
 
 }
