@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    138142,       4244]
-NotebookOptionsPosition[    137849,       4231]
-NotebookOutlinePosition[    138183,       4246]
-CellTagsIndexPosition[    138140,       4243]
+NotebookDataLength[    138050,       4232]
+NotebookOptionsPosition[    137757,       4219]
+NotebookOutlinePosition[    138091,       4234]
+CellTagsIndexPosition[    138048,       4231]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -95,21 +95,15 @@ Cell[BoxData[{
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{
-    RowBox[{"m0", "[", "N938", "]"}], "=", "0.938"}], ";", 
-   RowBox[{
-    RowBox[{"\[CapitalGamma]0", "[", "N938", "]"}], "=", "0."}], ";", 
-   RowBox[{
-    RowBox[{"j", "[", "N938", "]"}], "=", 
-    RowBox[{"1", "/", "2"}]}], ";", 
-   RowBox[{
-    RowBox[{"isoSpin", "[", "N938", "]"}], "=", 
-    RowBox[{"1", "/", "2"}]}], ";", 
-   RowBox[{
-    RowBox[{"mMin", "[", "N938", "]"}], "=", "0.938"}], ";", 
-   RowBox[{
-    RowBox[{"mMax", "[", "N938", "]"}], "=", "0.938"}], ";"}], 
-  " "}], "\[IndentingNewLine]", 
+   RowBox[{"m0", "[", "N938", "]"}], "=", "0.938"}], ";", 
+  RowBox[{
+   RowBox[{"\[CapitalGamma]0", "[", "N938", "]"}], "=", "0."}], ";", 
+  RowBox[{
+   RowBox[{"j", "[", "N938", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";", 
+  RowBox[{
+   RowBox[{"isoSpin", "[", "N938", "]"}], "=", 
+   RowBox[{"1", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{
@@ -152,7 +146,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "f0500"}], "}"}], ",", "0.17", ",", "0"}], 
+         RowBox[{"f0500", ",", "N938"}], "}"}], ",", "0.17", ",", "0"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -235,7 +229,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "f0500"}], "}"}], ",", "0.06", ",", "0"}], 
+         RowBox[{"f0500", ",", "N938"}], "}"}], ",", "0.06", ",", "0"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -289,7 +283,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "f0500"}], "}"}], ",", "0.10", ",", "0"}], 
+         RowBox[{"f0500", ",", "N938"}], "}"}], ",", "0.10", ",", "0"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -333,7 +327,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "f0500"}], "}"}], ",", "0.05", ",", "2"}], 
+         RowBox[{"f0500", ",", "N938"}], "}"}], ",", "0.05", ",", "2"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -367,17 +361,12 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.07", ",", "1"}], "}"}], 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.14", ",", "1"}], "}"}], 
       ",", 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.07", ",", "3"}], "}"}], 
-      ",", 
-      RowBox[{"{", 
-       RowBox[{
-        RowBox[{"{", 
-         RowBox[{"N938", ",", "f0500"}], "}"}], ",", "0.14", ",", "3"}], 
+         RowBox[{"f0500", ",", "N938"}], "}"}], ",", "0.14", ",", "3"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -411,7 +400,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.22", ",", "1"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.22", ",", "1"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -465,7 +454,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.03", ",", "0"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.03", ",", "0"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -480,7 +469,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.17", ",", "1"}], 
+         RowBox[{"rho", ",", "N938"}], "}"}], ",", "0.17", ",", "1"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -519,7 +508,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.26", ",", "1"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.26", ",", "1"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -529,22 +518,17 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.62", ",", "1"}], "}"}], 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.68", ",", "1"}], "}"}], 
       ",", 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.06", ",", "3"}], "}"}], 
+         RowBox[{"rho", ",", "N938"}], "}"}], ",", "0.01", ",", "1"}], "}"}], 
       ",", 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.01", ",", "1"}], "}"}], 
-      ",", 
-      RowBox[{"{", 
-       RowBox[{
-        RowBox[{"{", 
-         RowBox[{"N938", ",", "f0500"}], "}"}], ",", "0.08", ",", "1"}], 
+         RowBox[{"f0500", ",", "N938"}], "}"}], ",", "0.08", ",", "1"}], 
        "}"}], ",", "\[IndentingNewLine]", 
       RowBox[{"{", 
        RowBox[{
@@ -595,7 +579,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.20", ",", "1"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.20", ",", "1"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -610,7 +594,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "f0500"}], "}"}], ",", "0.45", ",", "1"}], 
+         RowBox[{"f0500", ",", "N938"}], "}"}], ",", "0.45", ",", "1"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -666,7 +650,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.20", ",", "0"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.20", ",", "0"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -686,7 +670,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "f0500"}], "}"}], ",", "0.25", ",", "0"}], 
+         RowBox[{"f0500", ",", "N938"}], "}"}], ",", "0.25", ",", "0"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -696,7 +680,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "a0980"}], "}"}], ",", "0.03", ",", "0"}], 
+         RowBox[{"a0980", ",", "N938"}], "}"}], ",", "0.03", ",", "0"}], 
        "}"}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
@@ -749,7 +733,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.28", ",", "0"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.28", ",", "0"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -764,7 +748,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "rho"}], "}"}], ",", "0.07", ",", "2"}], "}"}], 
+         RowBox[{"rho", ",", "N938"}], "}"}], ",", "0.07", ",", "2"}], "}"}], 
       ",", 
       RowBox[{"{", 
        RowBox[{
@@ -813,12 +797,12 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "eta958"}], "}"}], ",", "0.06", ",", "1"}], 
+         RowBox[{"eta958", ",", "N938"}], "}"}], ",", "0.06", ",", "1"}], 
        "}"}], ",", " ", 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.10", ",", "1"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.10", ",", "1"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -894,7 +878,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.04", ",", "2"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.04", ",", "2"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -909,7 +893,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "f0500"}], "}"}], ",", "0.06", ",", "2"}], 
+         RowBox[{"f0500", ",", "N938"}], "}"}], ",", "0.06", ",", "2"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -965,12 +949,12 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "eta958"}], "}"}], ",", "0.08", ",", "0"}], 
+         RowBox[{"eta958", ",", "N938"}], "}"}], ",", "0.08", ",", "0"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.32", ",", "0"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.32", ",", "0"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -1024,7 +1008,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.12", ",", "1"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.12", ",", "1"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -1078,7 +1062,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "omega"}], "}"}], ",", "0.14", ",", "3"}], 
+         RowBox[{"omega", ",", "N938"}], "}"}], ",", "0.14", ",", "3"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -1111,13 +1095,11 @@ Cell[BoxData[{
      RowBox[{"{", 
       RowBox[{
        RowBox[{"{", 
-        RowBox[{"N938", ",", "pi"}], "}"}], ",", "1.", ",", "4"}], "}"}], 
-     "}"}]}], ";"}], " ", 
-  RowBox[{"(*", " ", 
-   RowBox[{"Other", " ", "decay", " ", "modes", " ", "are", " ", "missing"}], 
-   " ", "*)"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
+        RowBox[{"N938", ",", "pi"}], "}"}], ",", "1.", ",", "4"}], "}"}], "}"}
+     ]}], ";", " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{"Other", " ", "decay", " ", "modes", " ", "are", " ", "missing"}],
+     " ", "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
    RowBox[{"Ns", "=", 
     RowBox[{"{", 
      RowBox[{
@@ -1496,15 +1478,17 @@ Cell[BoxData[{
         RowBox[{"{", 
          RowBox[{"S1190", ",", "Ka"}], "}"}], ",", "0.04", ",", "1"}], "}"}], 
       ",", 
+      RowBox[{"(*", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.18", ",", "1"}], 
+         "}"}], ","}], "*)"}], 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.18", ",", "1"}], "}"}], 
-      ",", 
-      RowBox[{"{", 
-       RowBox[{
-        RowBox[{"{", 
-         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.58", ",", "3"}], "}"}], 
+         RowBox[{"D1232", ",", "pi"}], "}"}], ",", "0.76", ",", "3"}], "}"}], 
       ",", 
       RowBox[{"{", 
        RowBox[{
@@ -1744,7 +1728,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1405", "]"}], "=", "13002"}], 
+   RowBox[{"idMask", "[", "L1405", "]"}], "=", "10002"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1774,7 +1758,7 @@ Cell[BoxData[{
    "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1520", "]"}], "=", "3004"}], 
+   RowBox[{"idMask", "[", "L1520", "]"}], "=", "0004"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1818,7 +1802,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1600", "]"}], "=", "23002"}], 
+   RowBox[{"idMask", "[", "L1600", "]"}], "=", "20002"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1852,7 +1836,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1670", "]"}], "=", "33002"}], 
+   RowBox[{"idMask", "[", "L1670", "]"}], "=", "30002"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1891,7 +1875,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1690", "]"}], "=", "13004"}], 
+   RowBox[{"idMask", "[", "L1690", "]"}], "=", "10004"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1930,7 +1914,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1800", "]"}], "=", "43002"}], 
+   RowBox[{"idMask", "[", "L1800", "]"}], "=", "40002"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -1959,7 +1943,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "Kstar"}], "}"}], ",", "0.20", ",", "0"}], 
+         RowBox[{"Kstar", ",", "N938"}], "}"}], ",", "0.20", ",", "0"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -1974,7 +1958,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1810", "]"}], "=", "53002"}], 
+   RowBox[{"idMask", "[", "L1810", "]"}], "=", "50002"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2003,7 +1987,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "Kstar"}], "}"}], ",", "0.45", ",", "1"}], 
+         RowBox[{"Kstar", ",", "N938"}], "}"}], ",", "0.45", ",", "1"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -2018,7 +2002,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1820", "]"}], "=", "3006"}], 
+   RowBox[{"idMask", "[", "L1820", "]"}], "=", "0006"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2057,7 +2041,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1830", "]"}], "=", "13006"}], 
+   RowBox[{"idMask", "[", "L1830", "]"}], "=", "10006"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2096,7 +2080,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L1890", "]"}], "=", "13006"}], 
+   RowBox[{"idMask", "[", "L1890", "]"}], "=", "10006"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2125,7 +2109,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "Kstar"}], "}"}], ",", "0.21", ",", "1"}], 
+         RowBox[{"Kstar", ",", "N938"}], "}"}], ",", "0.21", ",", "1"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -2140,7 +2124,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L2100", "]"}], "=", "3008"}], 
+   RowBox[{"idMask", "[", "L2100", "]"}], "=", "0008"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2169,7 +2153,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "Kstar"}], "}"}], ",", "0.20", ",", "2"}], 
+         RowBox[{"Kstar", ",", "N938"}], "}"}], ",", "0.20", ",", "2"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -2189,12 +2173,11 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"L1116", ",", "omega"}], "}"}], ",", "0.08", ",", "2"}], 
-       "}"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+         RowBox[{"omega", ",", "L1116"}], "}"}], ",", "0.08", ",", "2"}], "}"}
+       ]}], "}"}]}], ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "L2110", "]"}], "=", "23006"}], 
+   RowBox[{"idMask", "[", "L2110", "]"}], "=", "20006"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2223,7 +2206,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "Kstar"}], "}"}], ",", "0.45", ",", "1"}], 
+         RowBox[{"Kstar", ",", "N938"}], "}"}], ",", "0.45", ",", "1"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -2283,7 +2266,7 @@ Cell[BoxData[{
    "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "S1385", "]"}], "=", "3004"}], 
+   RowBox[{"idMask", "[", "S1385", "]"}], "=", "0004"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2317,7 +2300,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "S1660", "]"}], "=", "13002"}], 
+   RowBox[{"idMask", "[", "S1660", "]"}], "=", "10002"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2356,7 +2339,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "S1670", "]"}], "=", "13004"}], 
+   RowBox[{"idMask", "[", "S1670", "]"}], "=", "10004"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2395,7 +2378,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "S1750", "]"}], "=", "23002"}], 
+   RowBox[{"idMask", "[", "S1750", "]"}], "=", "20002"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2434,7 +2417,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "S1775", "]"}], "=", "3006"}], 
+   RowBox[{"idMask", "[", "S1775", "]"}], "=", "0006"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2483,7 +2466,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "S1915", "]"}], "=", "13006"}], 
+   RowBox[{"idMask", "[", "S1915", "]"}], "=", "10006"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2527,7 +2510,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "S1940", "]"}], "=", "23004"}], 
+   RowBox[{"idMask", "[", "S1940", "]"}], "=", "20004"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2556,7 +2539,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "Kstar"}], "}"}], ",", "0.15", ",", "0"}], 
+         RowBox[{"Kstar", ",", "N938"}], "}"}], ",", "0.15", ",", "0"}], 
        "}"}], ",", " ", 
       RowBox[{"{", 
        RowBox[{
@@ -2586,7 +2569,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "S2030", "]"}], "=", "3008"}], 
+   RowBox[{"idMask", "[", "S2030", "]"}], "=", "0008"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2615,7 +2598,7 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"N938", ",", "Kstar"}], "}"}], ",", "0.04", ",", "3"}], 
+         RowBox[{"Kstar", ",", "N938"}], "}"}], ",", "0.04", ",", "3"}], 
        "}"}], ",", 
       RowBox[{"{", 
        RowBox[{
@@ -2671,7 +2654,7 @@ Cell[BoxData[{
  RowBox[{" ", 
   RowBox[{
    RowBox[{
-    RowBox[{"idMask", "[", "X1315", "]"}], "=", "3302"}], 
+    RowBox[{"idMask", "[", "X1315", "]"}], "=", "0002"}], 
    ";"}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -2694,7 +2677,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "X1530", "]"}], "=", "3304"}], ";", " ", 
+   RowBox[{"idMask", "[", "X1530", "]"}], "=", "0004"}], ";", " ", 
   RowBox[{"(*", " ", 
    RowBox[{"X1530", " ", "aka", " ", "Xi", "*"}], " ", "*)"}], 
   "\[IndentingNewLine]", 
@@ -2768,7 +2751,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "X1820", "]"}], "=", "13304"}], 
+   RowBox[{"idMask", "[", "X1820", "]"}], "=", "10004"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -3135,7 +3118,7 @@ Cell[BoxData[{
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"idMask", "[", "Kstar", "]"}], "=", "303"}], 
+   RowBox[{"idMask", "[", "Kstar", "]"}], "=", "003"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
@@ -4225,12 +4208,17 @@ Cell[BoxData[{
    3.765261082943466*^9}, 3.765261124260027*^9, {3.76526118281236*^9, 
    3.7652611939536047`*^9}, 3.7652612819382553`*^9, {3.765261315138159*^9, 
    3.765261315218953*^9}, {3.7652631525158052`*^9, 3.765263157027245*^9}, {
-   3.765879497737793*^9, 3.765879558793798*^9}, 
-   3.7658798370117283`*^9},ExpressionUUID->"2fa6308b-198d-43cd-b214-\
-0b1a287e6148"]
+   3.765879497737793*^9, 3.765879558793798*^9}, 3.7658798370117283`*^9, {
+   3.7697661877874413`*^9, 3.769766234283897*^9}, {3.7698472527841473`*^9, 
+   3.7698472653717957`*^9}, 3.769920768781103*^9, {3.7699230138720427`*^9, 
+   3.7699232395500727`*^9}, {3.769931203548297*^9, 3.769931256427804*^9}, {
+   3.769942222977395*^9, 3.769942225195085*^9}, {3.76994226074984*^9, 
+   3.7699423135006104`*^9}},
+ CellLabel->
+  "In[1446]:=",ExpressionUUID->"2fa6308b-198d-43cd-b214-0b1a287e6148"]
 },
 WindowSize->{956, 1135},
-WindowMargins->{{16, Automatic}, {0, Automatic}},
+WindowMargins->{{24, Automatic}, {0, Automatic}},
 FrontEndVersion->"11.3 for Linux x86 (64-bit) (March 6, 2018)",
 StyleDefinitions->"Default.nb"
 ]
@@ -4245,7 +4233,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 137287, 4209, 14752, "Input",ExpressionUUID->"2fa6308b-198d-43cd-b214-0b1a287e6148"]
+Cell[558, 20, 137195, 4197, 16740, "Input",ExpressionUUID->"2fa6308b-198d-43cd-b214-0b1a287e6148"]
 }
 ]
 *)
