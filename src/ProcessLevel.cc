@@ -83,7 +83,17 @@ bool ProcessLevel::init( Info* infoPtrIn, Settings& settings,
   resonanceDecays.init( infoPtr, particleDataPtr, rndmPtr);
 
   // Option with nonperturbative processes.
-  doNonPert      = settings.flag("NonPerturbative:all");
+  // @TODO: Maybe pass this as a flag from Pythia?
+  doNonPert      = settings.flag("NonPerturbative:all")
+    || settings.flag("NonPerturbative:nonDiffractive") 
+    || settings.flag("NonPerturbative:elastic")
+    || settings.flag("NonPerturbative:singleDiffractive")
+    || settings.flag("NonPerturbative:singleDiffractiveAX")
+    || settings.flag("NonPerturbative:singleDiffractiveXB")
+    || settings.flag("NonPerturbative:doubleDiffractive")
+    || settings.flag("NonPerturbative:excitation")
+    || settings.flag("NonPerturbative:annihilation")
+    || settings.flag("NonPerturbative:resonant");
 
   // Set up SigmaTotal. Store sigma_nondiffractive for future use.
   sigmaTotPtr->init( infoPtr, settings, particleDataPtr, rndmPtr);
@@ -168,11 +178,8 @@ bool ProcessLevel::init( Info* infoPtrIn, Settings& settings,
     containerPtrs[iLHACont]->setLHAPtr(lhaUpPtr);
   }
 
-  // Check if low-energy nonperturbative processes are allowed.
-  bool hasLowE = settings.flag("NonPerturbative:all");
-
   // If no processes found then refuse to do anything.
-  if ( int(containerPtrs.size()) == 0 && !hasLowE) {
+  if ( int(containerPtrs.size()) == 0 && !doNonPert) {
     infoPtr->errorMsg("Error in ProcessLevel::init: "
       "no process switched on");
     return false;

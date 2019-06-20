@@ -295,10 +295,43 @@ Code 140.
 <h3>Low-energy QCD processes</h3> 
  
 <flag name="NonPerturbative:all" default="off"> 
-Common switch for the group of all low-energy nonpuerturbative 
+Common switch for the group of all low-energy nonperturbative 
 QCD processes. 
 </flag> 
  
+<flag name="NonPerturbative:nonDiffractive" default="off">
+</flag>
+
+<flag name="NonPerturbative:elastic" default = "off">
+</flag>
+
+<flag name="NonPerturbative:singleDiffractive" default = "off">
+</flag>
+<flag name="NonPerturbative:singleDiffractiveAX" default = "off">
+</flag>
+<flag name="NonPerturbative:singleDiffractiveXB" default = "off">
+</flag>
+
+<flag name="NonPerturbative:doubleDiffractive" default = "off">
+</flag>
+
+<flag name="NonPerturbative:excitation" default = "off">
+</flag>
+
+<flag name="NonPerturbative:annihilation" default = "off">
+</flag>
+
+<flag name="NonPerturbative:resonant" default = "off">
+</flag>
+
+
+
+<flag name="NonPerturbative:verbose" default="off">
+If on, nonperturbative processes show all intermediate steps, e.g. intermediate
+quarks that form strings. If off, only the final products are shown in the 
+event record.
+</flag>
+
 </chapter> 
  
 <!-- Copyright (C) 2019 Torbjorn Sjostrand --> 

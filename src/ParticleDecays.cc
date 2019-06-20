@@ -382,7 +382,7 @@ bool ParticleDecays::decay( int iDec, Event& event) {
 
 bool ParticleDecays::decayAll(Event& event, double minWidth) {
   bool gotMoreToDo = false;
-
+  
   // Loop through all entries to find those that should decay.
   for (int iDec = 0; iDec < event.size(); ++iDec) {
     Particle& decayer = event[iDec];

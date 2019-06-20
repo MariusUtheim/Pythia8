@@ -307,8 +307,9 @@ private:
   bool   doProcessLevel, doPartonLevel, doHadronLevel, doSoftQCDall,
          doSoftQCDinel, doCentralDiff, doDiffraction,
          doSoftQCD, doVMDsideA, doVMDsideB, doHardDiff, doResDec,
-         doFSRinRes, decayRHadrons, abortIfVeto, checkEvent, checkHistory,
-         doNonPert;
+         doFSRinRes, decayRHadrons, abortIfVeto, checkEvent, checkHistory;
+  bool   doNonPert, doNonPertall;
+  vector<int> nonPertProcesses;
   int    nErrList;
   double epTolErr, epTolWarn, mTolErr, mTolWarn;
 

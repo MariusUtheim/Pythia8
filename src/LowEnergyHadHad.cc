@@ -177,8 +177,6 @@ int type = typeIn;
     if (leEvent[i].isFinal() || verbose)
       event.append( leEvent[i]);
 
-printf("LEHH: [3] %s tau = %f\n", event[3].name().c_str(), event[3].tau());
-
   // Boost from collision rest frame to event frame.
   // Set status and mothers. Offset vertex info to collision vertex.
   RotBstMatrix MfromCM = fromCMframe( event[i1].p(), event[i2].p());
@@ -187,7 +185,10 @@ printf("LEHH: [3] %s tau = %f\n", event[3].name().c_str(), event[3].tau());
   for (int i = sizeOld; i < event.size(); ++i) {
     event[i].rotbst( MfromCM);
     event[i].mothers( mother2, mother1 );
-    event[i].status(910 + (abs(type) < 10 ? type : 9));
+    if (event[i].isFinal())
+      event[i].status(910 + (abs(type) < 10 ? type : 9));
+    else
+      event[i].status(-(9910 + (abs(type) < 10 ? type : 9)));
     event[i].vProdAdd( vtx);
   }
 

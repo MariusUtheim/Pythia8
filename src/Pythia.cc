@@ -1078,7 +1078,30 @@ bool Pythia::init() {
   abortIfVeto      = settings.flag("Check:abortIfVeto");
   checkEvent       = settings.flag("Check:event");
   checkHistory     = settings.flag("Check:history");
-  doNonPert        = settings.flag("NonPerturbative:all");
+
+  doNonPertall     = settings.flag("NonPerturbative:all");
+  if (!doNonPertall) {
+    if (settings.flag("NonPerturbative:nonDiffractive")) 
+      nonPertProcesses.push_back(1);
+    if (settings.flag("NonPerturbative:elastic")) 
+      nonPertProcesses.push_back(2);
+    if (settings.flag("NonPerturbative:singleDiffractive")
+     || settings.flag("NonPerturbative:singleDiffractiveAX"))
+      nonPertProcesses.push_back(3);
+    if (settings.flag("NonPerturbative:singleDiffractive")
+     || settings.flag("NonPerturbative:singleDiffractiveXB")) 
+      nonPertProcesses.push_back(4);
+    if (settings.flag("NonPerturbative:doubleDiffractive")) 
+      nonPertProcesses.push_back(5);
+    if (settings.flag("NonPerturbative:excitation")) 
+      nonPertProcesses.push_back(7);
+    if (settings.flag("NonPerturbative:annihilation")) 
+      nonPertProcesses.push_back(8);
+    if (settings.flag("NonPerturbative:resonant")) 
+      nonPertProcesses.push_back(9);
+  }
+  doNonPert        = doNonPertall || nonPertProcesses.size() > 0;
+
   nErrList         = settings.mode("Check:nErrList");
   epTolErr         = settings.parm("Check:epTolErr");
   epTolWarn        = settings.parm("Check:epTolWarn");
@@ -2543,13 +2566,59 @@ void Pythia::nextKinematics() {
 bool Pythia::nextNonPert() {
 
   // Fill collision instate.
-  process.append( 90, -11, 0, 0, 0, 0, 0, 0,  Vec4(0., 0., 0., eCM), eCM, 0. );
+  process.append( 90, -11, 0, 0, 0, 0, 0, 0, Vec4(0., 0., 0., eCM),  eCM, 0. );
   process.append(idA, -12, 0, 0, 0, 0, 0, 0, Vec4(0., 0., pzAcm, eA), mA, 0. );
   process.append(idB, -12, 0, 0, 0, 0, 0, 0, Vec4(0., 0., pzBcm, eB), mB, 0. );
   for (int i = 0; i < 3; ++i) event.append( process[i] );
 
+
+  int procType;
+  if (doNonPertall) {
+    procType = lowEnergySigma.pickProcess(idA, idB, eCM);
+    if (procType == 0) {
+      info.errorMsg("Error in Pythia::nextNonPert: "
+        "No available processes for specified particles and energy");
+      return false;
+    }
+  }
+  else {
+    vector<double> sigmas(nonPertProcesses.size());
+    bool hasAny = false;
+    for (size_t i = 0; i < nonPertProcesses.size(); ++i) {
+      double sig = lowEnergySigma.sigmaPartial(idA, idB, eCM, 
+                                               nonPertProcesses[i]);
+      if (sig == 0)
+        // @TODO: Give different error messages for processes with sigma = 0 
+        //        everywhere vs. processes that are illegal for just this eCM
+        info.errorMsg("Warning in Pythia::nextNonPert: "
+          "A process with zero cross section was explicitly turned on: ",
+          std::to_string(nonPertProcesses[i]));
+      else {
+        hasAny = true;
+        sigmas[i] = sig;
+      }
+    }
+
+    if (!hasAny) {
+      info.errorMsg("Error in Pythia::nextNonPert: "
+        "No available processes have been turned on");
+      return false;
+    }
+
+    procType = nonPertProcesses[rndm.pick(sigmas)];
+  }
+
+  if (procType == 9) {
+    procType = lowEnergySigma.pickResonance(idA, idB, eCM);
+    if (procType == 0) {
+      info.errorMsg("Error in Pythia::nextNonPert: "
+        "No available resonances for the given particles and energy");
+      return false;
+    }
+  }
+
   // Do a low-energy collision, for now inelastic nondiffractive only.
-  if (!doLowEnergyHadHad( 1, 2, 1)) {
+  if (!doLowEnergyHadHad( 1, 2, procType)) {
     info.errorMsg("Error from Pythia::nextNonPert: fragmentation failed");
     return false;
   }
