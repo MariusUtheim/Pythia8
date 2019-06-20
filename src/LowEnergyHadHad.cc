@@ -36,14 +36,15 @@ const double LowEnergyHadHad::ALPHAPRIME = 0.25;
 
 // Initialize the LowEnergyHadHad class as required.
 
-bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
-  ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
+bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
+  ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn,
   StringFragmentation* stringFragPtrIn,
   MiniStringFragmentation* ministringFragPtrIn) {
 
   // Save pointers.
   infoPtr           = infoPtrIn;
   particleDataPtr   = particleDataPtrIn;
+  particleWidthsPtr = particleWidthsPtrIn;
   rndmPtr           = rndmPtrIn;
   stringFragPtr     = stringFragPtrIn;
   ministringFragPtr = ministringFragPtrIn;
@@ -80,8 +81,6 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,
     infoPtr->errorMsg("In Pythia8::LowEnergyHadHad: failed to initialize particle widths");
     return false;
   }
-  lowEnergySigma.init(infoPtrIn, settings, rndmPtr, 
-                           particleDataPtrIn, &particleWidths);
 
   // Initialize collision event record.
   leEvent.init( "(low energy event)", particleDataPtr);
@@ -120,10 +119,10 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   sCM       = eCM * eCM;
 
   // Pick event type for typeIn = 0.
-  int type = typeIn == 0 ? lowEnergySigma.pickProcess(id1, id2, eCM)
-           : typeIn == 9 ? lowEnergySigma.pickResonance(id1, id2, eCM)
-                         : typeIn;
-
+  //int type = typeIn == 0 ? lowEnergySigma.pickProcess(id1, id2, eCM)
+  //         : typeIn == 9 ? lowEnergySigma.pickResonance(id1, id2, eCM)
+  //                       : typeIn;
+int type = typeIn;
   // E.g. if there are no allowed processes
   if (type == 0) 
     return false;

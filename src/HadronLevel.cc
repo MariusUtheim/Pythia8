@@ -49,19 +49,21 @@ public:
 
 // Find settings. Initialize HadronLevel classes as required.
 
-bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
-  ParticleData* particleDataPtrIn,
-  Rndm* rndmPtrIn, Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
+bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
+  ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn,
+  Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
   RHadrons* rHadronsPtrIn, DecayHandler* decayHandlePtr,
-  vector<int> handledParticles, UserHooks* userHooksPtrIn) {
+  vector<int> handledParticles, LowEnergySigma* lowEnergySigmaPtrIn,
+  UserHooks* userHooksPtrIn) {
 
   // Save pointers.
-  infoPtr         = infoPtrIn;
-  particleDataPtr = particleDataPtrIn;
-  rndmPtr         = rndmPtrIn;
-  couplingsPtr    = couplingsPtrIn;
-  rHadronsPtr     = rHadronsPtrIn;
-  userHooksPtr    = userHooksPtrIn;
+  infoPtr           = infoPtrIn;
+  particleDataPtr   = particleDataPtrIn;
+  rndmPtr           = rndmPtrIn;
+  couplingsPtr      = couplingsPtrIn;
+  rHadronsPtr       = rHadronsPtrIn;
+  userHooksPtr      = userHooksPtrIn;
+  lowEnergySigmaPtr = lowEnergySigmaPtrIn;
 
   // Main flags.
   doHadronize     = settings.flag("HadronLevel:Hadronize");
@@ -116,7 +118,8 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings,
 
 
   // Initialize low energy.
-  if (!lowEnergyHadHad.init(infoPtr, settings, particleDataPtr, rndmPtr, 
+  if (!lowEnergyHadHad.init(infoPtr, settings, rndmPtr, 
+    particleDataPtr, particleWidthsPtrIn,
     &stringFrag, &ministringFrag))
     return false;
 

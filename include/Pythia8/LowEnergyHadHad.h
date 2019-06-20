@@ -32,12 +32,13 @@ class LowEnergyHadHad {
 public:
 
   // Constructor. Still to be expanded with further default values.
-  LowEnergyHadHad() : infoPtr(), particleDataPtr(), rndmPtr(),
+  LowEnergyHadHad() : infoPtr(), rndmPtr(),
+    particleDataPtr(), particleWidthsPtr(),
     stringFragPtr(), ministringFragPtr() {}
 
   // Initialize the class.
-  bool init(Info* infoPtrIn, Settings& settings,
-    ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
+  bool init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
+    ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn,
     StringFragmentation* stringFragPtrIn,
     MiniStringFragmentation* ministringFragPtrIn);
 
@@ -46,10 +47,6 @@ public:
 
   // Event record to handle hadronization.
   Event         leEvent;
-
-  double sigmaTotal(int i1, int i2, double e) const {
-    return lowEnergySigma.sigmaTotal(i1, i2, e);
-  }
 
   // @TODO
   ParticleWidths particleWidths;
@@ -76,22 +73,22 @@ private:
          mc2, mac2, px2, py2, pTs2, mTsc2, mTsac2, mTc2, mTac2;
 
   // Pointer to various information on the generation.
-  Info*         infoPtr;
+  Info* infoPtr;
+
+  // Pointer to the random number generator.
+  Rndm* rndmPtr;
 
   // Pointer to the particle data table.
   ParticleData* particleDataPtr;
 
-  // Pointer to the random number generator.
-  Rndm*         rndmPtr;
+  // Pointer to particle widths.
+  ParticleWidths* particleWidthsPtr;
 
   // Pointer to the generator for normal string fragmentation.
   StringFragmentation* stringFragPtr;
 
   // Pointer to the generator for special low-mass string fragmentation.
   MiniStringFragmentation* ministringFragPtr;
-
-  // @TODO Comment
-  LowEnergySigma lowEnergySigma;
 
   // Separate configuration for simple collisions.
   ColConfig     simpleColConfig;

@@ -53,11 +53,12 @@ public:
     useHiddenValley() {}
 
   // Initialize HadronLevel classes as required.
-  bool init(Info* infoPtrIn, Settings& settings,
-    ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
+  bool init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
+    ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn,
     Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
     RHadrons* rHadronsPtrIn, DecayHandler* decayHandlePtr,
-    vector<int> handledParticles, UserHooks* userHooksPtrIn);
+    vector<int> handledParticles, LowEnergySigma* lowEnergySigmaPtrIn,
+    UserHooks* userHooksPtrIn);
 
   // Get pointer to StringFlav instance (needed by BeamParticle).
   StringFlav* getStringFlavPtr() {return &flavSel;}
@@ -120,6 +121,9 @@ private:
   // Pointers to Standard Model couplings.
   Couplings*    couplingsPtr;
 
+  // Pointer to low energy cross sections for use in rescattering
+  LowEnergySigma* lowEnergySigmaPtr;
+
   // Configuration of colour-singlet systems.
   ColConfig     colConfig;
 
@@ -142,7 +146,6 @@ private:
 
   // The generator class for low-energy hadron-hadron collisions.
   LowEnergyHadHad lowEnergyHadHad;
-  LowEnergySigma  lowEnergySigma;
 
   // Class for event geometry for Rope Hadronization. Production vertices.
   Ropewalk ropewalk;

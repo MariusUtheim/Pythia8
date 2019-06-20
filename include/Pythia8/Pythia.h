@@ -286,6 +286,12 @@ public:
   // The total cross section class is used both on process and parton level.
   SigmaTotal sigmaTot;
 
+  // Cross sections for low energy hadron-hadron collisions
+  LowEnergySigma lowEnergySigma;
+
+  // Handler for particles with mass-dependent widths
+  ParticleWidths particleWidths;
+
 private:
 
   // Copy and = constructors are made private so they cannot be used.

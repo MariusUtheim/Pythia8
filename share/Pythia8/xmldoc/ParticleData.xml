@@ -3477,7 +3477,7 @@ The meaning of the various properties and the format used are explained
 <particle id="2101" name="ud_0" antiName="ud_0bar" spinType="1" chargeType="1" colType="-1" 
           m0="0.57933"> 
 </particle> 
- 
+
 <particle id="2103" name="ud_1" antiName="ud_1bar" spinType="3" chargeType="1" colType="-1" 
           m0="0.77133"> 
 </particle> 

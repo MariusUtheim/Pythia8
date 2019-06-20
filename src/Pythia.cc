@@ -117,6 +117,14 @@ Pythia::Pythia(string xmlDir, bool printBanner) :
     return;
   }
 
+  // Read in files with particle widths
+  dataFile = xmlPath + "ParticleWidths.xml";
+  isConstructed = particleWidths.init(&info, &rndm, &particleData, dataFile);
+  if (!isConstructed) {
+    info.errorMsg("Abort from Pythia::Pythia: particle widths unavailable");
+    return;
+  }
+
   // Write the Pythia banner to output.
   if (printBanner) banner();
 
@@ -1342,11 +1350,15 @@ bool Pythia::init() {
     mergingPtr->init();
   }
 
+  // Initialize low energy cross sections
+  lowEnergySigma.init(&info, settings, &rndm, &particleData, &particleWidths);
+
   // Send info/pointers to hadron level for initialization.
   // Note: forceHadronLevel() can come, so we must always initialize.
-  if ( !hadronLevel.init( &info, settings, &particleData, &rndm,
+  if ( !hadronLevel.init( &info, settings, &rndm,
+    &particleData, &particleWidths,
     couplingsPtr, timesDecPtr, &rHadrons, decayHandlePtr,
-    handledParticles, userHooksPtr) ) {
+    handledParticles, &lowEnergySigma, userHooksPtr) ) {
     info.errorMsg("Abort from Pythia::init: "
       "hadronLevel initialization failed");
     return false;
@@ -1355,6 +1367,8 @@ bool Pythia::init() {
   // Optionally check particle data table for inconsistencies.
   if ( settings.flag("Check:particleData") )
     particleData.checkTable( settings.mode("Check:levelParticleData") );
+
+  // @TODO Check particle widths table for inconsistencies
 
   // Optionally show settings and particle data, changed or all.
   bool showCS  = settings.flag("Init:showChangedSettings");
