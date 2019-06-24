@@ -506,9 +506,11 @@ double LowEnergySigma::BBExcite(int idA, int idB, double eCM) const {
   if ((idA != 2212 && idA != 2112) || (idB != 2212 && idB != 2112))
     return 0.;
 
+  // Below excitation threshold, all non-elastic processes are excitations
   if (eCM < NNExciteThreshold)
     return BBTotal(idA, idB, eCM) - BBElastic(idA, idB, eCM);
 
+  // Above excitation threshold, parametrise excitation cross section
   if (eCM < NNExciteData.right())
     return NNExciteData(eCM);
   else

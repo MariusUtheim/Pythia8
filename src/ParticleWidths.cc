@@ -84,29 +84,29 @@ bool ParticleWidths::readXML(istream& stream) {
 
       int id = intAttributeValue(line, "id");
       if (id < 0) {
-        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
-          "Got negative id:", std::to_string(id));
+        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+          "Got negative id", std::to_string(id));
         continue;
       }
       auto* entry = particleDataPtr->findParticle(id);
       if (!entry) {
-        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
-          "Particle is not defined:", std::to_string(id));
+        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+          "Particle is not defined", std::to_string(id));
         continue;
       }
       if (!entry->isHadron()) {
-        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
-          "Particle is not defined as hadron:", std::to_string(id));
+        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+          "Particle is not defined as hadron", std::to_string(id));
         continue;
       }
       if (particleDataPtr->heaviestQuark(id) > 3) {
-        infoPtr->errorMsg("Warning in ParticleWidths:readXML: "
-          "Particle contains a charmed or bottom hadron:",
+        infoPtr->errorMsg("Error in ParticleWidths:readXML: "
+          "Particle contains a charmed or bottom hadron",
           std::to_string(id));
         continue;
       }
 
-
+      // @TODO: Add a shift to avoid the boundary region on the left side
       double left = doubleAttributeValue(line, "left");
       double right = doubleAttributeValue(line, "right");
       double m0 = doubleAttributeValue(line, "m0");
@@ -125,23 +125,32 @@ bool ParticleWidths::readXML(istream& stream) {
       int id = intAttributeValue(line, "id");
       auto iter = entries.find(id);
       if (iter == entries.end()) {
-        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
           "got br for a particle with undefined or ill-defined width");
         continue;
       }
 
       int lType = intAttributeValue(line, "lType");
       if (lType == 0) {
-        infoPtr->errorMsg( "Warning in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
           "lType is not defined");
         lType = 1;
       }
 
       istringstream productStr(attributeValue(line, "products"));
       vector<int> products;
+      bool gotInvalidParticle = false;
       int currentProduct;
-      while (productStr >> currentProduct)
+      while (productStr >> currentProduct) {
+        if (!particleDataPtr->isParticle(currentProduct)) gotInvalidParticle = true;
         products.push_back(currentProduct);
+      }
+      if (gotInvalidParticle) {
+        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+          "decay product is not a particle",
+          std::to_string(id) + " --> " + productStr.str());
+        continue;
+      }
 
       istringstream dataStr(attributeValue(line, "data"));
       vector<double> data;
@@ -275,13 +284,17 @@ static constexpr double MAX_LOOPS = 200;
 bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   double& mAOut) {
 
+  // Ensure resonance is positive - the mass distribution doesn't change
+  idRes = abs(idRes);
+
+  // Get width entry
   auto iter = entries.find(idRes);
   if (iter == entries.end()) {
     infoPtr->errorMsg("Error in ParticleWidths::pickMass: "
-      "mass distribution for particle is not defined");
+      "mass distribution for particle is not defined",
+      std::to_string(idRes));
     return false;
   }
-
   ParticleWidthEntry& channel(iter->second);
 
   // @TODO: Maybe an mPeak that is different from m0 will be more efficient
@@ -348,8 +361,8 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   }
 
   infoPtr->errorMsg("Warning in ParticleWidths::pickMass: "
-    "Could not choose mass within the prescribed number of iterations for ",
-    std::to_string(idRes) + " + " + std::to_string(mB) + " @ " + std::to_string(eCM));
+    "Could not pick mass within prescribed number of iterations. ",
+    std::to_string(idRes) + " in (" + std::to_string(mMin) + ", " + std::to_string(mMax) + ")");
   
   mAOut = mMin + rndmPtr->flat() * (mMax - mMin);
   return true;
