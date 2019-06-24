@@ -37,7 +37,7 @@ public:
 
   // Priority comparison to be used by priority_queue
   // Note that lower t means higher priority!
-  // @TODO: allow the user to pick the comparator
+  // @TODO: allow the user to pick the comparer (time-ordering problem)?
   bool operator<(const PriorityNode& r) const
   { return origin.e() > r.origin.e(); }
 
@@ -127,9 +127,6 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
     particleWidthsPtrIn, couplingsPtr, timesDecPtr, &flavSel,
     decayHandlePtr, handledParticles);
 
-  // Initialize rescatterings
-  rescatterings.init(infoPtr, settings, &lowEnergyHadHad);
-
   if (doRescatter && !settings.flag("Fragmentation:setVertices"))
   {
     // @TODO Handle error message correctly and at the right location
@@ -169,21 +166,65 @@ void HadronLevel::queueDecResc(Event& event, int iStart,
   for (int iFirst = iStart; iFirst < event.size(); ++iFirst) 
   {
     Particle& hadA = event[iFirst];
+    if (!hadA.isFinal())
+      continue;
 
     // @TODO Have the right upper mWidth bound here
-    if (doDecay && hadA.isFinal() && hadA.canDecay() && hadA.mayDecay()
+    if (doDecay && hadA.canDecay() && hadA.mayDecay()
     && (hadA.mWidth() > widthSepBE || hadA.id() == 311))
       queue.push(PriorityNode(iFirst, hadA.vDec()));
 
-    if (!hadA.isFinal() || !hadA.isHadron()) continue;
+    // Rescattering only for hadrons
+    if (!hadA.isHadron())
+      continue;
 
     for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
       
-      if (!event[iSecond].isFinal() || !event[iSecond].isHadron()) continue;
+      Particle& hadB = event[iSecond];
+      if (!hadB.isFinal() || !hadB.isHadron())
+        continue;
       
-      Vec4 origin;
-      if (rescatterings.calcRescatterOrigin(iFirst, iSecond, event, origin))
-        queue.push(PriorityNode(iFirst, iSecond, origin));
+      // check for rescattering and calculate origin
+
+      // @TODO: Profiling shows that frame.toCMframe is the most significant
+      // bottleneck in Pythia for high-multiplicity events. We should think about
+      // checks that can be made to abort early (e.g. particles moving away
+      // from each other in the lab frame)
+
+      // Set up positions for each particle in their CM frame
+      RotBstMatrix frame;
+      frame.toCMframe(hadA.p(), hadB.p());
+
+      Vec4 vA = hadA.vProd(), vB = hadB.vProd();
+      Vec4 pA = hadA.p(),     pB = hadB.p();
+
+      vA.rotbst(frame); vB.rotbst(frame);
+      pA.rotbst(frame); pB.rotbst(frame);
+
+      double eCM = (pA + pB).mCalc();
+      double sigma = lowEnergySigmaPtr->sigmaTotal(hadA.idAbs(), hadB.idAbs(), eCM);
+
+      // Abort if impact parameter is too large
+      if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
+        continue;
+
+      // Abort if particles have already passed each other
+      double t0 = max(vA.e(), vB.e());
+      double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
+      double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
+
+      if (zA >= zB)
+        continue;
+
+      // Calculate collision origin and transform to lab frame
+      double tCollision = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
+      Vec4 origin(0.5 * (vA.px() + vB.px()), 0.5 * (vA.py() + vB.py()),
+                  zA + pA.pz() / pA.e() * (tCollision - t0), tCollision);
+      frame.invert();
+      origin.rotbst(frame);
+
+      // Add rescattering candidate to queue
+      queue.push(PriorityNode(iFirst, iSecond, origin));
     }
   }
 }
@@ -305,7 +346,6 @@ bool HadronLevel::next(Event& event) {
     }
     // If rescattering is on, decays/rescatterings must happen in order
     else if (doRescatter) {
-      
       priority_queue<PriorityNode> candidates; 
 
       queueDecResc(event, 0, candidates);
@@ -327,8 +367,14 @@ bool HadronLevel::next(Event& event) {
           // @TODO If there is moreToDo, those things should also be handled in order?
           if (decays.moreToDo()) decaysCausedHadronization = true;
         }
-        else
-          rescatterings.rescatter(node.iFirst, node.iSecond, node.origin, event);
+        else {
+          double eCM = (event[node.iFirst].p() + event[node.iSecond].p()).mCalc();
+          int process = lowEnergySigmaPtr->pickProcess(event[node.iFirst].id(),
+            event[node.iSecond].id(), eCM);
+          if (process != 0)
+            lowEnergyHadHad.collide(node.iFirst, node.iSecond, process, event, node.origin);
+
+        }
 
         // Check for new interactions
         // @TODO Allow decays of rescattered hadrons without allowing second rescatterings
