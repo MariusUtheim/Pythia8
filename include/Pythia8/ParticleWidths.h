@@ -7,48 +7,6 @@
 
 namespace Pythia8 {
 
-class MDWDecayChannel {
-public:
-
-  MDWDecayChannel(Interpolator brIn, int lTypeIn)
-    : br(brIn), lType(lTypeIn) {}
-
-  Interpolator br;
-  int lType;
-
-};
-
-class ParticleWidthEntry {
-public:
-
-  ParticleWidthEntry(double m0In, Interpolator widthsIn)
-    : m0(m0In), widths(widthsIn) {}
-  ParticleWidthEntry(const ParticleWidthEntry&) = delete;
-  ParticleWidthEntry(ParticleWidthEntry&&) = default;
-
-  void addProducts(pair<int, int> prods, Interpolator brs, int lType) {
-    decayChannels.emplace(prods, MDWDecayChannel(brs, lType));
-  }
-
-  double getWidth(pair<int, int> prods, double eCM) const {
-    auto iter = decayChannels.find(prods);
-    return (iter != decayChannels.end()) ? iter->second.br(eCM) * widths(eCM) : 0.;
-  }
-
-  double getBR(pair<int, int> prods, double eCM) const {
-    auto iter = decayChannels.find(prods);
-    return (iter != decayChannels.end()) ? iter->second.br(eCM) : 0.;
-  }
-
-  int getlType(pair<int, int> prods) const {
-    auto iter = decayChannels.find({ abs(prods.first), abs(prods.second) });
-    return (iter != decayChannels.end()) ? iter->second.lType : 0;
-  }
-
-  double m0;
-  Interpolator widths;
-  map<pair<int, int>, MDWDecayChannel> decayChannels;
-};
 
 //TS?? HadronWidths better name?
 //Then also ParticleWidths.xml -> HadronWidthData.xml
@@ -86,7 +44,6 @@ public:
   // Calculate resonance formation cross section
   double resonanceSigma(int idA, int idB, int idRes, double eCM) const;
 
-
   // Pick masses for two particles, taking distributions and phase space
   // into account. Returns whether successful.
   bool pickMasses(int idA, int idB, double eCM, double& mAOut, double& mBOut);
@@ -98,15 +55,42 @@ public:
 
 private:
 
+  typedef pair<int, int> keyType;
+
+  class Channel {
+  public:
+    Channel(Interpolator brIn, int idAIn, int idBIn, int lTypeIn) 
+      : br(brIn), idA(idAIn), idB(idBIn), lType(lTypeIn) {}
+    Interpolator br;
+    int idA, idB;
+    int lType;
+  };
+
+  class Entry {
+  public:
+    Entry(double m0In, Interpolator widthsIn) : m0(m0In), widths(widthsIn) {}
+    Entry(const Entry&) = delete;
+    Entry(Entry&&) = default;
+
+    void addProducts(keyType, Interpolator brs, int idA, int idB, int lType);
+    double getWidth(keyType key, double eCM) const;
+    double getBR(keyType key, double eCM) const; 
+    int getlType(keyType key) const;
+
+    double m0;
+    Interpolator widths;
+    map<keyType, Channel> decayChannels;
+  };
+
   Info* infoPtr;
 
   Rndm* rndmPtr;
 
   ParticleData* particleDataPtr;
 
-  map<int, ParticleWidthEntry> entries;
+  map<int, Entry> entries;
 
-  pair<int, int> getKey(int& idR, int idA, int idB) const;
+  keyType getKey(int& idR, int idA, int idB) const;
 
   bool _pickMass1(int idRes, double eCM, double mB, int lType, double& mAOut);
 

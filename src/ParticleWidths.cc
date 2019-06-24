@@ -3,6 +3,29 @@
 
 namespace Pythia8 {
 
+typedef pair<int, int> keyType;
+
+void ParticleWidths::Entry::addProducts(keyType key, Interpolator brs,
+  int idA, int idB, int lType) {
+    decayChannels.emplace(key, Channel(brs, idA, idB, lType));
+}
+
+double ParticleWidths::Entry::getWidth(keyType key, double eCM) const {
+    auto iter = decayChannels.find(key);
+    return (iter != decayChannels.end()) ? iter->second.br(eCM) * widths(eCM) : 0.;
+}
+
+double ParticleWidths::Entry::getBR(keyType key, double eCM) const {
+    auto iter = decayChannels.find(key);
+    return (iter != decayChannels.end()) ? iter->second.br(eCM) : 0.;
+}
+
+int ParticleWidths::Entry::getlType(keyType key) const {
+    auto iter = decayChannels.find(key);
+    return (iter != decayChannels.end()) ? iter->second.lType : 0;
+}
+
+
 
 static string attributeValue(string line, string attribute) {
   if (line.find(attribute) == string::npos) return "";
@@ -40,7 +63,7 @@ static void completeTag(istream& stream, string& line) {
 }
 
 // Gets key for the decay and flips idR if necessary
-pair<int, int> ParticleWidths::getKey(int& idR, int idA, int idB) const {
+keyType ParticleWidths::getKey(int& idR, int idA, int idB) const {
 
   if (idR < 0) {
     idR = -idR;
@@ -117,7 +140,7 @@ bool ParticleWidths::readXML(istream& stream) {
       while (dataStr >> currentData)
         data.push_back(currentData);
 
-      this->entries.emplace(id, ParticleWidthEntry(m0, Interpolator(left, right, data)));
+      this->entries.emplace(id, Entry(m0, Interpolator(left, right, data)));
     }
     else if (word1 == "<br") {
       completeTag(stream, line);
@@ -138,7 +161,7 @@ bool ParticleWidths::readXML(istream& stream) {
       }
 
       istringstream productStr(attributeValue(line, "products"));
-      vector<int> products;
+      vector<int> products; // @TODO this better
       bool gotInvalidParticle = false;
       int currentProduct;
       while (productStr >> currentProduct) {
@@ -158,11 +181,11 @@ bool ParticleWidths::readXML(istream& stream) {
       while (dataStr >> currentData)
         data.push_back(currentData);
 
-      auto prods = getKey(id, products[0], products[1]);
+      keyType key = getKey(id, products[0], products[1]);
       
-      ParticleWidthEntry& entry = iter->second;
+      auto& entry = iter->second;
       Interpolator br(entry.widths.left(), entry.widths.right(), data);
-      entry.addProducts(prods, br, lType);
+      entry.addProducts(key, br, products[0], products[1], lType);
     }
   }
 
@@ -200,7 +223,7 @@ double ParticleWidths::resonanceSigma(int idR, int idA, int idB,
   double eCM) const {
   
   // Ensure canonical ordering
-  auto prods = getKey(idR, idA, idB);
+  keyType key = getKey(idR, idA, idB);
 
   // Get width entry
   auto entryIter = entries.find(idR);
@@ -209,10 +232,20 @@ double ParticleWidths::resonanceSigma(int idR, int idA, int idB,
   auto& entry = entryIter->second;
 
   // Find decay channel
-  auto channelIter = entry.decayChannels.find(prods);
+  auto channelIter = entry.decayChannels.find(key);
   if (channelIter == entry.decayChannels.end())
     return 0.;
   auto& channel = channelIter->second;
+
+  // Find particle entries
+  auto* entryR = particleDataPtr->findParticle(idR);
+  auto* entryA = particleDataPtr->findParticle(channel.idA);
+  auto* entryB = particleDataPtr->findParticle(channel.idB);
+  if (!entryR || !entryA || !entryB) {
+    infoPtr->errorMsg("In ParticleWidths::resonanceSigma: "
+      "got invalid particle id");
+    return 0.;
+  }
 
   // Get mass dependent width and branching ratios
   double gammaR = entry.widths(eCM);
@@ -222,18 +255,13 @@ double ParticleWidths::resonanceSigma(int idR, int idA, int idB,
   if (br == 0) return 0.;
 
   // Calculate the resonance sigma
-  double s = pow2(eCM), mR = particleDataPtr->m0(idR),
-         mA = particleDataPtr->m0(prods.first),
-         mB = particleDataPtr->m0(prods.second);
+  double s = pow2(eCM), mA = entryA->m0(), mB = entryB->m0();
   double pCMS2 = 1 / (4 * s) * (s - pow2(mA + mB)) * (s - pow2(mA - mB));
 
   return GEVINVSQ2MB * M_PI / pCMS2
-    * particleDataPtr->spinType(idR)
-        / (particleDataPtr->spinType(prods.first) 
-         * particleDataPtr->spinType(prods.second))
-    * br * pow2(gammaR) / (pow2(mR - eCM) + 0.25 * pow2(gammaR));
+    * entryR->spinType() / (entryA->spinType() * entryB->spinType())
+    * br * pow2(gammaR) / (pow2(entryR->m0() - eCM) + 0.25 * pow2(gammaR));
 }
-
 
 
 bool ParticleWidths::pickMasses(int idA, int idB, double eCM, double& mAOut, double& mBOut) {
@@ -295,11 +323,11 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
       std::to_string(idRes));
     return false;
   }
-  ParticleWidthEntry& channel(iter->second);
+  Entry& entry(iter->second);
 
   // @TODO: Maybe an mPeak that is different from m0 will be more efficient
-  double mMin = channel.widths.left(), 
-         mMax = min(channel.widths.right(), eCM - mB),
+  double mMin = entry.widths.left(), 
+         mMax = min(entry.widths.right(), eCM - mB),
          mPeak = particleDataPtr->m0(idRes),
          m0 = particleDataPtr->m0(idRes);
 
@@ -313,7 +341,7 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
     return false;
   }
 
-  double gamma = channel.widths(mPeak);
+  double gamma = entry.widths(mPeak);
 
   // Scale factor is chosen based on what empirically gives sufficient
   // accuracy and a high efficiency.
@@ -352,7 +380,7 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
     
     // Rejection step
     double yDistr = pow(pCMS(eCM, mCand, mB), lType) 
-                  * breitWigner(channel.widths(mCand), mCand - m0);
+                  * breitWigner(entry.widths(mCand), mCand - m0);
   
     if (rndmPtr->flat() * envelope < yDistr) {
       mAOut = mCand;
