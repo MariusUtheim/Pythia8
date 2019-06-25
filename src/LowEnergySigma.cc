@@ -700,7 +700,7 @@ vector<int> LowEnergySigma::possibleResonances(int idX, int idM) const {
 
 double LowEnergySigma::XMResonantPartial(int idX, int idM, int idR, 
     double eCM) const {
-  return particleWidthsPtr->resonanceSigma(idR, idX, idM, eCM);
+  return particleWidthsPtr->resonanceSigma(idX, idM, idR, eCM);
 }
 
 //==========================================================================

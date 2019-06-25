@@ -219,7 +219,7 @@ double ParticleWidths::branchingRatio(int idR, int idA, int idB, double m) const
   return (iter != entries.end()) ? iter->second.getBR(prods, m) : 0.;
 }
 
-double ParticleWidths::resonanceSigma(int idR, int idA, int idB,
+double ParticleWidths::resonanceSigma(int idA, int idB, int idR,
   double eCM) const {
   
   // Ensure canonical ordering
