@@ -6,13 +6,14 @@
 
 using namespace Pythia8;
 
+// @TODO comments, also where to put this? 
 class Interpolator {
 public:
 
   Interpolator(double leftIn, double rightIn, vector<double> ysIn);
 
-  double left() { return leftSave; }
-  double right() { return rightSave; }
+  double left()  const { return leftSave; }
+  double right() const { return rightSave; }
   
   double dx() const { return (rightSave - leftSave) / (ysSave.size() - 1); } 
   double x(int j) const { return leftSave + j * dx(); }
