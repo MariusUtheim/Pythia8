@@ -7,7 +7,7 @@ typedef pair<int, int> keyType;
 
 void ParticleWidths::Entry::addProducts(keyType key, Interpolator brs,
   int idA, int idB, int lType) {
-    decayChannels.emplace(key, Channel(brs, idA, idB, lType));
+    decayChannels.emplace(key, DecayChannel(brs, idA, idB, lType));
 }
 
 double ParticleWidths::Entry::getWidth(keyType key, double eCM) const {
@@ -102,7 +102,26 @@ bool ParticleWidths::readXML(istream& stream) {
     string word1;
     istringstream(line) >> word1;
 
-    if (word1 == "<width") {
+    if (word1 == "<excitationChannel") {
+      completeTag(stream, line);
+
+      int maskA = intAttributeValue(line, "maskA");
+      int maskB = intAttributeValue(line, "maskB");
+      // @TODO Check that masks produce valid particles
+
+      double left  = doubleAttributeValue(line, "left");
+      double right = doubleAttributeValue(line, "right");
+      
+      istringstream dataStr(attributeValue(line, "data"));
+      vector<double> data;
+      double currentData;
+      while (dataStr >> currentData)
+        data.push_back(currentData);
+
+      Interpolator sigmas(left, right, data);
+      excitationChannels.push_back(ExcitationChannel(sigmas, maskA, maskB));
+    }
+    else if (word1 == "<width") {
       completeTag(stream, line);
 
       int id = intAttributeValue(line, "id");
@@ -469,10 +488,33 @@ bool ParticleWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
 }
 
 
+bool ParticleWidths::pickExcitation(int idA, int idB, double eCM, 
+  int& idCOut, double& mCOut, int& idDOut, double& mDOut) {
 
+  // Pick an excitation channel
+  vector<double> sigmas(excitationChannels.size());
+  for (size_t i = 0; i < sigmas.size(); ++i)
+    sigmas[i] = excitationChannels[i].sigma(eCM);
+  auto& channel = excitationChannels[rndmPtr->pick(sigmas)];
 
+  // The two nucleons have equal chance of becoming excited
+  int maskA = channel.maskA, maskB = channel.maskB;  
+  if (rndmPtr->flat() > 0.5)
+    swap(maskA, maskB);
 
+  // Construct ids of resonances from masks plus incoming ids
+  int idCtmp = maskA + (idA - idA % 10);
+  int idDtmp = maskB + (idB - idB % 10);
+  
+  // Pick masses
+  double mCtmp, mDtmp;
+  if (!_pickMasses(idCtmp, idDtmp, eCM, mCtmp, mDtmp, 1))
+    return false;
 
-
+  // Set output values and return
+  idCOut = idCtmp; mCOut = mCtmp;
+  idDOut = idDtmp; mDOut = mDtmp;
+  return true;
+}
 
 }

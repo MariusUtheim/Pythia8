@@ -53,17 +53,29 @@ public:
   bool pickDecay(int idDec, double m, int& id1Out, int& id2Out,
     double& m1Out, double& m2Out);
 
+  bool pickExcitation(int idA, int idB, double eCM, 
+    int& idCOut, double& mCOut, int& idDOut, double& mDOut);
+
 private:
 
   typedef pair<int, int> keyType;
 
-  class Channel {
+  class DecayChannel {
   public:
-    Channel(Interpolator brIn, int idAIn, int idBIn, int lTypeIn) 
+    DecayChannel(Interpolator brIn, int idAIn, int idBIn, int lTypeIn) 
       : br(brIn), idA(idAIn), idB(idBIn), lType(lTypeIn) {}
+    DecayChannel(const DecayChannel&) = delete; // prohibit copying
+    DecayChannel(DecayChannel&&) = default;
     Interpolator br;
-    int idA, idB;
-    int lType;
+    int idA, idB, lType;
+  };
+
+  class ExcitationChannel {
+  public:
+    ExcitationChannel(Interpolator sigmaIn, int maskAIn, int maskBIn) 
+      : sigma(sigmaIn), maskA(maskAIn), maskB(maskBIn) {}
+    Interpolator sigma;
+    int maskA, maskB;
   };
 
   class Entry {
@@ -79,7 +91,7 @@ private:
 
     double m0;
     Interpolator widths;
-    map<keyType, Channel> decayChannels;
+    map<keyType, DecayChannel> decayChannels;
   };
 
   Info* infoPtr;
@@ -89,6 +101,7 @@ private:
   ParticleData* particleDataPtr;
 
   map<int, Entry> entries;
+  vector<ExcitationChannel> excitationChannels;
 
   keyType getKey(int& idR, int idA, int idB) const;
 

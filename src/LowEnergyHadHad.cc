@@ -396,13 +396,6 @@ bool LowEnergyHadHad::eldiff( int type) {
 
 // Do an excitation collision.
 
-#include "Pythia8/Interpolator.h"
-// Interpolator for branching ratios for each excitation
-struct ExcitationChannel {
-  pair<int, int> products;
-  Interpolator sigma;
-};
-
 static vector<Vec4> phaseSpace(double eCM, vector<double> ms, Rndm* rndmPtr) {
   
   if (ms.size() == 2) {
@@ -427,9 +420,6 @@ static vector<Vec4> phaseSpace(double eCM, vector<double> ms, Rndm* rndmPtr) {
     return vector<Vec4>(ms.size());
 }
 
-// @TODO Load excitation channels from an XML
-#include "Pythia8/LowEnergyExcitationChannels.h"
-static vector<ExcitationChannel> channels = loadExcitationChannels();
 
 bool LowEnergyHadHad::excitation() {
   // Excitations are only implemented for NN
@@ -437,35 +427,16 @@ bool LowEnergyHadHad::excitation() {
   if (!(id1 == 2112 || id1 == 2212) || !(id2 == 2112 || id2 == 2212))
     return false;
 
-  // Pick an excitation channel at random
-  vector<double> sigmas(channels.size());
-  for (size_t i = 0; i < sigmas.size(); ++i)
-    sigmas[i] = channels[i].sigma(eCM); 
-  int iChannel = rndmPtr->pick(sigmas);
-
-  // The channel contains the particle ids without quark contents,
-  // e.g. p(1535) = 102212, so N(1535) = 100002
-  int prod1 = channels[iChannel].products.first, 
-      prod2 = channels[iChannel].products.second;
-
-  // The two nucleons have equal chance of becoming excited
-  if (rndmPtr->flat() > 0.5)
-    swap(prod1, prod2);
-
-  // Construct specific particles, e.g. turn N(1535) into p(1535) or n(1535)
-  prod1 = prod1 + (id1 - id1 % 10);
-  prod2 = prod2 + (id2 - id2 % 10);
-
-  // Pick masses
-  double m1Ex, m2Ex;
-  if (!particleWidthsPtr->pickMasses(prod1, prod2, eCM, m1Ex, m2Ex))
+  int idC, idD;
+  double mC, mD;
+  if (!particleWidthsPtr->pickExcitation(id1, id2, eCM, idC, mC, idD, mD))
     return false;
 
   // @TODO: Angular distribution might not be uniform
   // Generate phase space
-  vector<Vec4> ps = phaseSpace(eCM, { m1Ex, m2Ex }, rndmPtr);
-  leEvent.append(prod1, 918, 1,2, 0,0, 0,0, ps[0], m1Ex);
-  leEvent.append(prod2, 918, 1,2, 0,0, 0,0, ps[1], m2Ex);
+  vector<Vec4> ps = phaseSpace(eCM, { mC, mD }, rndmPtr);
+  leEvent.append(idC, 918, 1,2, 0,0, 0,0, ps[0], mC);
+  leEvent.append(idD, 918, 1,2, 0,0, 0,0, ps[1], mD);
 
   return true;
 }
