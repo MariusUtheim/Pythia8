@@ -29,11 +29,11 @@ using std::priority_queue;
 class HadronLevel::PriorityNode {
 public:
   PriorityNode(int iDecayIn, Vec4 originIn)
-    : iFirst(iDecayIn), iSecond(0), origin(originIn) {}
-  PriorityNode(int iFirstIn, int iSecondIn, Vec4 originIn)
-    : iFirst(iFirstIn), iSecond(iSecondIn), origin(originIn) {}
+    : i1(iDecayIn), i2(0), origin(originIn) {}
+  PriorityNode(int i1In, int i2In, Vec4 originIn)
+    : i1(i1In), i2(i2In), origin(originIn) {}
   
-  bool isDecay() { return iSecond == 0; }
+  bool isDecay() { return i2 == 0; }
 
   // Priority comparison to be used by priority_queue
   // Note that lower t means higher priority!
@@ -41,7 +41,7 @@ public:
   bool operator<(const PriorityNode& r) const
   { return origin.e() > r.origin.e(); }
 
-  int iFirst, iSecond;
+  int i1, i2;
   Vec4 origin;
 };
 
@@ -178,18 +178,18 @@ void HadronLevel::queueDecResc(Event& event, int iStart,
     if (!hadA.isHadron())
       continue;
 
-    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
+    // Loop over particle pairs
+    for (int iSecond = iFirstHad; iSecond < iFirst; ++iSecond) {
       
       Particle& hadB = event[iSecond];
       if (!hadB.isFinal() || !hadB.isHadron())
         continue;
-      
-      // check for rescattering and calculate origin
 
-      // @TODO: Profiling shows that frame.toCMframe is the most significant
-      // bottleneck in Pythia for high-multiplicity events. We should think about
-      // checks that can be made to abort early (e.g. particles moving away
-      // from each other in the lab frame)
+      // Abort early if particles are moving away from each other
+      // @TODO verify the logic here
+      if (dot3(hadB.p() / hadB.e() - hadA.p() / hadA.e(), 
+               hadB.vProd() - hadA.vProd() ) > 0)
+        continue;
 
       // Set up positions for each particle in their CM frame
       RotBstMatrix frame;
@@ -201,19 +201,19 @@ void HadronLevel::queueDecResc(Event& event, int iStart,
       vA.rotbst(frame); vB.rotbst(frame);
       pA.rotbst(frame); pB.rotbst(frame);
 
-      double eCM = (pA + pB).mCalc();
-      double sigma = lowEnergySigmaPtr->sigmaTotal(hadA.idAbs(), hadB.idAbs(), eCM);
-
-      // Abort if impact parameter is too large
-      if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
-        continue;
-
-      // Abort if particles have already passed each other
+      // Offset first particle to position when the last particle is created
       double t0 = max(vA.e(), vB.e());
       double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
       double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
 
+      // Abort if particles have already passed each other
       if (zA >= zB)
+        continue;
+
+      // Calculate sigma and abort if impact parameter is too large
+      double eCM = (pA + pB).mCalc();
+      double sigma = lowEnergySigmaPtr->sigmaTotal(hadA.idAbs(), hadB.idAbs(), eCM);
+      if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
         continue;
 
       // Calculate collision origin and transform to lab frame
@@ -245,7 +245,7 @@ bool HadronLevel::next(Event& event) {
   if (!decayOctetOnia(event)) return false;
 
   // Set lifetimes for already existing hadrons, like onia.
-  for (int i = 0; i < event.size(); ++i) if (event[i].isHadron())
+  for (int i = 0; i < event.size(); ++i)
       event[i].tau( event[i].tau0() * rndmPtr->exp() );
 
   // Remove junction structures.
@@ -346,34 +346,40 @@ bool HadronLevel::next(Event& event) {
     }
     // If rescattering is on, decays/rescatterings must happen in order
     else if (doRescatter) {
+
+      // Find first hadron
+      for (iFirstHad = 0; iFirstHad < event.size(); ++iFirstHad) 
+        if (event[iFirstHad].isFinal() && event[iFirstHad].isHadron())
+          break;
+
       priority_queue<PriorityNode> candidates; 
 
-      queueDecResc(event, 0, candidates);
+      queueDecResc(event, iFirstHad, candidates);
 
       while (!candidates.empty()) {
         PriorityNode node = candidates.top();
         candidates.pop();
 
         // Abort if either particle has already interacted elsewhere
-        if (!event[node.iFirst].isFinal() 
-        || (!node.isDecay() && !event[node.iSecond].isFinal()))
+        if (!event[node.i1].isFinal() 
+        || (!node.isDecay() && !event[node.i2].isFinal()))
           continue;
 
         int oldSize = event.size();
 
         // Perform the queued action
         if (node.isDecay()) {
-          decays.decay(node.iFirst, event);
+          decays.decay(node.i1, event);
           // @TODO If there is moreToDo, those things should also be handled in order?
           if (decays.moreToDo()) decaysCausedHadronization = true;
         }
         else {
-          double eCM = (event[node.iFirst].p() + event[node.iSecond].p()).mCalc();
-          int process = lowEnergySigmaPtr->pickProcess(event[node.iFirst].id(),
-            event[node.iSecond].id(), eCM);
+          double eCM = (event[node.i1].p() + event[node.i2].p()).mCalc();
+          int process = lowEnergySigmaPtr->pickProcess(event[node.i1].id(),
+            event[node.i2].id(), eCM);
           if (process != 0)
-            lowEnergyHadHad.collide(node.iFirst, node.iSecond, process, event, node.origin);
-
+            lowEnergyHadHad.collide(node.i1, node.i2,
+                                    process, event, node.origin);
         }
 
         // Check for new interactions

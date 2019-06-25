@@ -267,37 +267,26 @@ int ParticleDataEntry::strangeness() const {
 
   int idNow = abs(idSave);
   int idSign = idSave > 0 ? 1 : -1;
-  int nS    = 0;
+  
+  int q1 = (idNow / 1000) % 10;
+  int q2 = (idNow / 100)  % 10;
+  int q3 = (idNow / 10)   % 10;
+
+  // Baryons and diquarks
+  if (q1 != 0) {
+    int nS = (q1 == 3) + (q2 == 3) + (q3 == 3);
+    return nS * idSign;
+  }
 
   // Quarks
-  if (isQuark()) {
-    return (idNow == 3) ? idSign : 0;
-  }
-
-  // Diquarks
-  if (isDiquark()) {
-    if ( (idNow/100) % 10 == 3) ++nS;
-    if ( (idNow/10)  % 10 == 3) ++nS;
-    return idSign * nS;
-  }
+  if (q2 == 0)
+      return (q3 == 3) ? idSign : 0;
 
   // Mesons
-  if (isMeson()) {
-    if ( (idNow/100) % 10 == 3) ++nS;
-    if ( (idNow/10)  % 10 == 3) --nS; // decrement because this is antiparticle
-    return idSign * nS;
-  }
+  // @TODO something for K_S and K_L
 
-  // Baryons
-  if (isBaryon()) {
-    if ( (idNow/1000) % 10 == 3) ++nS;
-    if ( (idNow/100)  % 10 == 3) ++nS;
-    if ( (idNow/10)   % 10 == 3) ++nS;
-    return idSign * nS;    
-  }
-  
-  // Done.
-  return 0;
+  int nS = (q2 == 3) - (q3 == 3);
+  return nS * idSign;
 }
 
 //--------------------------------------------------------------------------

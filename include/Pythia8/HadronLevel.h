@@ -99,6 +99,7 @@ private:
 
   // New hadron rescattering
   class PriorityNode;
+  int iFirstHad; // for optimization
   LowEnergyHadHad leHadHad;
   bool doRescatter, scatterManyTimes;
   void queueDecResc(Event& event, int iStart, 

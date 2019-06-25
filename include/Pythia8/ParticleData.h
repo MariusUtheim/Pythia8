@@ -236,6 +236,8 @@ public:
 
   // Give back current values.
   int    id()                     const { return idSave; }
+  int    antiId()                 const {
+         return hasAntiSave ? -idSave : idSave; }
   bool   hasAnti()                const { return hasAntiSave; }
   string name(int idIn = 1)       const {
          return (idIn > 0) ? nameSave : antiNameSave; }
@@ -580,7 +582,8 @@ public:
     const ParticleDataEntry* ptr = findParticle(idIn);
     return ( ptr ) ? ptr->hasAnti() : false; }
   int antiId(int idIn) const {
-    return ( hasAnti(idIn) ) ? -idIn : idIn; }
+    const ParticleDataEntry* ptr = findParticle(idIn);
+    return ( ptr ) ? ptr->antiId() : 0; }
   string name(int idIn) const {
     const ParticleDataEntry* ptr = findParticle(idIn);
     return ( ptr ) ? ptr->name(idIn) : " "; }
