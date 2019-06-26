@@ -5,27 +5,8 @@ namespace Pythia8 {
 
 typedef pair<int, int> keyType;
 
-void ParticleWidths::Entry::addProducts(keyType key, Interpolator brs,
-  int idA, int idB, int lType) {
-    decayChannels.emplace(key, DecayChannel(brs, idA, idB, lType));
-}
-
-double ParticleWidths::Entry::getWidth(keyType key, double eCM) const {
-    auto iter = decayChannels.find(key);
-    return (iter != decayChannels.end()) ? iter->second.br(eCM) * widths(eCM) : 0.;
-}
-
-double ParticleWidths::Entry::getBR(keyType key, double eCM) const {
-    auto iter = decayChannels.find(key);
-    return (iter != decayChannels.end()) ? iter->second.br(eCM) : 0.;
-}
-
-int ParticleWidths::Entry::getlType(keyType key) const {
-    auto iter = decayChannels.find(key);
-    return (iter != decayChannels.end()) ? iter->second.lType : 0;
-}
-
-
+// @TODO Clean up these static functions
+// @TODO Go through error messages
 
 static string attributeValue(string line, string attribute) {
   if (line.find(attribute) == string::npos) return "";
@@ -119,7 +100,7 @@ bool ParticleWidths::readXML(istream& stream) {
         data.push_back(currentData);
 
       Interpolator sigmas(left, right, data);
-      excitationChannels.push_back(ExcitationChannel(sigmas, maskA, maskB));
+      excitationChannels.push_back(ExcitationChannel{ sigmas, maskA, maskB });
     }
     else if (word1 == "<width") {
       completeTag(stream, line);
@@ -159,7 +140,7 @@ bool ParticleWidths::readXML(istream& stream) {
       while (dataStr >> currentData)
         data.push_back(currentData);
 
-      this->entries.emplace(id, Entry(m0, Interpolator(left, right, data)));
+      entries.emplace(id, Entry{m0, Interpolator(left, right, data), {}});
     }
     else if (word1 == "<br") {
       completeTag(stream, line);
@@ -180,17 +161,23 @@ bool ParticleWidths::readXML(istream& stream) {
       }
 
       istringstream productStr(attributeValue(line, "products"));
-      vector<int> products; // @TODO this better
-      bool gotInvalidParticle = false;
-      int currentProduct;
-      while (productStr >> currentProduct) {
-        if (!particleDataPtr->isParticle(currentProduct)) gotInvalidParticle = true;
-        products.push_back(currentProduct);
-      }
-      if (gotInvalidParticle) {
+      int prod1, prod2;
+      productStr >> prod1;
+      productStr >> prod2;
+      
+      if (!particleDataPtr->isParticle(prod1) || !particleDataPtr->isParticle(prod2)) {
         infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
           "decay product is not a particle",
           std::to_string(id) + " --> " + productStr.str());
+        continue;
+      }
+
+      if (particleDataPtr->chargeType(prod1) + particleDataPtr->chargeType(prod2) 
+        != particleDataPtr->chargeType(id)) {
+
+        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+          "Charge not conserved in decay.", 
+          std::to_string(id) + " --> " + std::to_string(prod1) + " + " + std::to_string(prod2));
         continue;
       }
 
@@ -200,17 +187,35 @@ bool ParticleWidths::readXML(istream& stream) {
       while (dataStr >> currentData)
         data.push_back(currentData);
 
-      keyType key = getKey(id, products[0], products[1]);
+      keyType key = getKey(id, prod1, prod2);
       
       auto& entry = iter->second;
       Interpolator br(entry.widths.left(), entry.widths.right(), data);
-      entry.addProducts(key, br, products[0], products[1], lType);
+      entry.decayChannels.emplace(key, DecayChannel{br, prod1, prod2, lType});
     }
   }
 
   return true;
 }
 
+
+bool ParticleWidths::_getEntryAndChannel(int idR, int idA, int idB, 
+  const Entry*& entryOut, const DecayChannel*& channelOut) const {
+
+  auto key = getKey(idR, idA, idB);
+
+  auto entryIter = entries.find(idR);
+  if (entryIter == entries.end())
+    return false;
+
+  auto channelIter = entryIter->second.decayChannels.find(key);
+  if (channelIter == entryIter->second.decayChannels.end())
+    return false;
+  
+  entryOut   = &entryIter->second;
+  channelOut = &channelIter->second;
+  return true;
+}
 
 
 vector<int> ParticleWidths::getResonances() const {
@@ -221,45 +226,38 @@ vector<int> ParticleWidths::getResonances() const {
 }
 
 double ParticleWidths::width(int id, double eCM) const {
-  if (id < 0) id = -id;
-  auto iter = entries.find(id);
+  auto iter = entries.find(abs(id));
   return (iter != entries.end()) ? iter->second.widths(eCM) : 0.;
 }
 
-double ParticleWidths::partialWidth(int idR, int idA, int idB, double m) const {
-  auto prods = getKey(idR, idA, idB);
-  auto iter = entries.find(idR);
-  return (iter != entries.end()) ? iter->second.getWidth(prods, m) : 0.;
-}
-
 double ParticleWidths::branchingRatio(int idR, int idA, int idB, double m) const {
-  auto prods = getKey(idR, idA, idB);
-  auto iter = entries.find(idR);
-  return (iter != entries.end()) ? iter->second.getBR(prods, m) : 0.;
+  const Entry* entry;
+  const DecayChannel* channel;
+  return _getEntryAndChannel(idR, idA, idB, entry, channel)
+       ? channel->br(m) : 0.;
 }
 
+double ParticleWidths::partialWidth(int idR, int idA, int idB, double m) const {
+  const Entry* entry;
+  const DecayChannel* channel;
+  return _getEntryAndChannel(idR, idA, idB, entry, channel)
+       ? entry->widths(m) * channel->br(m) : 0.;
+}
+
+// @TODO verify parameter order
 double ParticleWidths::resonanceSigma(int idA, int idB, int idR,
   double eCM) const {
   
-  // Ensure canonical ordering
-  keyType key = getKey(idR, idA, idB);
+  const Entry* entry;
+  const DecayChannel* channel;
 
-  // Get width entry
-  auto entryIter = entries.find(idR);
-  if (entryIter == entries.end())
+  if (!_getEntryAndChannel(idR, idA, idB, entry, channel))
     return 0.;
-  auto& entry = entryIter->second;
-
-  // Find decay channel
-  auto channelIter = entry.decayChannels.find(key);
-  if (channelIter == entry.decayChannels.end())
-    return 0.;
-  auto& channel = channelIter->second;
 
   // Find particle entries
   auto* entryR = particleDataPtr->findParticle(idR);
-  auto* entryA = particleDataPtr->findParticle(channel.idA);
-  auto* entryB = particleDataPtr->findParticle(channel.idB);
+  auto* entryA = particleDataPtr->findParticle(channel->idA);
+  auto* entryB = particleDataPtr->findParticle(channel->idB);
   if (!entryR || !entryA || !entryB) {
     infoPtr->errorMsg("In ParticleWidths::resonanceSigma: "
       "got invalid particle id");
@@ -267,10 +265,10 @@ double ParticleWidths::resonanceSigma(int idA, int idB, int idR,
   }
 
   // Get mass dependent width and branching ratios
-  double gammaR = entry.widths(eCM);
+  double gammaR = entry->widths(eCM);
   if (gammaR == 0) return 0.;
 
-  double br = channel.br(eCM);
+  double br = channel->br(eCM);
   if (br == 0) return 0.;
 
   // Calculate the resonance sigma
@@ -342,7 +340,7 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
       std::to_string(idRes));
     return false;
   }
-  Entry& entry(iter->second);
+  Entry& entry = iter->second;
 
   // @TODO: Maybe an mPeak that is different from m0 will be more efficient
   double mMin = entry.widths.left(), 

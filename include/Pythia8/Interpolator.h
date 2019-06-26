@@ -25,8 +25,8 @@ public:
 
 private:
 
-  const double leftSave, rightSave;
-  const vector<double> ysSave;
+  double leftSave, rightSave;
+  vector<double> ysSave;
 
 };
 

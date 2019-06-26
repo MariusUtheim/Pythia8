@@ -60,35 +60,17 @@ private:
 
   typedef pair<int, int> keyType;
 
-  class DecayChannel {
-  public:
-    DecayChannel(Interpolator brIn, int idAIn, int idBIn, int lTypeIn) 
-      : br(brIn), idA(idAIn), idB(idBIn), lType(lTypeIn) {}
-    DecayChannel(const DecayChannel&) = delete; // prohibit copying
-    DecayChannel(DecayChannel&&) = default;
+  struct DecayChannel {
     Interpolator br;
     int idA, idB, lType;
   };
 
-  class ExcitationChannel {
-  public:
-    ExcitationChannel(Interpolator sigmaIn, int maskAIn, int maskBIn) 
-      : sigma(sigmaIn), maskA(maskAIn), maskB(maskBIn) {}
+  struct ExcitationChannel {
     Interpolator sigma;
     int maskA, maskB;
   };
 
-  class Entry {
-  public:
-    Entry(double m0In, Interpolator widthsIn) : m0(m0In), widths(widthsIn) {}
-    Entry(const Entry&) = delete;
-    Entry(Entry&&) = default;
-
-    void addProducts(keyType, Interpolator brs, int idA, int idB, int lType);
-    double getWidth(keyType key, double eCM) const;
-    double getBR(keyType key, double eCM) const; 
-    int getlType(keyType key) const;
-
+  struct Entry {
     double m0;
     Interpolator widths;
     map<keyType, DecayChannel> decayChannels;
@@ -104,6 +86,9 @@ private:
   vector<ExcitationChannel> excitationChannels;
 
   keyType getKey(int& idR, int idA, int idB) const;
+
+  bool _getEntryAndChannel(int idR, int idA, int idB,
+    const Entry*& entryOut, const DecayChannel*& channelOut) const;
 
   bool _pickMass1(int idRes, double eCM, double mB, int lType, double& mAOut);
 
