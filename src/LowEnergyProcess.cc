@@ -1,18 +1,18 @@
-// LowEnergyHadHad.cc is a part of the PYTHIA event generator.
+// LowEnergyProcess.cc is a part of the PYTHIA event generator.
 // Copyright (C) 2019 Torbjorn Sjostrand.
 // PYTHIA is licenced under the GNU GPL v2 or later, see COPYING for details.
 // Please respect the MCnet Guidelines, see GUIDELINES for details.
 
-// Function definitions (not found in the header) for the LowEnergyHadHad
+// Function definitions (not found in the header) for the LowEnergyProcess
 // class.
 
-#include "Pythia8/LowEnergyHadHad.h"
+#include "Pythia8/LowEnergyProcess.h"
 
 namespace Pythia8 {
 
 //==========================================================================
 
-// LowEnergyHadHad class.
+// LowEnergyProcess class.
 // This class handles low-energy collisions between two hadrons.
 
 //--------------------------------------------------------------------------
@@ -21,22 +21,22 @@ namespace Pythia8 {
 // These are of technical nature, as described for each.
 
 // Maximum number of tries to split beam particles before reconnection.
-const int LowEnergyHadHad::MAXLOOP = 100;
+const int LowEnergyProcess::MAXLOOP = 100;
 
 // Gradually reduce assumed quark masses from their constituent values.
-const double LowEnergyHadHad::MASSREDUCERATE = 0.02;
+const double LowEnergyProcess::MASSREDUCERATE = 0.02;
 
 // Let diffractive mass spectrum begin this much above unexcited mass.
-const double LowEnergyHadHad::MDIFFMIN = 0.2;
+const double LowEnergyProcess::MDIFFMIN = 0.2;
 
 // Pomeron trajectory alpha(t) = 1 + epsilon + alpha' * t
-const double LowEnergyHadHad::ALPHAPRIME = 0.25;
+const double LowEnergyProcess::ALPHAPRIME = 0.25;
 
 //--------------------------------------------------------------------------
 
-// Initialize the LowEnergyHadHad class as required.
+// Initialize the LowEnergyProcess class as required.
 
-bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
+bool LowEnergyProcess::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
   ParticleData* particleDataPtrIn, HadronWidths* hadronWidthsPtrIn,
   StringFragmentation* stringFragPtrIn,
   MiniStringFragmentation* ministringFragPtrIn) {
@@ -89,7 +89,7 @@ bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
 //      | 7: excitation | 8: annihilation | 9: resonant
 //      | >100: resonant through the specified resonance particle
 
-bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
+bool LowEnergyProcess::collide( int i1, int i2, int typeIn, Event& event,
   Vec4 vtx) {
 
   // Check that incoming hadrons. Store current event size.
@@ -109,11 +109,6 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
   m2        = event[i2].m();
   eCM       = (event[i1].p() + event[i2].p()).mCalc();
   sCM       = eCM * eCM;
-
-  // Pick event type for typeIn = 0.
-  //int type = typeIn == 0 ? lowEnergySigma.pickProcess(id1, id2, eCM)
-  //         : typeIn == 9 ? lowEnergySigma.pickResonance(id1, id2, eCM)
-  //                       : typeIn;
 
   // Reset leEvent event record. Add incoming hadrons as beams in rest frame.
   leEvent.reset();
@@ -137,7 +132,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
       break;
 
     case 6:
-      infoPtr->errorMsg( "Error in LowEnergyHadHad::collide: "
+      infoPtr->errorMsg( "Error in LowEnergyProcess::collide: "
         "central diffraction (type = 6) is not yet implemented");
       return false;
 
@@ -158,7 +153,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
         break;
       }
       else {
-        infoPtr->errorMsg( "Error in LowEnergyHadHad::collide: "
+        infoPtr->errorMsg( "Error in LowEnergyProcess::collide: "
           "invalid type code ", std::to_string(typeIn));
         return false;
       }
@@ -166,7 +161,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
 
   // Hadronize new strings and move products to standard event record.
   if (needHadronize && !simpleHadronization( leEvent)) {
-    infoPtr->errorMsg( "Error in LowEnergyHadHad::collide: "
+    infoPtr->errorMsg( "Error in LowEnergyProcess::collide: "
       "no rescattering since hadronization failed");
     return false;
   }
@@ -206,7 +201,7 @@ bool LowEnergyHadHad::collide( int i1, int i2, int typeIn, Event& event,
 
 // Do an inelastic nondiffractive scattering.
 
-bool LowEnergyHadHad::nondiff() {
+bool LowEnergyProcess::nondiff() {
 
   // Check that not stuck in infinite loop. Allow reduced quark masses.
   int    loop = 0;
@@ -215,7 +210,7 @@ bool LowEnergyHadHad::nondiff() {
   do {
     do {
       if (++loop == MAXLOOP) {
-        infoPtr->errorMsg("Error in LowEnergyHadHad::nondiff: "
+        infoPtr->errorMsg("Error in LowEnergyProcess::nondiff: "
           " failed to construct valid kinematics");
         return false;
       }
@@ -269,7 +264,7 @@ bool LowEnergyHadHad::nondiff() {
 // Do an elastic or diffractive scattering.
 // type = 2: elastic; = 3: SD (XB); = 4: SD (AX); = 5: DD.
 
-bool LowEnergyHadHad::eldiff( int type) {
+bool LowEnergyProcess::eldiff( int type) {
 
   // Classify process type.
   bool excite1 = (type == 3 || type == 5);
@@ -283,7 +278,7 @@ bool LowEnergyHadHad::eldiff( int type) {
   double mAmax = eCM - mBmin;
   double mBmax = eCM - mAmin;
   if (mAmin + mBmin > eCM) {
-    infoPtr->errorMsg("Error in LowEnergyHadHad::eldiff: "
+    infoPtr->errorMsg("Error in LowEnergyProcess::eldiff: "
       " too low invariant mass for diffraction");
     return false;
   }
@@ -294,7 +289,7 @@ bool LowEnergyHadHad::eldiff( int type) {
   do {
     failM = false;
     if (++loop == MAXLOOP) {
-      infoPtr->errorMsg("Error in LowEnergyHadHad::eldiff: "
+      infoPtr->errorMsg("Error in LowEnergyProcess::eldiff: "
         " failed to construct valid kinematics");
       return false;
     }
@@ -421,7 +416,7 @@ static vector<Vec4> phaseSpace(double eCM, vector<double> ms, Rndm* rndmPtr) {
 }
 
 
-bool LowEnergyHadHad::excitation() {
+bool LowEnergyProcess::excitation() {
   // Excitations are only implemented for NN
   // @TODO: could also be NbarNbar
   if (!(id1 == 2112 || id1 == 2212) || !(id2 == 2112 || id2 == 2212))
@@ -445,7 +440,7 @@ bool LowEnergyHadHad::excitation() {
 
 // Do a resonance formation and decay.
 
-bool LowEnergyHadHad::resonance(int idRes) {
+bool LowEnergyProcess::resonance(int idRes) {
 
   // Create the resonance
   int iNew = leEvent.append(idRes, 919, 1,2,0,0, 0,0, Vec4(0,0,0,eCM), eCM);
@@ -462,7 +457,7 @@ bool LowEnergyHadHad::resonance(int idRes) {
 // Do an annihilation collision.
 // @TODO Unsolved: how handle K0S and K0L, which have alternating flavours??
 
-bool LowEnergyHadHad::annihilation() {
+bool LowEnergyProcess::annihilation() {
 
   // Vectors of quarks ("ord") and antiquarks ("bar"), and of their pairs.
   vector<int> iqord, iqbar, iord, ibar;
@@ -506,7 +501,7 @@ bool LowEnergyHadHad::annihilation() {
 
   // Return if no annihilation possible.
   if (iord.size() == 0) {
-    infoPtr->errorMsg( "Warning in LowEnergyHadHad::annihilation: "
+    infoPtr->errorMsg( "Warning in LowEnergyProcess::annihilation: "
       "flavour content does not allow annihilation",
       std::to_string(id1) + " + " + std::to_string(id2));
     return false;
@@ -579,7 +574,7 @@ bool LowEnergyHadHad::annihilation() {
     idacAnn = 1000 * max(iqord[0], iqord[1]) + 100 * min( iqord[0], iqord[1])
             + ( (iqord[1] == iqord[0]) ? 3 : 1 );
   } else {
-    infoPtr->errorMsg( "Error in LowEnergyHadHad::annihilation: "
+    infoPtr->errorMsg( "Error in LowEnergyProcess::annihilation: "
       "obtained unphysical flavour content");
     return false;
   }
@@ -589,7 +584,7 @@ bool LowEnergyHadHad::annihilation() {
   double mcAnn, macAnn, pxAnn, pyAnn, pTsAnn, mTscAnn, mTsacAnn;
   do {
     if (++loop == MAXLOOP) {
-      infoPtr->errorMsg("Error in LowEnergyHadHad::nondiff: "
+      infoPtr->errorMsg("Error in LowEnergyProcess::nondiff: "
         " failed to construct valid kinematics");
       return false;
     }
@@ -650,7 +645,7 @@ bool LowEnergyHadHad::annihilation() {
 // Simple version of hadronization for low-energy hadronic collisions.
 // Only accepts simple q-qbar systems and hadrons.
 
-bool LowEnergyHadHad::simpleHadronization( Event& event, bool isDiff) {
+bool LowEnergyProcess::simpleHadronization( Event& event, bool isDiff) {
 
   // Find the complete colour singlet configuration of the event.
   simpleColConfig.clear();
@@ -686,7 +681,7 @@ bool LowEnergyHadHad::simpleHadronization( Event& event, bool isDiff) {
 
 // Split up hadron A into a colour-anticolour pair, with masses and pT values.
 
-bool LowEnergyHadHad::splitA( double redMpT) {
+bool LowEnergyProcess::splitA( double redMpT) {
 
   // Split up flavour of hadron into a colour and an anticolour constituent.
   pair< int, int>  paircac  = splitFlav( id1 );
@@ -722,7 +717,7 @@ bool LowEnergyHadHad::splitA( double redMpT) {
 
 // Split up hadron B into a colour-anticolour pair, with masses and pT values.
 
-bool LowEnergyHadHad::splitB( double redMpT) {
+bool LowEnergyProcess::splitB( double redMpT) {
 
   // Split up flavour of hadron into a colour and an anticolour constituent.
   pair< int, int>  paircac  = splitFlav( id2 );
@@ -758,7 +753,7 @@ bool LowEnergyHadHad::splitB( double redMpT) {
 
 // Split up a hadron into a colour and an anticolour part, of q or qq kinds.
 
-pair< int, int> LowEnergyHadHad::splitFlav( int id) {
+pair< int, int> LowEnergyProcess::splitFlav( int id) {
 
   // Hadron flavour content.
   int idAbs = abs(id);
@@ -829,7 +824,7 @@ pair< int, int> LowEnergyHadHad::splitFlav( int id) {
   }
 
   // Done.
-  infoPtr->errorMsg("Error in LowEnergyHadHad::splitFlav: "
+  infoPtr->errorMsg("Error in LowEnergyProcess::splitFlav: "
     "Split not handled", 
     std::to_string(id) + " in " + std::to_string(id1) + " + " + std::to_string(id2) + " @ " + std::to_string(eCM));
   // @TODO better plan B, decide what to do with heavy quarks
@@ -847,7 +842,7 @@ pair< int, int> LowEnergyHadHad::splitFlav( int id) {
 
 // Find relative momentum of colour and anticolour constituents in hadron.
 
-double LowEnergyHadHad::splitZ( int iq1, int iq2, double mRat1, double mRat2) {
+double LowEnergyProcess::splitZ( int iq1, int iq2, double mRat1, double mRat2) {
 
   // Initial values.
   int iq1Abs = abs(iq1);
@@ -885,7 +880,7 @@ double LowEnergyHadHad::splitZ( int iq1, int iq2, double mRat1, double mRat2) {
 // Overestimate mass of lightest 2-body state for given flavour combination.
 // Only account for one c or b in hadron, ond do not consider diquark spin.
 
-double LowEnergyHadHad::mThreshold( int iq1, int iq2) {
+double LowEnergyProcess::mThreshold( int iq1, int iq2) {
 
   // Initial values.
   int iq1Abs = abs(iq1);
@@ -938,7 +933,7 @@ double LowEnergyHadHad::mThreshold( int iq1, int iq2) {
 
 // Pick slope b of exp(b * t) for elastic and diffractive events.
 
-double LowEnergyHadHad::bSlope( int type) {
+double LowEnergyProcess::bSlope( int type) {
 
   // Steeper slope for baryons than mesons.
   // To do: charm and bottom should have smaller slopes.

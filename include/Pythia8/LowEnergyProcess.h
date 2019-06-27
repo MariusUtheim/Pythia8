@@ -1,12 +1,12 @@
-// LowEnergyHadHad.h is a part of the PYTHIA event generator.
+// LowEnergyProcess.h is a part of the PYTHIA event generator.
 // Copyright (C) 2019 Torbjorn Sjostrand.
 // PYTHIA is licenced under the GNU GPL v2 or later, see COPYING for details.
 // Please respect the MCnet Guidelines, see GUIDELINES for details.
 
 // Header file for low-energy hadronic collisions, as used for rescattering.
 
-#ifndef Pythia8_LowEnergyHadHad_H
-#define Pythia8_LowEnergyHadHad_H
+#ifndef Pythia8_LowEnergyProcess_H
+#define Pythia8_LowEnergyProcess_H
 
 #include "Pythia8/Basics.h"
 #include "Pythia8/Event.h"
@@ -24,15 +24,15 @@ namespace Pythia8 {
 
 //==========================================================================
 
-// LowEnergyHadHad class.
+// LowEnergyProcess class.
 // Is used to describe the low-energy collision between two hadrons.
 
-class LowEnergyHadHad {
+class LowEnergyProcess {
 
 public:
 
   // Constructor. Still to be expanded with further default values.
-  LowEnergyHadHad() : infoPtr(), rndmPtr(),
+  LowEnergyProcess() : infoPtr(), rndmPtr(),
     particleDataPtr(), hadronWidthsPtr(),
     stringFragPtr(), ministringFragPtr() {}
 
@@ -128,4 +128,4 @@ private:
 
 } // end namespace Pythia8
 
-#endif // Pythia8_LowEnergyHadHad_H
+#endif // Pythia8_LowEnergyProcess_H

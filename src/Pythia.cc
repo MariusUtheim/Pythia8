@@ -2632,7 +2632,7 @@ bool Pythia::nextNonPert() {
   }
 
   // Do a low-energy collision, for now inelastic nondiffractive only.
-  if (!doLowEnergyHadHad( 1, 2, procType)) {
+  if (!doLowEnergyProcess( 1, 2, procType)) {
     info.errorMsg("Error from Pythia::nextNonPert: fragmentation failed");
     return false;
   }

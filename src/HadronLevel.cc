@@ -117,7 +117,7 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
     &flavSel, &pTSel, &zSel);
 
   // Initialize low energy.
-  if (!lowEnergyHadHad.init(infoPtr, settings, rndmPtr, 
+  if (!lowEnergyProcess.init(infoPtr, settings, rndmPtr, 
     particleDataPtr, hadronWidthsPtrIn,
     &stringFrag, &ministringFrag))
     return false;
@@ -373,7 +373,7 @@ bool HadronLevel::next(Event& event) {
           int process = lowEnergySigmaPtr->pickProcess(event[node.i1].id(),
             event[node.i2].id(), eCM);
           if (process != 0)
-            lowEnergyHadHad.collide(node.i1, node.i2,
+            lowEnergyProcess.collide(node.i1, node.i2,
                                     process, event, node.origin);
         }
 

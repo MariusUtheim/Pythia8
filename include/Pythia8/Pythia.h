@@ -214,8 +214,8 @@ public:
   bool forceRHadronDecays() {return doRHadronDecays();}
 
   // Do a low-energy collision between two hadrons in the event record.
-  bool doLowEnergyHadHad(int i1, int i2, int type) {
-    return hadronLevel.doLowEnergyHadHad( i1, i2, type, event); }
+  bool doLowEnergyProcess(int i1, int i2, int type) {
+    return hadronLevel.doLowEnergyProcess( i1, i2, type, event); }
 
   // List the current Les Houches event.
   void LHAeventList() { if (lhaUpPtr != 0) lhaUpPtr->listEvent();}

@@ -21,7 +21,7 @@
 #include "Pythia8/HiddenValleyFragmentation.h"
 #include "Pythia8/Info.h"
 #include "Pythia8/JunctionSplitting.h"
-#include "Pythia8/LowEnergyHadHad.h"
+#include "Pythia8/LowEnergyProcess.h"
 #include "Pythia8/LowEnergySigma.h"
 #include "Pythia8/MiniStringFragmentation.h"
 #include "Pythia8/ParticleData.h"
@@ -70,14 +70,14 @@ public:
   bool moreDecays(Event& event);
 
   // Special routine to do a low-energy hadron-hadron scattering.
-  bool doLowEnergyHadHad(int i1, int i2, int type, Event& event) {
-    if (!lowEnergyHadHad.collide( i1, i2, type, event)) {
-      infoPtr->errorMsg("Error in HadronLevel::doLowEnergyHadHad: "
+  bool doLowEnergyProcess(int i1, int i2, int type, Event& event) {
+    if (!lowEnergyProcess.collide( i1, i2, type, event)) {
+      infoPtr->errorMsg("Error in HadronLevel::doLowEnergyProcess: "
         "Low energy collision did not resolve");
       return false;
     }
     if (!next(event)) {
-      infoPtr->errorMsg("Error in HadronLevel::doLowEnergyHadHad: "
+      infoPtr->errorMsg("Error in HadronLevel::doLowEnergyProcess: "
         "Further hadron level processes failed");
       return false;
     }
@@ -100,7 +100,7 @@ private:
 
   // New hadron rescattering
   class PriorityNode;
-  LowEnergyHadHad leHadHad;
+  LowEnergyProcess leProcess;
   bool doRescatter, scatterManyTimes;
   void queueDecResc(Event& event, int iStart, 
                     priority_queue<HadronLevel::PriorityNode>& queue);
@@ -144,7 +144,7 @@ private:
   HadronScatter  hadronScatter;
 
   // The generator class for low-energy hadron-hadron collisions.
-  LowEnergyHadHad lowEnergyHadHad;
+  LowEnergyProcess lowEnergyProcess;
 
   // Class for event geometry for Rope Hadronization. Production vertices.
   Ropewalk ropewalk;
