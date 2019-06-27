@@ -64,6 +64,10 @@ void LowEnergySigma::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
 int LowEnergySigma::canonicalForm(int& idA, int& idB) const {
   if (!particleDataPtr->isHadron(idA) || !particleDataPtr->isHadron(idB))
     return 0;
+  // Explicitly don't handle c or b hadrons
+  if (particleDataPtr->heaviestQuark(idA) > 3 
+   || particleDataPtr->heaviestQuark(idB) > 3)
+    return 0;
 
   // Ensure |A| >= |B|
   if (abs(idA) < abs(idB))
@@ -143,7 +147,6 @@ bool LowEnergySigma::sigmaPartial(int idA, int idB, double eCM,
       for (auto idR : possibleResonances(idA, idB)) {
         double sigmaRes = XMResonantPartial(idA, idB, idR, eCM);
         if (sigmaRes != 0.) {
-          // If 
           if (process == 4) idR = particleDataPtr->antiId(idR);
           procsOut.push_back(idR);
           sigmasOut.push_back(sigmaRes);
@@ -224,7 +227,6 @@ int LowEnergySigma::pickProcess(int idA, int idB, double eCM) {
 //--------------------------------------------------------------------------
 
 int LowEnergySigma::pickResonance(int idA, int idB, double eCM) {
-
   int process = canonicalForm(idA, idB);
   if (process == 0 || process == 1 || process == 2) 
     return 0;
@@ -246,7 +248,6 @@ int LowEnergySigma::pickResonance(int idA, int idB, double eCM) {
 
   // Pick resonance at random
   int resPick = resonances[rndmPtr->pick(sigmas)];
-
   // Change to antiparticle if the canonical ordering changed signs
   return (process == 3) ? resPick : particleDataPtr->antiId(resPick);
 }
@@ -533,6 +534,8 @@ double LowEnergySigma::BBExcite(int idA, int idB, double eCM) const {
  * */
 
 double LowEnergySigma::BBbarTotal(int idA, int idB, double eCM) const {
+  // @TODO: Reduce the total cross section if annihilation is impossible
+
   // Calculate effective energy, i.e. energy of protons with the same momenta
   double m0 = particleDataPtr->m0(2212);
   double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
@@ -589,6 +592,23 @@ double LowEnergySigma::BBbarDiffractiveXX(int idA, int idB, double eCM) const {
 }
 
 double LowEnergySigma::BBbarAnnihilation(int idA, int idB, double eCM) const {
+  
+  // Count number of each quark type
+  vector<int> countA(3), countB(3);
+  for (int quarksA = ( idA / 10) % 1000; quarksA > 0; quarksA /= 10)
+    countA[quarksA % 10 - 1] += 1;
+  for (int quarksB = (-idB / 10) % 1000; quarksB > 0; quarksB /= 10)
+    countB[quarksB % 10 - 1] += 1;
+
+  // Find the maximum number of simultaneous annihilations  
+  int nMutual = 0;
+  for (int i = 0; i < 3; ++i) 
+    nMutual += min(countA[i], countB[i]);
+  
+  // Abort if no quarks can annihilate
+  if (nMutual == 0)
+    return 0.;
+
   // Calculate effective energy, i.e. energy of protons with the same momenta
   double m0 = particleDataPtr->m0(2212);
   double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
@@ -617,7 +637,7 @@ double LowEnergySigma::BBbarAnnihilation(int idA, int idB, double eCM) const {
  *  UrQMD includes something about Danielewicz forward delay
  *  Decide which resonances should be implemented
  *  Check that all excited particles have the correct data, including id
- *  Verify that mass-dependent widths are correct for all particles
+ *  Verify that mass-dependent widths are correct for all particles, esp. rho
  *  Compare pi/K + p cross sections to PDG data
  *  Compare a lot of cases to UrQMD
  **/
