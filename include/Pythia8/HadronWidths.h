@@ -38,9 +38,6 @@ public:
   // Get the branching ratio of the specified particle at specified mass
   double branchingRatio(int id, int prodA, int prodB, double m) const;
 
-  // Calculate resonance formation cross section
-  double resonanceSigma(int idA, int idB, int idRes, double eCM) const;
-
   // Pick masses for two particles, taking distributions and phase space
   // into account. Returns whether successful.
   bool pickMasses(int idA, int idB, double eCM, double& mAOut, double& mBOut);
@@ -50,6 +47,7 @@ public:
   bool pickDecay(int idDec, double m, int& id1Out, int& id2Out,
     double& m1Out, double& m2Out);
 
+  
   bool pickExcitation(int idA, int idB, double eCM, 
     int& idCOut, double& mCOut, int& idDOut, double& mDOut);
 

@@ -65,8 +65,8 @@ int LowEnergySigma::canonicalForm(int& idA, int& idB) const {
   if (!particleDataPtr->isHadron(idA) || !particleDataPtr->isHadron(idB))
     return 0;
   // Explicitly don't handle c or b hadrons
-  if (particleDataPtr->heaviestQuark(idA) > 3 
-   || particleDataPtr->heaviestQuark(idB) > 3)
+  if (abs(particleDataPtr->heaviestQuark(idA)) > 3 
+   || abs(particleDataPtr->heaviestQuark(idB)) > 3)
     return 0;
 
   // Ensure |A| >= |B|
@@ -720,7 +720,25 @@ vector<int> LowEnergySigma::possibleResonances(int idX, int idM) const {
 
 double LowEnergySigma::XMResonantPartial(int idX, int idM, int idR, 
     double eCM) const {
-  return hadronWidthsPtr->resonanceSigma(idX, idM, idR, eCM);
+
+  double gammaR = hadronWidthsPtr->width(idR, eCM);
+  double br = hadronWidthsPtr->branchingRatio(idR, idX, idM, eCM);
+  
+  if (gammaR == 0. || br == 0.)
+    return 0.;
+
+    // Find particle entries
+  auto* entryR = particleDataPtr->findParticle(idR);
+  auto* entryA = particleDataPtr->findParticle(idX);
+  auto* entryB = particleDataPtr->findParticle(idM);
+
+  // Calculate the resonance sigma
+  double s = pow2(eCM), mA = entryA->m0(), mB = entryB->m0();
+  double pCMS2 = 1 / (4 * s) * (s - pow2(mA + mB)) * (s - pow2(mA - mB));
+
+  return GEVINVSQ2MB * M_PI / pCMS2
+    * entryR->spinType() / (entryA->spinType() * entryB->spinType())
+    * br * pow2(gammaR) / (pow2(entryR->m0() - eCM) + 0.25 * pow2(gammaR));
 }
 
 //==========================================================================

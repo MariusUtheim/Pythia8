@@ -246,42 +246,6 @@ double HadronWidths::partialWidth(int idR, int idA, int idB, double m) const {
        ? entry->widths(m) * channel->br(m) : 0.;
 }
 
-// @TODO verify parameter order
-double HadronWidths::resonanceSigma(int idA, int idB, int idR,
-  double eCM) const {
-  
-  const Entry* entry;
-  const DecayChannel* channel;
-
-  if (!_getEntryAndChannel(idR, idA, idB, entry, channel))
-    return 0.;
-
-  // Find particle entries
-  auto* entryR = particleDataPtr->findParticle(idR);
-  auto* entryA = particleDataPtr->findParticle(channel->idA);
-  auto* entryB = particleDataPtr->findParticle(channel->idB);
-  if (!entryR || !entryA || !entryB) {
-    infoPtr->errorMsg("In HadronWidths::resonanceSigma: "
-      "got invalid particle id");
-    return 0.;
-  }
-
-  // Get mass dependent width and branching ratios
-  double gammaR = entry->widths(eCM);
-  if (gammaR == 0) return 0.;
-
-  double br = channel->br(eCM);
-  if (br == 0) return 0.;
-
-  // Calculate the resonance sigma
-  double s = pow2(eCM), mA = entryA->m0(), mB = entryB->m0();
-  double pCMS2 = 1 / (4 * s) * (s - pow2(mA + mB)) * (s - pow2(mA - mB));
-
-  return GEVINVSQ2MB * M_PI / pCMS2
-    * entryR->spinType() / (entryA->spinType() * entryB->spinType())
-    * br * pow2(gammaR) / (pow2(entryR->m0() - eCM) + 0.25 * pow2(gammaR));
-}
-
 
 bool HadronWidths::pickMasses(int idA, int idB, double eCM, double& mAOut, double& mBOut) {
   return _pickMasses(idA, idB, eCM, mAOut, mBOut, 1);
@@ -326,7 +290,7 @@ static double breitWigner(double gamma, double dm) {
   return 1. / (2. * M_PI) * gamma / (dm * dm + 0.25 * gamma * gamma);
 }
 
-static constexpr double MAX_LOOPS = 200;
+static constexpr double MAX_LOOPS = 1000;
 
 bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   double& mAOut) {
