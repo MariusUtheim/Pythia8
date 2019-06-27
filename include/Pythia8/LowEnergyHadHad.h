@@ -15,7 +15,7 @@
 #include "Pythia8/LowEnergySigma.h"
 #include "Pythia8/MiniStringFragmentation.h"
 #include "Pythia8/ParticleData.h"
-#include "Pythia8/ParticleWidths.h"
+#include "Pythia8/HadronWidths.h"
 #include "Pythia8/PythiaStdlib.h"
 #include "Pythia8/Settings.h"
 #include "Pythia8/StringFragmentation.h"
@@ -33,12 +33,12 @@ public:
 
   // Constructor. Still to be expanded with further default values.
   LowEnergyHadHad() : infoPtr(), rndmPtr(),
-    particleDataPtr(), particleWidthsPtr(),
+    particleDataPtr(), hadronWidthsPtr(),
     stringFragPtr(), ministringFragPtr() {}
 
   // Initialize the class.
   bool init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
-    ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn,
+    ParticleData* particleDataPtrIn, HadronWidths* hadronWidthsPtrIn,
     StringFragmentation* stringFragPtrIn,
     MiniStringFragmentation* ministringFragPtrIn);
 
@@ -79,7 +79,7 @@ private:
   ParticleData* particleDataPtr;
 
   // Pointer to particle widths.
-  ParticleWidths* particleWidthsPtr;
+  HadronWidths* hadronWidthsPtr;
 
   // Pointer to the generator for normal string fragmentation.
   StringFragmentation* stringFragPtr;

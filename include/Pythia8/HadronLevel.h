@@ -17,6 +17,7 @@
 #include "Pythia8/FragmentationFlavZpT.h"
 #include "Pythia8/FragmentationSystems.h"
 #include "Pythia8/HadronScatter.h"
+#include "Pythia8/HadronWidths.h"
 #include "Pythia8/HiddenValleyFragmentation.h"
 #include "Pythia8/Info.h"
 #include "Pythia8/JunctionSplitting.h"
@@ -53,7 +54,7 @@ public:
 
   // Initialize HadronLevel classes as required.
   bool init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
-    ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn,
+    ParticleData* particleDataPtrIn, HadronWidths* hadronWidthsPtrIn,
     Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
     RHadrons* rHadronsPtrIn, DecayHandler* decayHandlePtr,
     vector<int> handledParticles, LowEnergySigma* lowEnergySigmaPtrIn,

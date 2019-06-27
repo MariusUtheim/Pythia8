@@ -118,8 +118,8 @@ Pythia::Pythia(string xmlDir, bool printBanner) :
   }
 
   // Read in files with particle widths
-  dataFile = xmlPath + "ParticleWidths.xml";
-  isConstructed = particleWidths.init(&info, &rndm, &particleData, dataFile);
+  dataFile = xmlPath + "HadronWidths.xml";
+  isConstructed = hadronWidths.init(&info, &rndm, &particleData, dataFile);
   if (!isConstructed) {
     info.errorMsg("Abort from Pythia::Pythia: particle widths unavailable");
     return;
@@ -1374,12 +1374,12 @@ bool Pythia::init() {
   }
 
   // Initialize low energy cross sections
-  lowEnergySigma.init(&info, settings, &rndm, &particleData, &particleWidths);
+  lowEnergySigma.init(&info, settings, &rndm, &particleData, &hadronWidths);
 
   // Send info/pointers to hadron level for initialization.
   // Note: forceHadronLevel() can come, so we must always initialize.
   if ( !hadronLevel.init( &info, settings, &rndm,
-    &particleData, &particleWidths,
+    &particleData, &hadronWidths,
     couplingsPtr, timesDecPtr, &rHadrons, decayHandlePtr,
     handledParticles, &lowEnergySigma, userHooksPtr) ) {
     info.errorMsg("Abort from Pythia::init: "
@@ -1501,6 +1501,20 @@ bool Pythia::checkBeams() {
   int idAabs = abs(idA);
   int idBabs = abs(idB);
   if (!doProcessLevel) return true;
+
+  if (doNonPert) {
+    if (!particleData.isHadron(idA) || !particleData.isHadron(idB)) {
+      info.errorMsg("Error in Pythia::init: non-perturbative processes are"
+        "defined only for hadron-hadron collisions.");
+      return false;
+    }
+    if (particleData.m0(idA) + particleData.m0(idB) > eCM) {
+      info.errorMsg("Error in Pythia::init: beam particles have higher"
+        "mass than eCM");
+      return false;
+    }
+    return true;
+  }
 
   // Neutrino beams always unresolved, charged lepton ones conditionally.
   bool isLeptonA    = (idAabs > 10 && idAabs < 17);

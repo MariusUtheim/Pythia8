@@ -45,17 +45,17 @@ const double ParticleDecays::WTCORRECTION[11] = { 1., 1., 1.,
 
 void ParticleDecays::init(Info* infoPtrIn, Settings& settings,
   ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
-  ParticleWidths* particleWidthsPtrIn, Couplings* couplingsPtrIn,
+  HadronWidths* hadronWidthsPtrIn, Couplings* couplingsPtrIn,
   TimeShower* timesDecPtrIn, StringFlav* flavSelPtrIn, 
   DecayHandler* decayHandlePtrIn, vector<int> handledParticles) {
 
   // Save pointers to error messages handling and flavour generation.
-  infoPtr           = infoPtrIn;
-  particleDataPtr   = particleDataPtrIn;
-  particleWidthsPtr = particleWidthsPtrIn;
-  rndmPtr           = rndmPtrIn;
-  couplingsPtr      = couplingsPtrIn;
-  flavSelPtr        = flavSelPtrIn;
+  infoPtr         = infoPtrIn;
+  particleDataPtr = particleDataPtrIn;
+  hadronWidthsPtr = hadronWidthsPtrIn;
+  rndmPtr         = rndmPtrIn;
+  couplingsPtr    = couplingsPtrIn;
+  flavSelPtr      = flavSelPtrIn;
 
   // Save pointer to timelike shower, as needed in some few decays.
   timesDecPtr     = timesDecPtrIn;
@@ -197,7 +197,7 @@ bool ParticleDecays::decay( int iDec, Event& event) {
 
     int id1, id2;
     double m1, m2;
-    if (!particleWidthsPtr->pickDecay(idDec, m0, id1, id2, m1, m2))
+    if (!hadronWidthsPtr->pickDecay(idDec, m0, id1, id2, m1, m2))
       return false;
 
     // Calculate phase space configuration.

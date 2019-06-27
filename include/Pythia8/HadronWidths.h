@@ -1,5 +1,5 @@
-#ifndef Particle_Widths_H
-#define Particle_Widths_H
+#ifndef Hadron_Widths_H
+#define Hadron_Widths_H
 
 #include "Pythia8/Info.h"
 #include "Pythia8/Interpolator.h"
@@ -7,23 +7,20 @@
 
 namespace Pythia8 {
 
-
-//TS?? HadronWidths better name?
-//Then also ParticleWidths.xml -> HadronWidthData.xml
-class ParticleWidths {
+class HadronWidths {
 
 public:
 
-  ParticleWidths() = default;
-  ParticleWidths(const ParticleWidths&) = delete;
-  ParticleWidths(ParticleWidths&&) = delete;
+  HadronWidths() = default;
+  HadronWidths(const HadronWidths&) = delete;
+  HadronWidths(HadronWidths&&) = delete;
 
   bool init(Info* infoPtrIn, Rndm* rndmPtrIn, ParticleData* particleDataPtrIn,
     string path);
 
   bool readXML(istream& stream);
 
-  // Returns whether the specified particle is handled by ParticleWidths
+  // Returns whether the specified particle is handled by HadronWidths
   bool hasData(int id) const {
     auto iter = entries.find(abs(id));
     return iter != entries.end();

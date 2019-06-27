@@ -16,19 +16,19 @@ static double clamp(double x, double min, double max) {
 //--------------------------------------------------------------------------
 
 void LowEnergySigma::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
-    ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn) {
+    ParticleData* particleDataPtrIn, HadronWidths* hadronWidthsPtrIn) {
     
   // Store pointers
   infoPtr           = infoPtrIn;
   particleDataPtr   = particleDataPtrIn; 
   rndmPtr           = rndmPtrIn;
-  particleWidthsPtr = particleWidthsPtrIn;
+  hadronWidthsPtr = hadronWidthsPtrIn;
 
   // @TODO: Maybe just copy the relevant parts from sigmaSaSDL
   sigmaSaSDL.init(infoPtrIn, settings, particleDataPtrIn, nullptr);
 
   // Initialize map of resonance particles
-  for (int id : particleWidthsPtr->getResonances()) {
+  for (int id : hadronWidthsPtr->getResonances()) {
 
     // Insert id in signature map
     int signature = getSignature(particleDataPtr->isHadron(id), 
@@ -720,7 +720,7 @@ vector<int> LowEnergySigma::possibleResonances(int idX, int idM) const {
 
 double LowEnergySigma::XMResonantPartial(int idX, int idM, int idR, 
     double eCM) const {
-  return particleWidthsPtr->resonanceSigma(idX, idM, idR, eCM);
+  return hadronWidthsPtr->resonanceSigma(idX, idM, idR, eCM);
 }
 
 //==========================================================================

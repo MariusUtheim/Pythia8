@@ -15,7 +15,7 @@
 #include "Pythia8/FragmentationFlavZpT.h"
 #include "Pythia8/Info.h"
 #include "Pythia8/ParticleData.h"
-#include "Pythia8/ParticleWidths.h"
+#include "Pythia8/HadronWidths.h"
 #include "Pythia8/PythiaStdlib.h"
 #include "Pythia8/Settings.h"
 #include "Pythia8/TimeShower.h"
@@ -68,7 +68,7 @@ public:
   // Initialize: store pointers and find settings
   void init(Info* infoPtrIn, Settings& settings,
     ParticleData* particleDataPtrIn, Rndm* rndmPtrIn,
-    ParticleWidths* particleWidthsPtrIn, Couplings* couplingsPtrIn,
+    HadronWidths* hadronWidthsPtrIn, Couplings* couplingsPtrIn,
     TimeShower* timesDecPtrIn, StringFlav* flavSelPtrIn,
     DecayHandler* decayHandlePtrIn, vector<int> handledParticles);
 
@@ -93,7 +93,7 @@ private:
   ParticleData*   particleDataPtr;
 
   // Pointer to the particle widths table.
-  ParticleWidths* particleWidthsPtr;
+  HadronWidths* hadronWidthsPtr;
 
   // Pointer to the random number generator.
   Rndm*           rndmPtr;

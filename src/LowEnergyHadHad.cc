@@ -37,14 +37,14 @@ const double LowEnergyHadHad::ALPHAPRIME = 0.25;
 // Initialize the LowEnergyHadHad class as required.
 
 bool LowEnergyHadHad::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
-  ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn,
+  ParticleData* particleDataPtrIn, HadronWidths* hadronWidthsPtrIn,
   StringFragmentation* stringFragPtrIn,
   MiniStringFragmentation* ministringFragPtrIn) {
 
   // Save pointers.
   infoPtr           = infoPtrIn;
   particleDataPtr   = particleDataPtrIn;
-  particleWidthsPtr = particleWidthsPtrIn;
+  hadronWidthsPtr   = hadronWidthsPtrIn;
   rndmPtr           = rndmPtrIn;
   stringFragPtr     = stringFragPtrIn;
   ministringFragPtr = ministringFragPtrIn;
@@ -429,7 +429,7 @@ bool LowEnergyHadHad::excitation() {
 
   int idC, idD;
   double mC, mD;
-  if (!particleWidthsPtr->pickExcitation(id1, id2, eCM, idC, mC, idD, mD))
+  if (!hadronWidthsPtr->pickExcitation(id1, id2, eCM, idC, mC, idD, mD))
     return false;
 
   // @TODO: Angular distribution might not be uniform
@@ -506,7 +506,6 @@ bool LowEnergyHadHad::annihilation() {
 
   // Return if no annihilation possible.
   if (iord.size() == 0) {
-    // @TODO Cross-section should be zero when there can be no annihilation 
     infoPtr->errorMsg( "Warning in LowEnergyHadHad::annihilation: "
       "flavour content does not allow annihilation",
       std::to_string(id1) + " + " + std::to_string(id2));
@@ -656,12 +655,12 @@ bool LowEnergyHadHad::simpleHadronization( Event& event, bool isDiff) {
   // Find the complete colour singlet configuration of the event.
   simpleColConfig.clear();
   for (int i = 0; i < event.size(); ++i)
-    if (event[i].isQuark() || event[i].isDiquark()) {
-      vector<int> qqPair;
-      qqPair.push_back(   i);
-      qqPair.push_back( ++i);
-      simpleColConfig.simpleInsert( qqPair, event );
-    }
+  if (event[i].isQuark() || event[i].isDiquark()) {
+    vector<int> qqPair;
+    qqPair.push_back(   i);
+    qqPair.push_back( ++i);
+    simpleColConfig.simpleInsert( qqPair, event );
+  }
 
   // Process all colour singlet (sub)systems.
   for (int iSub = 0; iSub < simpleColConfig.size(); ++iSub) {

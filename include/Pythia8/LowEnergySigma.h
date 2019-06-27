@@ -2,7 +2,7 @@
 #define Pythia8_LowEnergySigma_H
 
 #include "Pythia8/Info.h"
-#include "Pythia8/ParticleWidths.h"
+#include "Pythia8/HadronWidths.h"
 #include "Pythia8/ParticleData.h"
 #include "SigmaTotal.h"
 
@@ -16,7 +16,7 @@ class LowEnergySigma {
 public:
 
   void init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
-    ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn);
+    ParticleData* particleDataPtrIn, HadronWidths* hadronWidthsPtrIn);
 
 
   // Get the total cross section for the specified collision
@@ -83,7 +83,7 @@ private:
   double BBbarAnnihilation(int idA, int idB, double eCM) const;
 
   // XM partial cross sections
-  ParticleWidths* particleWidthsPtr;
+  HadronWidths* hadronWidthsPtr;
   double XMTotal(int idX, int idM, double eCM) const;
   double XMNonDiffractive(int idX, int idM, double eCM) const;
   double XMElastic(int idX, int idM, double eCM) const;

@@ -1,5 +1,5 @@
 
-#include "Pythia8/ParticleWidths.h"
+#include "Pythia8/HadronWidths.h"
 
 namespace Pythia8 {
 
@@ -44,7 +44,7 @@ static void completeTag(istream& stream, string& line) {
 }
 
 // Gets key for the decay and flips idR if necessary
-keyType ParticleWidths::getKey(int& idR, int idA, int idB) const {
+keyType HadronWidths::getKey(int& idR, int idA, int idB) const {
 
   if (idR < 0) {
     idR = -idR;
@@ -59,7 +59,7 @@ keyType ParticleWidths::getKey(int& idR, int idA, int idB) const {
 }
 
 
-bool ParticleWidths::init(Info* infoPtrIn, Rndm* rndmPtrIn,
+bool HadronWidths::init(Info* infoPtrIn, Rndm* rndmPtrIn,
   ParticleData* particleDataPtrIn, string path) {
   infoPtr = infoPtrIn;
   rndmPtr = rndmPtrIn;
@@ -67,14 +67,14 @@ bool ParticleWidths::init(Info* infoPtrIn, Rndm* rndmPtrIn,
 
   ifstream stream(path);
   if (!stream.is_open()) {
-    infoPtr->errorMsg( "Error in ParticleWidths::init: "
+    infoPtr->errorMsg( "Error in HadronWidths::init: "
         "unable to open file");
     return false;
   }
   return readXML(stream);
 }
 
-bool ParticleWidths::readXML(istream& stream) {
+bool HadronWidths::readXML(istream& stream) {
 
   string line;
 
@@ -107,23 +107,23 @@ bool ParticleWidths::readXML(istream& stream) {
 
       int id = intAttributeValue(line, "id");
       if (id < 0) {
-        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
           "Got negative id", std::to_string(id));
         continue;
       }
       auto* entry = particleDataPtr->findParticle(id);
       if (!entry) {
-        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
           "Particle is not defined", std::to_string(id));
         continue;
       }
       if (!entry->isHadron()) {
-        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
           "Particle is not defined as hadron", std::to_string(id));
         continue;
       }
       if (particleDataPtr->heaviestQuark(id) > 3) {
-        infoPtr->errorMsg("Error in ParticleWidths:readXML: "
+        infoPtr->errorMsg("Error in HadronWidths:readXML: "
           "Particle contains a charmed or bottom hadron",
           std::to_string(id));
         continue;
@@ -148,14 +148,14 @@ bool ParticleWidths::readXML(istream& stream) {
       int id = intAttributeValue(line, "id");
       auto iter = entries.find(id);
       if (iter == entries.end()) {
-        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
           "got br for a particle with undefined or ill-defined width");
         continue;
       }
 
       int lType = intAttributeValue(line, "lType");
       if (lType == 0) {
-        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
           "lType is not defined");
         lType = 1;
       }
@@ -166,7 +166,7 @@ bool ParticleWidths::readXML(istream& stream) {
       productStr >> prod2;
       
       if (!particleDataPtr->isParticle(prod1) || !particleDataPtr->isParticle(prod2)) {
-        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
           "decay product is not a particle",
           std::to_string(id) + " --> " + productStr.str());
         continue;
@@ -175,7 +175,7 @@ bool ParticleWidths::readXML(istream& stream) {
       if (particleDataPtr->chargeType(prod1) + particleDataPtr->chargeType(prod2) 
         != particleDataPtr->chargeType(id)) {
 
-        infoPtr->errorMsg( "Error in ParticleWidths::readXML: "
+        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
           "Charge not conserved in decay.", 
           std::to_string(id) + " --> " + std::to_string(prod1) + " + " + std::to_string(prod2));
         continue;
@@ -195,11 +195,13 @@ bool ParticleWidths::readXML(istream& stream) {
     }
   }
 
+  // @TODO Check that all particles that useMassDependentWidth have data
+
   return true;
 }
 
 
-bool ParticleWidths::_getEntryAndChannel(int idR, int idA, int idB, 
+bool HadronWidths::_getEntryAndChannel(int idR, int idA, int idB, 
   const Entry*& entryOut, const DecayChannel*& channelOut) const {
 
   auto key = getKey(idR, idA, idB);
@@ -218,26 +220,26 @@ bool ParticleWidths::_getEntryAndChannel(int idR, int idA, int idB,
 }
 
 
-vector<int> ParticleWidths::getResonances() const {
+vector<int> HadronWidths::getResonances() const {
   vector<int> resonances;
   for (auto& p : entries)
     resonances.push_back(p.first);
   return resonances;
 }
 
-double ParticleWidths::width(int id, double eCM) const {
+double HadronWidths::width(int id, double eCM) const {
   auto iter = entries.find(abs(id));
   return (iter != entries.end()) ? iter->second.widths(eCM) : 0.;
 }
 
-double ParticleWidths::branchingRatio(int idR, int idA, int idB, double m) const {
+double HadronWidths::branchingRatio(int idR, int idA, int idB, double m) const {
   const Entry* entry;
   const DecayChannel* channel;
   return _getEntryAndChannel(idR, idA, idB, entry, channel)
        ? channel->br(m) : 0.;
 }
 
-double ParticleWidths::partialWidth(int idR, int idA, int idB, double m) const {
+double HadronWidths::partialWidth(int idR, int idA, int idB, double m) const {
   const Entry* entry;
   const DecayChannel* channel;
   return _getEntryAndChannel(idR, idA, idB, entry, channel)
@@ -245,7 +247,7 @@ double ParticleWidths::partialWidth(int idR, int idA, int idB, double m) const {
 }
 
 // @TODO verify parameter order
-double ParticleWidths::resonanceSigma(int idA, int idB, int idR,
+double HadronWidths::resonanceSigma(int idA, int idB, int idR,
   double eCM) const {
   
   const Entry* entry;
@@ -259,7 +261,7 @@ double ParticleWidths::resonanceSigma(int idA, int idB, int idR,
   auto* entryA = particleDataPtr->findParticle(channel->idA);
   auto* entryB = particleDataPtr->findParticle(channel->idB);
   if (!entryR || !entryA || !entryB) {
-    infoPtr->errorMsg("In ParticleWidths::resonanceSigma: "
+    infoPtr->errorMsg("In HadronWidths::resonanceSigma: "
       "got invalid particle id");
     return 0.;
   }
@@ -281,11 +283,11 @@ double ParticleWidths::resonanceSigma(int idA, int idB, int idR,
 }
 
 
-bool ParticleWidths::pickMasses(int idA, int idB, double eCM, double& mAOut, double& mBOut) {
+bool HadronWidths::pickMasses(int idA, int idB, double eCM, double& mAOut, double& mBOut) {
   return _pickMasses(idA, idB, eCM, mAOut, mBOut, 1);
 }
 
-bool ParticleWidths::_pickMasses(int idA, int idB, double eCM,
+bool HadronWidths::_pickMasses(int idA, int idB, double eCM,
   double& mAOut, double& mBOut, int lType) {
 
   bool isResA = hasData(idA), isResB = hasData(idB);
@@ -326,7 +328,7 @@ static double breitWigner(double gamma, double dm) {
 
 static constexpr double MAX_LOOPS = 200;
 
-bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
+bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   double& mAOut) {
 
   // Ensure resonance is positive - the mass distribution doesn't change
@@ -335,7 +337,7 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   // Get width entry
   auto iter = entries.find(idRes);
   if (iter == entries.end()) {
-    infoPtr->errorMsg("Error in ParticleWidths::pickMass: "
+    infoPtr->errorMsg("Error in HadronWidths::pickMass: "
       "mass distribution for particle is not defined",
       std::to_string(idRes));
     return false;
@@ -353,7 +355,7 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
     return false;
 
   if (mMin > m0 || mMin > mPeak) {
-    infoPtr->errorMsg("Error in ParticleWidths::pickMass: "
+    infoPtr->errorMsg("Error in HadronWidths::pickMass: "
       "mass ordering did not make sense. This indicates an error with the configuration files");
     return false;
   }
@@ -405,7 +407,7 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
     }
   }
 
-  infoPtr->errorMsg("Warning in ParticleWidths::pickMass: "
+  infoPtr->errorMsg("Warning in HadronWidths::pickMass: "
     "Could not pick mass within prescribed number of iterations. ",
     std::to_string(idRes) + " in (" + std::to_string(mMin) + ", " + std::to_string(mMax) + ")");
   
@@ -415,7 +417,7 @@ bool ParticleWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
 
 // @TODO: Implement this properly
 //        For the first iteration, we just pick id2 on shell
-bool ParticleWidths::_pickMass2(int id1, int id2, double eCM, int lType,
+bool HadronWidths::_pickMass2(int id1, int id2, double eCM, int lType,
   double& m1Out, double& m2Out) {
   
   double m2 = particleDataPtr->m0(id2);
@@ -433,7 +435,7 @@ bool ParticleWidths::_pickMass2(int id1, int id2, double eCM, int lType,
 
 
 
-bool ParticleWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
+bool HadronWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
     double& mAOut, double& mBOut) {
 
   bool isAnti = (idDec < 0);
@@ -442,7 +444,7 @@ bool ParticleWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
 
   auto entriesIter = entries.find(idDec);
   if (entriesIter == entries.end()) {
-    infoPtr->errorMsg("Error in ParticleWidths::pickDecay: "
+    infoPtr->errorMsg("Error in HadronWidths::pickDecay: "
       "particle not found:", std::to_string(idDec));
     return false;
   }
@@ -460,7 +462,7 @@ bool ParticleWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
   }
 
   if (!gotAny) {
-    infoPtr->errorMsg("Warning in ParticleWidths::pickDecay: "
+    infoPtr->errorMsg("Warning in HadronWidths::pickDecay: "
       "no channels have positive branching ratios");
     return false;
   }
@@ -469,7 +471,7 @@ bool ParticleWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
   auto lType = entry.decayChannels.at(prods).lType;
 
   if (lType == 0) {
-    infoPtr->errorMsg("Warning in ParticleWidths::pickDecay: "
+    infoPtr->errorMsg("Warning in HadronWidths::pickDecay: "
       "channel does not set its angular momentum for ",
       std::to_string(idDec) + " -> " + std::to_string(prods.first) + " + " + std::to_string(prods.second));
     return false;
@@ -486,7 +488,7 @@ bool ParticleWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
 }
 
 
-bool ParticleWidths::pickExcitation(int idA, int idB, double eCM, 
+bool HadronWidths::pickExcitation(int idA, int idB, double eCM, 
   int& idCOut, double& mCOut, int& idDOut, double& mDOut) {
 
   // Pick an excitation channel

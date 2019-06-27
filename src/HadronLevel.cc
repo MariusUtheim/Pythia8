@@ -50,7 +50,7 @@ public:
 // Find settings. Initialize HadronLevel classes as required.
 
 bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
-  ParticleData* particleDataPtrIn, ParticleWidths* particleWidthsPtrIn,
+  ParticleData* particleDataPtrIn, HadronWidths* hadronWidthsPtrIn,
   Couplings* couplingsPtrIn, TimeShower* timesDecPtr,
   RHadrons* rHadronsPtrIn, DecayHandler* decayHandlePtr,
   vector<int> handledParticles, LowEnergySigma* lowEnergySigmaPtrIn,
@@ -118,13 +118,13 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
 
   // Initialize low energy.
   if (!lowEnergyHadHad.init(infoPtr, settings, rndmPtr, 
-    particleDataPtr, particleWidthsPtrIn,
+    particleDataPtr, hadronWidthsPtrIn,
     &stringFrag, &ministringFrag))
     return false;
 
   // Initialize particle decays.
   decays.init(infoPtr, settings, particleDataPtr, rndmPtr,
-    particleWidthsPtrIn, couplingsPtr, timesDecPtr, &flavSel,
+    hadronWidthsPtrIn, couplingsPtr, timesDecPtr, &flavSel,
     decayHandlePtr, handledParticles);
 
   if (doRescatter && !settings.flag("Fragmentation:setVertices"))
@@ -246,6 +246,7 @@ bool HadronLevel::next(Event& event) {
 
   // Set lifetimes for already existing hadrons, like onia.
   for (int i = 0; i < event.size(); ++i)
+    if (event[i].isHadron() && event[i].tau() == 0)
       event[i].tau( event[i].tau0() * rndmPtr->exp() );
 
   // Remove junction structures.

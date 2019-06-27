@@ -289,8 +289,8 @@ public:
   // Cross sections for low energy hadron-hadron collisions
   LowEnergySigma lowEnergySigma;
 
-  // Handler for particles with mass-dependent widths
-  ParticleWidths particleWidths;
+  // Handler for hadrons with mass-dependent widths
+  HadronWidths hadronWidths;
 
 private:
 
