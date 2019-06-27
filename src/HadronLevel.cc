@@ -81,7 +81,7 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
   allowRH         = settings.flag("RHadrons:allow");
 
   // Allow decayed/rescattered particles to rescatter again
-  // @TODO scatterManyTimes = settings.flag("Rescattering:scatterManyTimes");
+  scatterManyTimes = settings.flag("Rescattering:scatterManyTimes");
 
   // Particles that should decay or not before Bose-Einstein stage.
   widthSepBE      = settings.parm("BoseEinstein:widthSep");
@@ -162,24 +162,24 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
 void HadronLevel::queueDecResc(Event& event, int iStart, 
   priority_queue<HadronLevel::PriorityNode>& queue)
 {
-  // @TODO Stress test and optimise if needed
   for (int iFirst = iStart; iFirst < event.size(); ++iFirst) 
   {
     Particle& hadA = event[iFirst];
     if (!hadA.isFinal())
       continue;
 
-    // @TODO Have the right upper mWidth bound here
+    // @TODO Have the correct upper mWidth bound here
+    // @TODO Can this include non-hadrons?
     if (doDecay && hadA.canDecay() && hadA.mayDecay()
     && (hadA.mWidth() > widthSepBE || hadA.id() == 311))
       queue.push(PriorityNode(iFirst, hadA.vDec()));
-
+      
     // Rescattering only for hadrons
     if (!hadA.isHadron())
       continue;
 
     // Loop over particle pairs
-    for (int iSecond = iFirstHad; iSecond < iFirst; ++iSecond) {
+    for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
       
       Particle& hadB = event[iSecond];
       if (!hadB.isFinal() || !hadB.isHadron())
@@ -201,7 +201,7 @@ void HadronLevel::queueDecResc(Event& event, int iStart,
       vA.rotbst(frame); vB.rotbst(frame);
       pA.rotbst(frame); pB.rotbst(frame);
 
-      // Offset first particle to position when the last particle is created
+      // Offset particles to position when the last particle is created
       double t0 = max(vA.e(), vB.e());
       double zA = vA.pz() + (t0 - vA.e()) * pA.pz() / pA.e();
       double zB = vB.pz() + (t0 - vB.e()) * pB.pz() / pB.e();
@@ -212,14 +212,14 @@ void HadronLevel::queueDecResc(Event& event, int iStart,
 
       // Calculate sigma and abort if impact parameter is too large
       double eCM = (pA + pB).mCalc();
-      double sigma = lowEnergySigmaPtr->sigmaTotal(hadA.idAbs(), hadB.idAbs(), eCM);
+      double sigma = lowEnergySigmaPtr->sigmaTotal(hadA.id(), hadB.id(), eCM);
       if ((vA - vB).pT2() > MB2MMSQ * sigma / M_PI)
         continue;
 
       // Calculate collision origin and transform to lab frame
-      double tCollision = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
+      double tColl = t0 - (zB - zA) / (pB.pz() / pB.e() - pA.pz() / pA.e());
       Vec4 origin(0.5 * (vA.px() + vB.px()), 0.5 * (vA.py() + vB.py()),
-                  zA + pA.pz() / pA.e() * (tCollision - t0), tCollision);
+                  zA + pA.pz() / pA.e() * (tColl - t0), tColl);
       frame.invert();
       origin.rotbst(frame);
 
@@ -245,9 +245,8 @@ bool HadronLevel::next(Event& event) {
   if (!decayOctetOnia(event)) return false;
 
   // Set lifetimes for already existing hadrons, like onia.
-  for (int i = 0; i < event.size(); ++i)
-    if (event[i].isHadron() && event[i].tau() == 0)
-      event[i].tau( event[i].tau0() * rndmPtr->exp() );
+  for (int i = 0; i < event.size(); ++i) if (event[i].isHadron())
+    event[i].tau( event[i].tau0() * rndmPtr->exp() );
 
   // Remove junction structures.
   if (!junctionSplitting.checkColours(event)) {
@@ -348,14 +347,9 @@ bool HadronLevel::next(Event& event) {
     // If rescattering is on, decays/rescatterings must happen in order
     else if (doRescatter) {
 
-      // Find first hadron
-      for (iFirstHad = 0; iFirstHad < event.size(); ++iFirstHad) 
-        if (event[iFirstHad].isFinal() && event[iFirstHad].isHadron())
-          break;
-
       priority_queue<PriorityNode> candidates; 
 
-      queueDecResc(event, iFirstHad, candidates);
+      queueDecResc(event, 0, candidates);
 
       while (!candidates.empty()) {
         PriorityNode node = candidates.top();

@@ -21,6 +21,10 @@ with some caution. Currently there are three different options available:
 
 <flag name="HadronLevel:Rescatter" default="off">
 </flag>
+<flag name="Rescattering:scatterManyTimes" default="on">
+When on, particles that have rescattered can scatter again.
+</flag>
+
 
 <modepick name="HadronScatter:mode" default="0" 
 min="0" max="2"> 
