@@ -298,7 +298,6 @@ public:
       && idSave < 9960000; }
   int    heaviestQuark(int idIn = 1)    const;
   int    baryonNumberType(int idIn = 1) const;
-  int    strangeness()                  const;
   int    nQuarksInCode(int idQIn)       const;
 
   // Reset to empty decay table.
@@ -700,9 +699,6 @@ public:
   int baryonNumberType(int idIn) {
     const ParticleDataEntry* ptr = findParticle(idIn);
     return ( ptr ) ? ptr->baryonNumberType(idIn) : 0 ; }
-  int strangeness(int idIn) {
-    const ParticleDataEntry* ptr = findParticle(idIn);
-    return ( ptr ) ? ptr->strangeness() : 0 ; }
   int nQuarksInCode(int idIn, int idQIn) {
     const ParticleDataEntry* ptr = findParticle(idIn);
     return ( ptr ) ? ptr->nQuarksInCode(idQIn) : 0 ; }

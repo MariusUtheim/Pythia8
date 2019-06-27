@@ -122,7 +122,7 @@ bool HadronWidths::readXML(istream& stream) {
           "Particle is not defined as hadron", std::to_string(id));
         continue;
       }
-      if (particleDataPtr->heaviestQuark(id) > 3) {
+      if (abs(entry->heaviestQuark(id)) > 3) {
         infoPtr->errorMsg("Error in HadronWidths:readXML: "
           "Particle contains a charmed or bottom hadron",
           std::to_string(id));

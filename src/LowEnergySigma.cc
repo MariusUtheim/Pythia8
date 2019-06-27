@@ -32,7 +32,7 @@ void LowEnergySigma::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
 
     // Insert id in signature map
     int signature = getSignature(particleDataPtr->isHadron(id), 
-      particleDataPtr->chargeType(id), particleDataPtr->strangeness(id));
+      particleDataPtr->chargeType(id), particleDataPtr->nQuarksInCode(id, 3));
     auto iter = signatureToParticles.find(signature);
     if (iter != signatureToParticles.end())
       iter->second.push_back(id);
@@ -260,8 +260,8 @@ double LowEnergySigma::aqm(int idA, int idB) const {
   double mesA = particleDataPtr->isMeson(idA);
   double mesB = particleDataPtr->isMeson(idB);
   return 40 * pow(2./3., mesA + mesB)
-       * (1 - 0.4 * abs(particleDataPtr->strangeness(idA)) / (mesA ? 2 : 3))
-       * (1 - 0.4 * abs(particleDataPtr->strangeness(idB)) / (mesB ? 2 : 3));
+    * (1 - 0.4 * abs(particleDataPtr->nQuarksInCode(idA, 3)) / (mesA ? 2 : 3))
+    * (1 - 0.4 * abs(particleDataPtr->nQuarksInCode(idB, 3)) / (mesB ? 2 : 3));
 }
 
 double LowEnergySigma::aqmNN() const {
@@ -698,22 +698,20 @@ double LowEnergySigma::XMResonant(int idX, int idM, double eCM) const {
   return sigmaRes;
 }
 
-int LowEnergySigma::getSignature(int baryonNumber, int charge, int strangeness) const {
+int LowEnergySigma::getSignature(int baryonNumber, int charge, int nStrange) const {
   return 100 * baryonNumber
        +  10 * ((charge >= 0) ? charge : (10 + charge))
-       +   1 * ((strangeness >= 0) ? strangeness : (10 + strangeness));
-
+       +   1 * nStrange;
 }
 
 vector<int> LowEnergySigma::possibleResonances(int idX, int idM) const {
-  int baryonNumber = particleDataPtr->isBaryon(idX)
-                   + particleDataPtr->isBaryon(idM);
-  int charge = particleDataPtr->chargeType(idX) 
-             + particleDataPtr->chargeType(idM);
-  int strangeness = particleDataPtr->strangeness(idX) 
-                  + particleDataPtr->strangeness(idM);
+  ParticleDataEntry* entryA = particleDataPtr->findParticle(idX);
+  ParticleDataEntry* entryB = particleDataPtr->findParticle(idM);
+  int baryonNumber = entryA->isBaryon() + entryB->isBaryon();
+  int charge = entryA->chargeType(idX) + entryB->chargeType(idM);
+  int nStrange = entryA->nQuarksInCode(3) + entryB->nQuarksInCode(3);
 
-  int signature = getSignature(baryonNumber, charge, strangeness);
+  int signature = getSignature(baryonNumber, charge, nStrange);
   auto iter = signatureToParticles.find(signature);
   return (iter != signatureToParticles.end()) ? iter->second : vector<int>();
 }
