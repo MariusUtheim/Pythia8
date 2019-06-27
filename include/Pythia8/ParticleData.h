@@ -582,6 +582,7 @@ public:
     const ParticleDataEntry* ptr = findParticle(idIn);
     return ( ptr ) ? ptr->hasAnti() : false; }
   int antiId(int idIn) const {
+    if (idIn < 0) return -idIn;
     const ParticleDataEntry* ptr = findParticle(idIn);
     return ( ptr ) ? ptr->antiId() : 0; }
   string name(int idIn) const {
