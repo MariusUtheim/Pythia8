@@ -574,10 +574,10 @@ bool LowEnergyHadHad::annihilation() {
     idcAnn  = -(1000 * max(iq4, iq5) + 100 * min( iq4, iq5)
             + ( (iq5 == iq4) ? 3 : 1 ));
   } else if (iqord.size() == 2 && iqbar.size() == 2) {
-    idcAnn  = 1000 * max(iqbar[0], iqbar[1]) + 100 * min( iqbar[0], iqbar[1])
-            + ( (iqbar[1] == iqbar[0]) ? 3 : 1 );
-    idacAnn = -(1000 * max(iqord[0], iqord[1]) + 100 * min( iqord[0], iqord[1])
-            + ( (iqord[1] == iqord[0]) ? 3 : 1 ));
+    idcAnn  = -(1000 * max(iqbar[0], iqbar[1]) + 100 * min( iqbar[0], iqbar[1])
+            + ( (iqbar[1] == iqbar[0]) ? 3 : 1 ));
+    idacAnn = 1000 * max(iqord[0], iqord[1]) + 100 * min( iqord[0], iqord[1])
+            + ( (iqord[1] == iqord[0]) ? 3 : 1 );
   } else {
     infoPtr->errorMsg( "Error in LowEnergyHadHad::annihilation: "
       "obtained unphysical flavour content");
@@ -830,7 +830,8 @@ pair< int, int> LowEnergyHadHad::splitFlav( int id) {
 
   // Done.
   infoPtr->errorMsg("Error in LowEnergyHadHad::splitFlav: "
-    "Split not handled. This indicates a bug.", std::to_string(id));
+    "Split not handled", 
+    std::to_string(id) + " in " + std::to_string(id1) + " + " + std::to_string(id2) + " @ " + std::to_string(eCM));
   // @TODO better plan B, decide what to do with heavy quarks
   if (id > 0) {
     if (iq1 == 0) return { iq2, -iq3 };
