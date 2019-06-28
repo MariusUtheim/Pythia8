@@ -38,6 +38,10 @@
 # VSCode
 .vscode/*
 
+# Main function
+sandbox/main.cc
+sandbox/mymain.cmnd
+
 # Sandbox output
 sandbox/*.py
 sandbox/*.dat
