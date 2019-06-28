@@ -89,7 +89,7 @@ bool LowEnergyProcess::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
 //      | 7: excitation | 8: annihilation | 9: resonant
 //      | >100: resonant through the specified resonance particle
 
-bool LowEnergyProcess::collide( int i1, int i2, int typeIn, Event& event,
+bool LowEnergyProcess::collide( int i1, int i2, int type, Event& event,
   Vec4 vtx) {
 
   // Check that incoming hadrons. Store current event size.
@@ -115,84 +115,91 @@ bool LowEnergyProcess::collide( int i1, int i2, int typeIn, Event& event,
   RotBstMatrix MtoCM = toCMframe( leEvent[1].p(), leEvent[2].p());
   leEvent.rotbst( MtoCM);
 
-  bool needHadronize;
-
-  
-
-  switch (typeIn) {
-    case 1:
-      if (!nondiff()) return false;
-      needHadronize = true; 
-      break;
-
-    case 2: case 3: case 4: case 5:
-      if (!eldiff( typeIn)) return false;
-      needHadronize = (typeIn != 2);
-      break;
-
-    case 6:
-      infoPtr->errorMsg( "Error in LowEnergyProcess::collide: "
-        "central diffraction (type = 6) is not yet implemented");
-      return false;
-
-    case 7:
-      if (!excitation()) return false;
-      needHadronize = false; 
-      break;
-
-    case 8:
-      if (!annihilation()) return false;
-      needHadronize = true;
-      break;
-
-    default:
-      if (abs(typeIn) > 100) {
-        if (!resonance(typeIn)) return false;
-        needHadronize = false;
-        break;
-      }
-      else {
-        infoPtr->errorMsg( "Error in LowEnergyProcess::collide: "
-          "invalid type code ", std::to_string(typeIn));
-        return false;
-      }
-  }
-
-  // Hadronize new strings if necessary.
-  if (needHadronize && !simpleHadronization( leEvent)) {
+  // Get code from type
+  int code;
+  if (type >= 1 && type <= 8 && type != 6)
+    code = type;
+  else if (abs(type) > 100)
+    code = 9;
+  else {
     infoPtr->errorMsg( "Error in LowEnergyProcess::collide: "
-      "no rescattering since hadronization failed");
+          "invalid type code ", std::to_string(type));
+    return false;
+  }
+  
+  // Perform collision specified by code
+  if      (code == 1)              { if (!nondiff())       return false; }
+  else if (code >= 2 && code <= 5) { if (!eldiff(type))    return false; }
+  else if (code == 7)              { if (!excitation())    return false; }
+  else if (code == 8)              { if (!annihilation())  return false; }
+  else if (code == 9)              { if (!resonance(type)) return false; }
+
+  // Hadronize new strings if necessary
+  bool needHadronize = (code == 1 || code == 3 || code == 4 || code == 5 
+                     || code == 8);
+  int iStartHadrons = needHadronize ? leEvent.size() : 3;
+  if (needHadronize && !simpleHadronization(leEvent)) {
+    infoPtr->errorMsg( "Error in LowEnergyProcess::collide: "
+      "hadronization failed");
     return false;
   }
 
-  // @TODO Is the event really necessary? Can functions just do this directly?
-  // Copy particles to the full event record
-  for (int i = 3; i < leEvent.size(); ++i) 
-    if (leEvent[i].isFinal() || verbose)
-      event.append( leEvent[i]);
-
-  // Boost from collision rest frame to event frame.
-  // Set status and mothers. Offset vertex info to collision vertex.
-  RotBstMatrix MfromCM = fromCMframe( event[i1].p(), event[i2].p());
+  // Set status and mothers.
   int mother1 = min(i1, i2);
   int mother2 = max(i1, i2);
+
+  // If verbose and there are intermediate quarks, mother and daughter
+  // indices must be copied carefully
+  if (verbose && needHadronize) {
+
+    // Offset between position in low energy event and position in full event
+    int indexOffset = sizeOld - 3;
+    
+    // Copy quarks and diquarks to event record
+    for (int i = 3; i < iStartHadrons; ++i) {
+      leEvent[i].mothers(mother2, mother1);
+      leEvent[i].daughter1(indexOffset + leEvent[i].daughter1());
+      leEvent[i].daughter2(indexOffset + leEvent[i].daughter2());
+      leEvent[i].status(-120 - code);
+      event.append(leEvent[i]);
+    }
+
+    // Copy hadrons to event record
+    for (int i = iStartHadrons; i < leEvent.size(); ++i) {
+      leEvent[i].mother1(indexOffset + leEvent[i].mother1());
+      leEvent[i].mother2(indexOffset + leEvent[i].mother2());
+      leEvent[i].status(110 + code);
+      event.append(leEvent[i]);
+    }
+
+    // Set daughters for original particles
+    event[i1].daughters(sizeOld, indexOffset + iStartHadrons - 1);
+    event[i2].daughters(sizeOld, indexOffset + iStartHadrons - 1);
+  }
+  // If only final hadrons should be shown, perform a simple copy operation
+  else {
+    // Insert hadrons in full event, all have the same mothers
+    for (int i = iStartHadrons; i < leEvent.size(); ++i) {
+      leEvent[i].mothers(mother2, mother1);
+      leEvent[i].status(110 + code);
+      event.append(leEvent[i]);
+    }
+
+    // Set daughters for original particles
+    event[i1].daughters(sizeOld, event.size() - 1);
+    event[i2].daughters(sizeOld, event.size() - 1);
+  }
+
+  // Boost particles from collision frame to event frame
+  RotBstMatrix MfromCM = fromCMframe( event[i1].p(), event[i2].p());
   for (int i = sizeOld; i < event.size(); ++i) {
     event[i].rotbst( MfromCM);
-    event[i].mothers( mother2, mother1 );
-    // @TBD Which status codes to use
-    // @TBD mother-daughter relation when verbose
-    if (event[i].isFinal())
-      event[i].status(910 + (abs(typeIn) < 10 ? typeIn : 9));
-    else
-      event[i].status(-(9910 + (abs(typeIn) < 10 ? typeIn : 9)));
     event[i].vProdAdd( vtx);
   }
 
-  // Mark incoming colliding hadrons as decayed. Set their daughters.
+  // Mark incoming colliding hadrons as decayed.
   event[i1].statusNeg();
   event[i2].statusNeg();
-  event[i1].daughters( sizeOld, event.size() - 1);
-  event[i2].daughters( sizeOld, event.size() - 1);
 
   // Done.
   return true;
