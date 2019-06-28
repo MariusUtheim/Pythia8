@@ -96,12 +96,14 @@ private:
   // Handle elastic and diffractive collisions.
   bool eldiff( int type);
 
+  // Handle excitation collisions.
   bool excitation();
-
-  bool resonance(int idRes);
 
   // Handle annihilation collisions.
   bool annihilation();
+
+  // Handle resonant collisions.
+  bool resonance(int idRes);
 
   // Simple version of hadronization for low-energy hadronic collisions.
   bool simpleHadronization(Event& event, bool isDiff = false);

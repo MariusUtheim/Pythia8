@@ -96,15 +96,11 @@ bool LowEnergyProcess::collide( int i1, int i2, int typeIn, Event& event,
   if (!event[i1].isHadron() || !event[i2].isHadron()) return false;
   sizeOld = event.size();
 
-  //  Hadron type and meson/baryon distinction.
-
+  // Store information abount incoming particles
   id1       = event[i1].id();
   id2       = event[i2].id();
-
   isBaryon1 = ( (abs(id1)/1000)%10 > 0 );
   isBaryon2 = ( (abs(id2)/1000)%10 > 0 );
-
-  //  Hadron masses and collision invariant mass.
   m1        = event[i1].m();
   m2        = event[i2].m();
   eCM       = (event[i1].p() + event[i2].p()).mCalc();
@@ -120,9 +116,12 @@ bool LowEnergyProcess::collide( int i1, int i2, int typeIn, Event& event,
   leEvent.rotbst( MtoCM);
 
   bool needHadronize;
+
+  
+
   switch (typeIn) {
     case 1:
-     if (!nondiff()) return false;
+      if (!nondiff()) return false;
       needHadronize = true; 
       break;
 
@@ -159,12 +158,15 @@ bool LowEnergyProcess::collide( int i1, int i2, int typeIn, Event& event,
       }
   }
 
-  // Hadronize new strings and move products to standard event record.
+  // Hadronize new strings if necessary.
   if (needHadronize && !simpleHadronization( leEvent)) {
     infoPtr->errorMsg( "Error in LowEnergyProcess::collide: "
       "no rescattering since hadronization failed");
     return false;
   }
+
+  // @TODO Is the event really necessary? Can functions just do this directly?
+  // Copy particles to the full event record
   for (int i = 3; i < leEvent.size(); ++i) 
     if (leEvent[i].isFinal() || verbose)
       event.append( leEvent[i]);
@@ -177,6 +179,8 @@ bool LowEnergyProcess::collide( int i1, int i2, int typeIn, Event& event,
   for (int i = sizeOld; i < event.size(); ++i) {
     event[i].rotbst( MfromCM);
     event[i].mothers( mother2, mother1 );
+    // @TBD Which status codes to use
+    // @TBD mother-daughter relation when verbose
     if (event[i].isFinal())
       event[i].status(910 + (abs(typeIn) < 10 ? typeIn : 9));
     else
@@ -189,8 +193,6 @@ bool LowEnergyProcess::collide( int i1, int i2, int typeIn, Event& event,
   event[i2].statusNeg();
   event[i1].daughters( sizeOld, event.size() - 1);
   event[i2].daughters( sizeOld, event.size() - 1);
-
-  // @TODO Add option to do decays?? Not to be done here for space-time tracing.
 
   // Done.
   return true;
@@ -436,22 +438,6 @@ bool LowEnergyProcess::excitation() {
   return true;
 }
 
-//-------------------------------------------------------------------------
-
-// Do a resonance formation and decay.
-
-bool LowEnergyProcess::resonance(int idRes) {
-
-  // Create the resonance
-  int iNew = leEvent.append(idRes, 919, 1,2,0,0, 0,0, Vec4(0,0,0,eCM), eCM);
-  leEvent[iNew].tau(HBARC * FM2MM / leEvent[iNew].mWidth() * rndmPtr->exp());
-
-  leEvent[1].daughters(iNew, 0); leEvent[1].statusNeg();
-  leEvent[2].daughters(iNew, 0); leEvent[2].statusNeg();
-
-  return true;
-}
-
 //--------------------------------------------------------------------------
 
 // Do an annihilation collision.
@@ -638,6 +624,22 @@ bool LowEnergyProcess::annihilation() {
   // Done.
   return true;
 
+}
+
+//-------------------------------------------------------------------------
+
+// Do a resonance formation and decay.
+
+bool LowEnergyProcess::resonance(int idRes) {
+
+  // Create the resonance
+  int iNew = leEvent.append(idRes, 919, 1,2,0,0, 0,0, Vec4(0,0,0,eCM), eCM);
+  leEvent[iNew].tau(HBARC * FM2MM / leEvent[iNew].mWidth() * rndmPtr->exp());
+
+  leEvent[1].daughters(iNew, 0); leEvent[1].statusNeg();
+  leEvent[2].daughters(iNew, 0); leEvent[2].statusNeg();
+
+  return true;
 }
 
 //--------------------------------------------------------------------------
