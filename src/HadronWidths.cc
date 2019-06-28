@@ -88,7 +88,6 @@ bool HadronWidths::readXML(istream& stream) {
 
       int maskA = intAttributeValue(line, "maskA");
       int maskB = intAttributeValue(line, "maskB");
-      // @TODO Check that masks produce valid particles
 
       double left  = doubleAttributeValue(line, "left");
       double right = doubleAttributeValue(line, "right");
@@ -105,34 +104,18 @@ bool HadronWidths::readXML(istream& stream) {
     else if (word1 == "<width") {
       completeTag(stream, line);
 
-      int id = intAttributeValue(line, "id");
-      if (id < 0) {
+      int id    = intAttributeValue(line, "id");
+
+      if (entries.find(id) != entries.end()) {
         infoPtr->errorMsg( "Error in HadronWidths::readXML: "
-          "Got negative id", std::to_string(id));
-        continue;
-      }
-      auto* entry = particleDataPtr->findParticle(id);
-      if (!entry) {
-        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
-          "Particle is not defined", std::to_string(id));
-        continue;
-      }
-      if (!entry->isHadron()) {
-        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
-          "Particle is not defined as hadron", std::to_string(id));
-        continue;
-      }
-      if (abs(entry->heaviestQuark(id)) > 3) {
-        infoPtr->errorMsg("Error in HadronWidths:readXML: "
-          "Particle contains a charmed or bottom hadron",
+          "resonance is defined more than once",
           std::to_string(id));
         continue;
       }
 
-      // @TODO: Add a shift to avoid the boundary region on the left side
-      double left = doubleAttributeValue(line, "left");
+      double left  = doubleAttributeValue(line, "left");
       double right = doubleAttributeValue(line, "right");
-      double m0 = doubleAttributeValue(line, "m0");
+      double m0    = doubleAttributeValue(line, "m0");
 
       istringstream dataStr(attributeValue(line, "data"));
       vector<double> data;
@@ -142,44 +125,25 @@ bool HadronWidths::readXML(istream& stream) {
 
       entries.emplace(id, Entry{m0, Interpolator(left, right, data), {}});
     }
+    // @TODO rename br to partial width
     else if (word1 == "<br") {
       completeTag(stream, line);
 
       int id = intAttributeValue(line, "id");
-      auto iter = entries.find(id);
-      if (iter == entries.end()) {
+      auto entryIter = entries.find(id);
+      if (entryIter == entries.end()) {
         infoPtr->errorMsg( "Error in HadronWidths::readXML: "
-          "got br for a particle with undefined or ill-defined width");
+          "got br for a particle with undefined or ill-defined width",
+          std::to_string(id));
         continue;
       }
 
       int lType = intAttributeValue(line, "lType");
-      if (lType == 0) {
-        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
-          "lType is not defined");
-        lType = 1;
-      }
-
+      
       istringstream productStr(attributeValue(line, "products"));
       int prod1, prod2;
       productStr >> prod1;
       productStr >> prod2;
-      
-      if (!particleDataPtr->isParticle(prod1) || !particleDataPtr->isParticle(prod2)) {
-        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
-          "decay product is not a particle",
-          std::to_string(id) + " --> " + productStr.str());
-        continue;
-      }
-
-      if (particleDataPtr->chargeType(prod1) + particleDataPtr->chargeType(prod2) 
-        != particleDataPtr->chargeType(id)) {
-
-        infoPtr->errorMsg( "Error in HadronWidths::readXML: "
-          "Charge not conserved in decay.", 
-          std::to_string(id) + " --> " + std::to_string(prod1) + " + " + std::to_string(prod2));
-        continue;
-      }
 
       istringstream dataStr(attributeValue(line, "data"));
       vector<double> data;
@@ -189,17 +153,108 @@ bool HadronWidths::readXML(istream& stream) {
 
       keyType key = getKey(id, prod1, prod2);
       
-      auto& entry = iter->second;
+      auto& entry = entryIter->second;
       Interpolator br(entry.widths.left(), entry.widths.right(), data);
       entry.decayChannels.emplace(key, DecayChannel{br, prod1, prod2, lType});
     }
   }
 
-  // @TODO Check that all particles that useMassDependentWidth have data
-
   return true;
 }
 
+bool HadronWidths::check() {
+
+  // Check that all excitations make sense
+  for (auto excitationChannel : excitationChannels) {
+    // Check that ids actually correspond to particles
+    for (int mask : { excitationChannel.maskA, excitationChannel.maskB })
+    for (int id : { mask + 2210, mask + 2110 })
+    if (!particleDataPtr->isParticle(id)) {
+      infoPtr->errorMsg("Error in HadronWidths::check: "
+        "excitation is not a particle", std::to_string(id));
+      return false;
+    }
+  }
+
+  // Check that all resonance entries make sense
+  for (auto entryPair : entries) {
+    int id = entryPair.first;
+    auto& entry = entryPair.second;
+    
+    // Check that entry id actually corresponds to a particle
+    if (!particleDataPtr->isParticle(id)) {
+      infoPtr->errorMsg("Error in HadronWidths::check: "
+        "resonance is not a particle", std::to_string(id));
+      return false;
+    }
+
+    // Check that entry id is positive (antiparticles are handled by symmetry)
+    if (id < 0) {
+      infoPtr->errorMsg("Error in HadronWidths::check: "
+        "resonance is an antiparticle", std::to_string(id));
+      return false;
+    }
+
+    // Check that entry id is positive (antiparticles are handled by symmetry)
+    if (!particleDataPtr->isHadron(id)) {
+      infoPtr->errorMsg("Error in HadronWidths::check: "
+        "resonance is not a hadron", std::to_string(id));
+      return false;
+    }
+
+    // Check that entry has no charm or bottom quarks
+    if (abs(particleDataPtr->heaviestQuark(id)) > 3) {
+      infoPtr->errorMsg("Error in HadronWidths::check: "
+        "resonance contains a charm or bottom quark", std::to_string(id));
+      return false;
+    }
+
+    // Check that all decay channels make sense
+    for (auto channelPair : entry.decayChannels) {
+      auto& channel = channelPair.second;
+      int idA = channel.idA, idB = channel.idB;
+      string channelStr = std::to_string(id) + " --> " 
+          + std::to_string(idA) + " + " + std::to_string(idB);
+
+      // Check that decay product ids actually correspond to particles
+      for (int idProd : { idA, idB }) 
+      if (!particleDataPtr->isParticle(idProd)) {
+        infoPtr->errorMsg("Error in HadronWidths::check: "
+          "decay product is not a particle", std::to_string(idProd));
+        return false;
+      }
+      // Check that lType makes sense
+      if (channel.lType == 0) {
+        infoPtr->errorMsg("Error in HadronWidths::check: "
+          "decay channel does not specify an lType", channelStr);
+        return false;
+      }
+
+      // Check that decay conserves charge (for debugging purposes)
+      if (particleDataPtr->chargeType(idA) + particleDataPtr->chargeType(idB)
+        != particleDataPtr->chargeType(id)) {
+        infoPtr->errorMsg("Error in HadronWidths::check: "
+          "decay does not conserve charge", channelStr);
+        return false;
+      }
+    }
+  }
+
+  // @TODO Check that all particles that useMassDependentWidth have data
+
+
+  return true;
+
+  // @TODO call check() whenever HadronWidths has been initialized
+
+
+  // Checks on decay channels:
+  //  -- Products are particles exists
+  //  -- Charge is conserved
+  //  -- lType makes sense
+
+  return true;
+}
 
 bool HadronWidths::_getEntryAndChannel(int idR, int idA, int idB, 
   const Entry*& entryOut, const DecayChannel*& channelOut) const {

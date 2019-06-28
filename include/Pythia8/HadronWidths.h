@@ -20,6 +20,8 @@ public:
 
   bool readXML(istream& stream);
 
+  bool check();
+
   // Returns whether the specified particle is handled by HadronWidths
   bool hasData(int id) const {
     auto iter = entries.find(abs(id));

@@ -121,8 +121,14 @@ Pythia::Pythia(string xmlDir, bool printBanner) :
   dataFile = xmlPath + "HadronWidths.xml";
   isConstructed = hadronWidths.init(&info, &rndm, &particleData, dataFile);
   if (!isConstructed) {
-    info.errorMsg("Abort from Pythia::Pythia: particle widths unavailable");
+    // @TBD: Abort even if rescattering is off?
+    info.errorMsg("Abort from Pythia::Pythia: hadron widths unavailable");
     return;
+  }
+  if (!hadronWidths.check()) {
+    info.errorMsg("Abort from Pythia::Pythia: "
+      "hadron widths did not initialize correctly");
+    return; 
   }
 
   // Write the Pythia banner to output.
