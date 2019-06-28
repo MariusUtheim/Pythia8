@@ -14,4 +14,7 @@ void test_compareDeltapT();
 void test_pT_distributions();
 void test_ClebschGordan();
 
+void test_Particle_sigmas_equals_antiparticle_sigmas();
+void test_Particles_pick_same_process_as_antiparticles();
+
 #endif
