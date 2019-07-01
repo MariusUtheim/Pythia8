@@ -506,6 +506,19 @@ bool HadronWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
 bool HadronWidths::pickExcitation(int idA, int idB, double eCM, 
   int& idCOut, double& mCOut, int& idDOut, double& mDOut) {
 
+  // No excitations for hadron with antihadron
+  if (idA * idB < 0)
+    return false;
+
+  bool isAnti = (idA < 0);
+  if (isAnti) {
+    idA = -idA; 
+    idB = -idB;
+  }
+
+  if (!(idA == 2112 || idA == 2212) || !(idA == 2112 || idA == 2212))
+    return false;
+
   // Pick an excitation channel
   vector<double> sigmas(excitationChannels.size());
   for (size_t i = 0; i < sigmas.size(); ++i)
@@ -527,8 +540,8 @@ bool HadronWidths::pickExcitation(int idA, int idB, double eCM,
     return false;
 
   // Set output values and return
-  idCOut = idCtmp; mCOut = mCtmp;
-  idDOut = idDtmp; mDOut = mDtmp;
+  idCOut = isAnti ? -idCtmp : idCtmp; mCOut = mCtmp;
+  idDOut = isAnti ? -idDtmp : idDtmp; mDOut = mDtmp;
   return true;
 }
 

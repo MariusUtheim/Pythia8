@@ -431,11 +431,8 @@ static vector<Vec4> phaseSpace(double eCM, vector<double> ms, Rndm* rndmPtr) {
 
 
 bool LowEnergyProcess::excitation() {
-  // Excitations are only implemented for NN
-  // @TODO: could also be NbarNbar
-  if (!(id1 == 2112 || id1 == 2212) || !(id2 == 2112 || id2 == 2212))
-    return false;
 
+  
   int idC, idD;
   double mC, mD;
   if (!hadronWidthsPtr->pickExcitation(id1, id2, eCM, idC, mC, idD, mD))
