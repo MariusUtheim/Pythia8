@@ -163,28 +163,23 @@ void HadronLevel::queueDecResc(Event& event, int iStart,
   for (int iFirst = iStart; iFirst < event.size(); ++iFirst) 
   {
     Particle& hadA = event[iFirst];
-    if (!hadA.isFinal())
+    if (!hadA.isFinal() || !hadA.isHadron())
       continue;
-
-    // @TODO Have the correct upper mWidth bound here
-    // @TODO Can this include non-hadrons?
+    
+    // Queue hadrons that should decay
     if (doDecay && hadA.canDecay() && hadA.mayDecay()
-    && (hadA.mWidth() > widthSepBE || hadA.id() == 311))
+    && (hadA.mWidth() > widthSepBE || hadA.id() == 311)) 
       queue.push(PriorityNode(iFirst, hadA.vDec()));
-      
-    // Rescattering only for hadrons
-    if (!hadA.isHadron())
-      continue;
 
     // Loop over particle pairs
     for (int iSecond = 0; iSecond < iFirst; ++iSecond) {
       
+      // @4TS verify the logic here
       Particle& hadB = event[iSecond];
       if (!hadB.isFinal() || !hadB.isHadron())
         continue;
 
       // Abort early if particles are moving away from each other
-      // @TODO verify the logic here
       if (dot3(hadB.p() / hadB.e() - hadA.p() / hadA.e(), 
                hadB.vProd() - hadA.vProd() ) > 0)
         continue;
@@ -221,7 +216,7 @@ void HadronLevel::queueDecResc(Event& event, int iStart,
       frame.invert();
       origin.rotbst(frame);
 
-      // Add rescattering candidate to queue
+      // Queue hadron that should rescatter
       queue.push(PriorityNode(iFirst, iSecond, origin));
     }
   }
