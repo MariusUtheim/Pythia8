@@ -117,6 +117,11 @@ constexpr double pow6(double x) {return x*x*x*x*x*x;}
 constexpr double pow7(double x) {return x*x*x*x*x*x*x;}
 constexpr double pow8(double x) {return x*x*x*x*x*x*x*x;}
 
+// Clamp a value between the two boundaries.
+constexpr double clamp( double v, double lo, double hi ) {
+  return (v < lo) ? lo : (hi < v) ? hi : v;
+}
+
 // Avoid problem with negative square root argument (from roundoff).
 inline double sqrtpos(const double& x) {return sqrt( max( 0., x));}
 

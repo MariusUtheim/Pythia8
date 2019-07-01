@@ -4,11 +4,6 @@
 
 namespace Pythia8 {
 
-// @TODO: Move this to a better place
-static double clamp(double x, double min, double max) {
-  return (x < min) ? min : (x > max) ? max : x;
-}
-
 //==========================================================================
 
 // The LowEnergySigma class.
