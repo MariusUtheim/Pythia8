@@ -1329,7 +1329,7 @@ bool Pythia::init() {
   if ( doProcessLevel && !processLevel.init( &info, settings, &particleData,
     &rndm, &beamA, &beamB, &beamGamA, &beamGamB, &beamVMDA, &beamVMDB,
     couplingsPtr, &sigmaTot, doLHA, &slhaInterface, userHooksPtr,
-    sigmaPtrs, phaseSpacePtrs) ) {
+    sigmaPtrs, phaseSpacePtrs, doNonPert) ) {
     info.errorMsg("Abort from Pythia::init: "
       "processLevel initialization failed");
     return false;
@@ -1398,8 +1398,6 @@ bool Pythia::init() {
   // Optionally check particle data table for inconsistencies.
   if ( settings.flag("Check:particleData") )
     particleData.checkTable( settings.mode("Check:levelParticleData") );
-
-  // @TODO Check particle widths table for inconsistencies
 
   // Optionally show settings and particle data, changed or all.
   bool showCS  = settings.flag("Init:showChangedSettings");

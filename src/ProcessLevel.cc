@@ -48,7 +48,8 @@ bool ProcessLevel::init( Info* infoPtrIn, Settings& settings,
   BeamParticle* beamVMDAPtrIn, BeamParticle* beamVMDBPtrIn,
   Couplings* couplingsPtrIn, SigmaTotal* sigmaTotPtrIn, bool doLHA,
   SLHAinterface* slhaInterfacePtrIn, UserHooks* userHooksPtrIn,
-  vector<SigmaProcess*>& sigmaPtrs, vector<PhaseSpace*>& phaseSpacePtrs) {
+  vector<SigmaProcess*>& sigmaPtrs, vector<PhaseSpace*>& phaseSpacePtrs,
+  bool doNonPertIn) {
 
   // Store input pointers for future use.
   infoPtr          = infoPtrIn;
@@ -81,19 +82,6 @@ bool ProcessLevel::init( Info* infoPtrIn, Settings& settings,
 
   // Send on some input pointers.
   resonanceDecays.init( infoPtr, particleDataPtr, rndmPtr);
-
-  // Option with nonperturbative processes.
-  // @TODO: Maybe pass this as a flag from Pythia?
-  doNonPert      = settings.flag("NonPerturbative:all")
-    || settings.flag("NonPerturbative:nonDiffractive") 
-    || settings.flag("NonPerturbative:elastic")
-    || settings.flag("NonPerturbative:singleDiffractive")
-    || settings.flag("NonPerturbative:singleDiffractiveAX")
-    || settings.flag("NonPerturbative:singleDiffractiveXB")
-    || settings.flag("NonPerturbative:doubleDiffractive")
-    || settings.flag("NonPerturbative:excitation")
-    || settings.flag("NonPerturbative:annihilation")
-    || settings.flag("NonPerturbative:resonant");
 
   // Set up SigmaTotal. Store sigma_nondiffractive for future use.
   sigmaTotPtr->init( infoPtr, settings, particleDataPtr, rndmPtr);
@@ -179,7 +167,7 @@ bool ProcessLevel::init( Info* infoPtrIn, Settings& settings,
   }
 
   // If no processes found then refuse to do anything.
-  if ( int(containerPtrs.size()) == 0 && !doNonPert) {
+  if ( int(containerPtrs.size()) == 0 && !doNonPertIn) {
     infoPtr->errorMsg("Error in ProcessLevel::init: "
       "no process switched on");
     return false;
@@ -333,7 +321,7 @@ bool ProcessLevel::init( Info* infoPtrIn, Settings& settings,
   }
 
   // If sum of maxima vanishes then refuse to do anything.
-  if ( (numberOn == 0  || sigmaMaxSum <= 0.) && !doNonPert) {
+  if ( (numberOn == 0  || sigmaMaxSum <= 0.) && !doNonPertIn) {
     infoPtr->errorMsg("Error in ProcessLevel::init: "
       "all processes have vanishing cross sections");
     return false;

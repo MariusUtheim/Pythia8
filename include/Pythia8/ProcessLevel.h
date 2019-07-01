@@ -39,8 +39,7 @@ public:
   // Constructor.
   ProcessLevel() : doSecondHard(), doSameCuts(), allHardSame(), noneHardSame(),
     someHardSame(), cutsAgree(), cutsOverlap(), doResDecays(), doISR(),
-    doMPI(), doWt2(), doNonPert(), startColTag(), maxPDFreweight(), 
-    mHatMin1(), mHatMax1(),
+    doMPI(), doWt2(), startColTag(), maxPDFreweight(), mHatMin1(), mHatMax1(),
     pTHatMin1(), pTHatMax1(), mHatMin2(), mHatMax2(), pTHatMin2(), pTHatMax2(),
     sigmaND(), beamHasGamma(), gammaMode(), iContainer(), iLHACont(-1),
     sigmaMaxSum(), i2Container(), sigma2MaxSum(), infoPtr(), particleDataPtr(),
@@ -59,7 +58,8 @@ public:
     BeamParticle* beamVMDAPtrIn, BeamParticle* beamVMDBPtrIn,
     Couplings* couplingsPtrIn, SigmaTotal* sigmaTotPtrIn, bool doLHAin,
     SLHAinterface* slhaInterfacePtrIn, UserHooks* userHooksPtrIn,
-    vector<SigmaProcess*>& sigmaPtrs, vector<PhaseSpace*>& phaseSpacePtrs);
+    vector<SigmaProcess*>& sigmaPtrs, vector<PhaseSpace*>& phaseSpacePtrs,
+    bool doNonPertIn);
 
   // Store or replace Les Houches pointer.
   void setLHAPtr( LHAup* lhaUpPtrIn) {lhaUpPtr = lhaUpPtrIn;
@@ -99,7 +99,7 @@ private:
 
   // Generic info for process generation.
   bool   doSecondHard, doSameCuts, allHardSame, noneHardSame, someHardSame,
-         cutsAgree, cutsOverlap, doResDecays, doISR, doMPI, doWt2, doNonPert;
+         cutsAgree, cutsOverlap, doResDecays, doISR, doMPI, doWt2;
   int    startColTag;
   double maxPDFreweight, mHatMin1, mHatMax1, pTHatMin1, pTHatMax1, mHatMin2,
          mHatMax2, pTHatMin2, pTHatMax2, sigmaND;
