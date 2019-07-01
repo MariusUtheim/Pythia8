@@ -358,7 +358,7 @@ bool HadronLevel::next(Event& event) {
         // Perform the queued action
         if (node.isDecay()) {
           decays.decay(node.i1, event);
-          // @TODO If there is moreToDo, those things should also be handled in order?
+          // @TBD If there is moreToDo, those things should also be handled in order?
           if (decays.moreToDo()) decaysCausedHadronization = true;
         }
         else {
@@ -371,9 +371,21 @@ bool HadronLevel::next(Event& event) {
         }
 
         // Check for new interactions
-        // @TODO Allow decays of rescattered hadrons without allowing second rescatterings
         if (scatterManyTimes)
           queueDecResc(event, oldSize, candidates);
+        // @4TS Verify logic, @TODO test that the right hadrons decay before BE
+        else if (doDecay) {
+          // If multiple rescattering is off, particles can still decay again
+          for (int i = oldSize; i < event.size(); ++i) {
+            if (event[i].isFinal() && event[i].isHadron()
+            && event[i].canDecay() && event[i].mayDecay()
+            && (event[i].mWidth() > widthSepBE || event[i].id() == 311)) {
+              decays.decay(i, event);
+              if (decays.moreToDo())
+                decaysCausedHadronization = true;
+            }
+          }
+        }
       }
     }
 
@@ -385,10 +397,11 @@ bool HadronLevel::next(Event& event) {
  
     // Fourth part: sequential decays also of long-lived particles.
     if (doDecay) {
-      decaysCausedHadronization = decays.decayAll(event);
+      if (decays.decayAll(event))
+        decaysCausedHadronization = true;
     }
 
-  // @TODO If not done, the next time around, rescatterings are not in order
+  // @TBD Do we need special considerations for dealing with more rescatters?
   // Normally done first time around, but sometimes not.
   // (e.g. Upsilon decay can cause create unstable hadrons).
   } while (decaysCausedHadronization);
