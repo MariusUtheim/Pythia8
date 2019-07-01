@@ -2593,27 +2593,27 @@ bool Pythia::nextNonPert() {
   process.append(idB, -12, 0, 0, 0, 0, 0, 0, Vec4(0., 0., pzBcm, eB), mB, 0. );
   for (int i = 0; i < 3; ++i) event.append( process[i] );
 
-
+  // Pick process type
   int procType;
   if (doNonPertall) {
+    // If all processes are on, just call LowEnergySigma directly
     procType = lowEnergySigma.pickProcess(idA, idB, eCM);
     if (procType == 0) {
       info.errorMsg("Error in Pythia::nextNonPert: "
-        "No available processes for specified particles and energy");
+        "no available processes for specified particles and energy");
       return false;
     }
   }
   else {
+    // If only certain processes are on, calculate partial cross sections
     vector<double> sigmas(nonPertProcesses.size());
     bool hasAny = false;
     for (size_t i = 0; i < nonPertProcesses.size(); ++i) {
       double sig = lowEnergySigma.sigmaPartial(idA, idB, eCM, 
                                                nonPertProcesses[i]);
       if (sig == 0)
-        // @TODO: Give different error messages for processes with sigma = 0 
-        //        everywhere vs. processes that are illegal for just this eCM
         info.errorMsg("Warning in Pythia::nextNonPert: "
-          "A process with zero cross section was explicitly turned on: ",
+          "a process with zero cross section was explicitly turned on",
           std::to_string(nonPertProcesses[i]));
       else {
         hasAny = true;
@@ -2621,20 +2621,23 @@ bool Pythia::nextNonPert() {
       }
     }
 
+    // If no processes returned a positive cross section
     if (!hasAny) {
       info.errorMsg("Error in Pythia::nextNonPert: "
-        "No available processes have been turned on");
+        "no available processes have been turned on");
       return false;
     }
 
+    // Pick process
     procType = nonPertProcesses[rndm.pick(sigmas)];
   }
 
+  // For type = 9, pick specific resonance
   if (procType == 9) {
     procType = lowEnergySigma.pickResonance(idA, idB, eCM);
     if (procType == 0) {
       info.errorMsg("Error in Pythia::nextNonPert: "
-        "No available resonances for the given particles and energy");
+        "no available resonances for the given particles and energy");
       return false;
     }
   }
