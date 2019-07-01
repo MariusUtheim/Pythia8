@@ -152,26 +152,34 @@ bool LowEnergyProcess::collide( int i1, int i2, int type, Event& event,
     // Offset between position in low energy event and position in full event
     int indexOffset = sizeOld - 3;
     
-    // Copy quarks and diquarks to event record
-    for (int i = 3; i < iStartHadrons; ++i) {
-      leEvent[i].mothers(mother2, mother1);
-      leEvent[i].daughter1(indexOffset + leEvent[i].daughter1());
-      leEvent[i].daughter2(indexOffset + leEvent[i].daughter2());
-      leEvent[i].status(-120 - code);
-      event.append(leEvent[i]);
-    }
-
-    // Copy hadrons to event record
-    for (int i = iStartHadrons; i < leEvent.size(); ++i) {
-      leEvent[i].mother1(indexOffset + leEvent[i].mother1());
-      leEvent[i].mother2(indexOffset + leEvent[i].mother2());
-      leEvent[i].status(110 + code);
-      event.append(leEvent[i]);
-    }
-
     // Set daughters for original particles
     event[i1].daughters(sizeOld, indexOffset + iStartHadrons - 1);
     event[i2].daughters(sizeOld, indexOffset + iStartHadrons - 1);
+
+    // Copy particles to event record
+    for (int i = 3; i < leEvent.size(); ++i) {
+      
+      if (i < iStartHadrons)
+        // If mothers are the original particles, set those
+        leEvent[i].mothers(mother2, mother1);
+      else {
+        // Otherwise, shift the mothers to the correct place in full record
+        leEvent[i].mother1(indexOffset + leEvent[i].mother1());
+        leEvent[i].mother2(indexOffset + leEvent[i].mother2());
+      }
+
+      // Set status and daughters if not final
+      if (leEvent[i].isFinal())
+        leEvent[i].status(110 + code);
+      else {
+        leEvent[i].status(-120 - code);
+        leEvent[i].daughter1(indexOffset + leEvent[i].daughter1());
+        leEvent[i].daughter2(indexOffset + leEvent[i].daughter2());
+      }
+      
+      event.append(leEvent[i]);
+    }
+
   }
   // If only final hadrons should be shown, perform a simple copy operation
   else {
