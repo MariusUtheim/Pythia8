@@ -450,7 +450,7 @@ bool LowEnergyProcess::excitation() {
 //--------------------------------------------------------------------------
 
 // Do an annihilation collision.
-// @TODO Unsolved: how handle K0S and K0L, which have alternating flavours??
+// @TBD Unsolved: how handle K0S and K0L, which have alternating flavours??
 
 bool LowEnergyProcess::annihilation() {
 
@@ -503,6 +503,7 @@ bool LowEnergyProcess::annihilation() {
   }
 
   // Annihilate one quark-antiquark pair at random among options.
+  // @4TS: Is this necessary? Note that int always rounds down (also later)
   int iAnn = max( 0, min( int(iord.size()) - 1,
     int(iord.size() * rndmPtr->flat()) ));
   iqord[iord[iAnn]] = iqord.back();
@@ -838,7 +839,7 @@ pair< int, int> LowEnergyProcess::splitFlav( int id) {
   infoPtr->errorMsg("Error in LowEnergyProcess::splitFlav: "
     "Split not handled", 
     std::to_string(id) + " in " + std::to_string(id1) + " + " + std::to_string(id2) + " @ " + std::to_string(eCM));
-  // @TODO better plan B, decide what to do with heavy quarks
+  // @TBD better plan B, decide what to do with heavy quarks
   if (id > 0) {
     if (iq1 == 0) return { iq2, -iq3 };
     else return { iq1, 10 * iq2 + iq3 };

@@ -221,7 +221,7 @@ bool SigmaTotal::calc(int idA, int idB, double eCM) {
   else                       sigDiffPtr = new SigmaABMST();
 
   // Initialize and calculate for selected diffractive class.
-  // @TODO: This check always fails, because they are separate pointers
+  // @4TS: This check always fails, because they are separate pointers
   if (sigDiffPtr != sigTotElPtr)
     sigDiffPtr->init( infoPtr, *settingsPtr, particleDataPtr, rndmPtr);
   if ( !sigDiffPtr->calcDiff( idA, idB, s, mA, mB) ) return false;

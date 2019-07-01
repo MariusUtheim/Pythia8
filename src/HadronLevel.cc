@@ -418,7 +418,7 @@ bool HadronLevel::next(Event& event) {
 
 bool HadronLevel::moreDecays( Event& event) {
 
-  // @TODO: It so happens that HadronLevel::moreDecays is called from 
+  // @TDB: It so happens that HadronLevel::moreDecays is called from 
   //   Pythia::nextNonPert, and there is no other check to whether doDecays 
   //   is set. Perhaps there should be such a case somewhere, or perhaps 
   //   this function should not actually be called at that point.

@@ -1203,7 +1203,7 @@ bool ParticleData::readFF(istream& is, bool reset) {
       if (isParticle(idTmp)) pdt.erase(idTmp);
 
       // Store new particle. Save pointer, to be used for decay channels.
-      // @TODO: Include MDW
+      // @TBD: Include MDW
       addParticle( idTmp, nameTmp, antiNameTmp, spinTypeTmp, chargeTypeTmp,
         colTypeTmp, m0Tmp, mWidthTmp, mMinTmp, mMaxTmp, tau0Tmp);
       particlePtr = particleDataEntryPtr(idTmp);
@@ -1491,7 +1491,7 @@ void ParticleData::listFF(string outFile) {
     // Else start over completely from scratch.
     } else {
       if (isParticle(idTmp)) pdt.erase(idTmp);
-      // @TODO: Include useMDW
+      // @TBD: Include useMDW
       addParticle( idTmp, nameTmp, antiNameTmp, spinTypeTmp, chargeTypeTmp,
         colTypeTmp, m0Tmp, mWidthTmp, mMinTmp, mMaxTmp, tau0Tmp);
     }

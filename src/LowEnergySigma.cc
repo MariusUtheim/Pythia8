@@ -276,12 +276,12 @@ static double HERAFit(double a, double b, double n, double c, double d, double p
 
 // Baryon-Baryon section
 
-/**@TODO list for BB:
- *  Check that the tables are correct and sufficiently smooth, compare w/ data
- *  Implement strangeness exchange
- *  Implement parametrisation for Lambda+p and Sigma+p special cases
- *  Implement D+N and D+D collisions
- *  Do something abour charm and bottom? 
+/** Todo list for BB:
+ * @TODO Check that the tables are correct and sufficiently smooth, compare w/ data
+ * @TODO Implement strangeness exchange
+ * @TODO Implement parametrisation for Lambda+p and Sigma+p special cases
+ * @TODO Implement D+N and D+D collisions
+ * @TODO Do something abour charm and bottom? 
  **/
 
 // === Begin interpolation data for NN cross sections ===
@@ -517,15 +517,15 @@ double LowEnergySigma::BBExcite(int idA, int idB, double eCM) const {
 
 // Baryon-Antibaryon section
 
-/**@TODO list for BBbar:
- *  Check that sNN is correct
- *  UrQMD actually uses Regge fit instead of HERA fit for sigmaTotNN
- *  sigmaTotNN and sigmaElNN do not match data well for pLab < 0.3
- *  Should there be a different parametrisation for npbar?
- *  Check that the aqmFactor is correct (should we use the elastic one?)
- *  Figure out if the annihilation cross section parametrisation is up to date
- *  Decide how to split the diffractive cross sections among specific processes
- *  Compare with data cases: ppbar, npbar, +others?
+/**TODO list for BBbar:
+ * @TODO Check that sNN is correct
+ * @TODO UrQMD actually uses Regge fit instead of HERA fit for sigmaTotNN
+ * @TODO sigmaTotNN and sigmaElNN do not match data well for pLab < 0.3
+ * @TODO Should there be a different parametrisation for npbar?
+ * @TODO Check that the aqmFactor is correct (should we use the elastic one?)
+ * @TODO Figure out if the annihilation cross section parametrisation is up to date
+ * @TODO Decide how to split the diffractive cross sections among specific processes
+ * @TODO Compare with data cases: ppbar, npbar, +others?
  * */
 
 double LowEnergySigma::BBbarTotal(int idA, int idB, double eCM) const {
@@ -546,6 +546,7 @@ double LowEnergySigma::BBbarTotal(int idA, int idB, double eCM) const {
                    : HERAFit(38.4, 77.6, -0.64, 0.26, -1.2, pLab);
 
   // Scale by AQM factor
+  // @TODO should this be elastic AQM factor?
   return sigmaTotNN * aqm(idA, idB) / aqmNN();
 }
 
@@ -624,17 +625,18 @@ double LowEnergySigma::BBbarAnnihilation(int idA, int idB, double eCM) const {
 
 // Hadron-Meson section
 
-/**@TODO list for XM:
- *  Consider parametrising ppiTotal, and define diff = total - res - elastic
- *  Parametrise other cases explicitly, such as other pi+N and K+N
- *  Get full elastic cross section (i.e. include resonant elastic)
- *  Something with strangeness exchange?
- *  UrQMD includes something about Danielewicz forward delay
- *  Decide which resonances should be implemented
- *  Check that all excited particles have the correct data, including id
- *  Verify that mass-dependent widths are correct for all particles, esp. rho
- *  Compare pi/K + p cross sections to PDG data
- *  Compare a lot of cases to UrQMD
+/**TODO list for XM:
+ * @TODO Diffraction using SaSDL
+ * @TODO Consider parametrising ppiTotal, and define diff = total - res - elastic
+ * @TODO Parametrise other cases explicitly, such as other pi+N and K+N
+ * @TODO Get full elastic cross section (i.e. include resonant elastic)
+ * @TODO Something with strangeness exchange?
+ * @TODO UrQMD includes something about Danielewicz forward delay
+ * @TODO Decide which resonances should be implemented
+ * @TODO Check that all excited particles have the correct data, including id
+ * @TODO Verify that mass-dependent widths are correct for all particles, esp. rho
+ * @TODO Compare pi/K + p cross sections to PDG data
+ * @TODO Compare a lot of cases to UrQMD
  **/
 
 static Interpolator ppiStringData(1.9, 3.19642, {
@@ -672,7 +674,7 @@ double LowEnergySigma::XMNonDiffractive(int idX, int idM, double eCM) const {
 double LowEnergySigma::XMElastic(int idX, int idM, double eCM) const {
   if (particleDataPtr->isBaryon(idX)) 
     // Use parametrisation of ppi and scale by an aqm factor
-    // @TODO: Should this scale by the elastic aqm or the total aqm?
+    // @TBD: Should this scale by the elastic aqm or the total aqm?
     return ppiElData(eCM) * pow(aqm(idX, idM) / aqm(2212, 211), 2./3.);
   else
     // For meson-meson, return a fixed cross section

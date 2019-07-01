@@ -2393,7 +2393,7 @@ bool MergingHooks::doVetoEmission( const Event& event) {
   int nJetMax = nMaxJets();
   // Always remove emissions above the merging scale for
   // samples containing reclusterings!
-  if ( nRecluster() > 0 ) nSteps = max(1, min(nJetMax-2, 1));
+  if ( nRecluster() > 0 ) nSteps = max(1, min(nJetMax-2, 1)); // @4TS Always sets nSteps to 1
   // Check veto condition
   if ( nSteps - 1 < nJetMax && nSteps >= 1 && tnow > tms() ) veto = true;
 

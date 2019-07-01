@@ -6,7 +6,6 @@ namespace Pythia8 {
 typedef pair<int, int> keyType;
 
 // @TODO Clean up these static functions
-// @TODO Go through error messages
 
 static string attributeValue(string line, string attribute) {
   if (line.find(attribute) == string::npos) return "";
@@ -359,7 +358,6 @@ bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   }
   Entry& entry = iter->second;
 
-  // @TODO: Maybe an mPeak that is different from m0 will be more efficient
   double mMin = entry.widths.left(), 
          mMax = min(entry.widths.right(), eCM - mB),
          mPeak = particleDataPtr->m0(idRes),
