@@ -125,7 +125,9 @@ Pythia::Pythia(string xmlDir, bool printBanner) :
     info.errorMsg("Abort from Pythia::Pythia: hadron widths unavailable");
     return;
   }
-  if (!hadronWidths.check()) {
+
+  isConstructed = hadronWidths.check();
+  if (!isConstructed) {
     info.errorMsg("Abort from Pythia::Pythia: "
       "hadron widths did not initialize correctly");
     return; 

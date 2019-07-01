@@ -523,6 +523,10 @@ public:
   // Return the id of the sequentially next particle stored in table.
   int nextId(int idIn) ;
 
+  // Define iterators over entries
+  map<int, ParticleDataEntry>::iterator begin() { return pdt.begin(); }
+  map<int, ParticleDataEntry>::iterator end()   { return pdt.end();   }
+
   // Change current values one at a time (or set if not set before).
   void name(int idIn, string nameIn) {
     ParticleDataEntry* ptr = findParticle(idIn);

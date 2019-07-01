@@ -240,18 +240,14 @@ bool HadronWidths::check() {
     }
   }
 
-  // @TODO Check that all particles that useMassDependentWidth have data
-
-
-  return true;
-
-  // @TODO call check() whenever HadronWidths has been initialized
-
-
-  // Checks on decay channels:
-  //  -- Products are particles exists
-  //  -- Charge is conserved
-  //  -- lType makes sense
+  for (auto& entry : *particleDataPtr) {
+    if (entry.second.useMassDependentWidth() && !hasData(entry.first)) {
+      infoPtr->errorMsg("Error in HadronWidths::check: "
+        "particle uses mass dependent width, but width is not defined", 
+        std::to_string(entry.first));
+      return false;
+    }
+  }
 
   return true;
 }
