@@ -272,6 +272,53 @@ static double HERAFit(double a, double b, double n, double c, double d, double p
   return a + b * pow(p, n) + c * pow2(log(p)) + d * log(p);
 }
 
+double LowEnergySigma::calcAX(int idA, int idB, double eCM,
+  double lBound, double mBound) const {
+
+  // @TODO: Diffractive scattering is only implemented for NN collisions
+  if ((idA != 2212 && idA != 2112) || (idB != 2212 && idB != 2112))
+    return 0.;
+
+  // No continuous diffraction in the resonance region
+  if (eCM < lBound) 
+    return 0.;
+
+  // Interpolate between resonance region and beginning of SaSDL region
+  double t = 1.;
+  if (eCM < mBound) {
+    t = (eCM - lBound) / (mBound - lBound);
+    eCM = mBound;
+  }
+  
+  // Calculate cross section from SaSDL
+  sigmaSaSDL.calcDiff(idA, idB, eCM * eCM, 
+                      particleDataPtr->m0(idA), particleDataPtr->m0(idB));
+  return t * sigmaSaSDL.sigAX;
+}
+
+double LowEnergySigma::calcXX(int idA, int idB, double eCM,
+  double lBound, double mBound) const {
+  // @TODO: Diffractive scattering is only implemented for NN collisions
+  if ((idA != 2212 && idA != 2112) || (idB != 2212 && idB != 2112))
+    return 0.;
+
+  // No continuous diffraction in the resonance region
+  if (eCM < lBound) 
+    return 0.;
+
+  // Interpolate between resonance region and beginning of SaSDL region
+  double t = 1.;
+  if (eCM < mBound) {
+    t = (eCM - lBound) / (mBound - lBound);
+    eCM = mBound;
+  }
+  
+  // Calculate cross section from SaSDL
+  sigmaSaSDL.calcDiff(idA, idB, eCM * eCM, 
+                      particleDataPtr->m0(idA), particleDataPtr->m0(idB));
+  return t * sigmaSaSDL.sigXX;
+}
+
 //--------------------------------------------------------------------------
 
 // Baryon-Baryon section
@@ -448,53 +495,17 @@ double LowEnergySigma::BBNonDiff(int idA, int idB, double eCM) const {
         - BBDiffractiveXX(idA, idB, eCM) - BBExcite(idA, idB, eCM);
 }
 
+
 double LowEnergySigma::BBDiffractiveAX(int idA, int idB, double eCM) const {
-
-  // @TODO: Diffractive scattering is only implemented for NN collisions
-  if ((idA != 2212 && idA != 2112) || (idB != 2212 && idB != 2112))
-    return 0.;
-
-  // No continuous diffraction in the resonance region
-  if (eCM < NNExciteThreshold) 
-    return 0.;
-
-  // Interpolate between resonance region and beginning of SaSDL region
-  double t = 1.;
-  if (eCM < SaSDLThreshold) {
-    t = (eCM - NNExciteThreshold) / (SaSDLThreshold - NNExciteThreshold);
-    eCM = SaSDLThreshold;
-  }
-  
-  // Calculate cross section from SaSDL
-  sigmaSaSDL.calcDiff(idA, idB, eCM * eCM, 
-                      particleDataPtr->m0(idA), particleDataPtr->m0(idB));
-  return t * sigmaSaSDL.sigAX;
+  return calcAX(idA, idB, eCM, SaSDLThreshold, NNExciteThreshold);
 }
 
 double LowEnergySigma::BBDiffractiveXB(int idA, int idB, double eCM) const {
-  return BBDiffractiveAX(idB, idA, eCM);
+  return calcAX(idB, idA, eCM, SaSDLThreshold, NNExciteThreshold);
 }
 
 double LowEnergySigma::BBDiffractiveXX(int idA, int idB, double eCM) const {
-  // @TODO: Diffractive scattering is only implemented for NN collisions
-  if ((idA != 2212 && idA != 2112) || (idB != 2212 && idB != 2112))
-    return 0.;
-
-  // No continuous diffraction in the resonance region
-  if (eCM < NNExciteThreshold) 
-    return 0.;
-
-  // Interpolate between resonance region and beginning of SaSDL region
-  double t = 1.;
-  if (eCM < SaSDLThreshold) {
-    t = (eCM - NNExciteThreshold) / (SaSDLThreshold - NNExciteThreshold);
-    eCM = SaSDLThreshold;
-  }
-  
-  // Calculate cross section from SaSDL
-  sigmaSaSDL.calcDiff(idA, idB, eCM * eCM, 
-                      particleDataPtr->m0(idA), particleDataPtr->m0(idB));
-  return t * sigmaSaSDL.sigXX;
+  return calcXX(idA, idB, eCM, SaSDLThreshold, NNExciteThreshold);
 }
 
 double LowEnergySigma::BBExcite(int idA, int idB, double eCM) const {

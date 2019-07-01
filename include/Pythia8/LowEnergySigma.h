@@ -62,6 +62,9 @@ private:
   double aqm(int idA, int idB) const;
   // Get AQM nucleon-nucleon cross section (always 40 mb). For scale factors
   double aqmNN() const;
+  
+  double calcAX(int idA, int idB, double eCM, double lBound, double mBound) const;
+  double calcXX(int idA, int idB, double eCM, double lBound, double mBound) const;
 
   // BB partial cross sections
   double BBTotal(int idA, int idB, double eCM) const;
@@ -94,7 +97,7 @@ private:
   // @TODO: Make a more intutive system?
   // The signature of a particle is the three digit number BQS, where B is 
   // baryon number, Q is charge signature and S is number of strange quarks.
-  // A resonance can be formed only if it conserves the total signature. 
+  // A resonance cannot be formed unless it conserves the total signature. 
   // The charge signature of a particle with charge q is given by chargeType if
   // charge is positive and 10 + chargeType if it is negative. This way, charge
   // signature is always positive. Strangeness signature is defined similarly.
