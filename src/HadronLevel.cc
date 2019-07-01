@@ -37,7 +37,7 @@ public:
 
   // Priority comparison to be used by priority_queue
   // Note that lower t means higher priority!
-  // @TODO: allow the user to pick the comparer (time-ordering problem)?
+  // @FUTURE: allow the user to pick the comparer (time-ordering problem)?
   bool operator<(const PriorityNode& r) const
   { return origin.e() > r.origin.e(); }
 
@@ -71,6 +71,13 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
   doRescatter     = settings.flag("HadronLevel:Rescatter");
   doBoseEinstein  = settings.flag("HadronLevel:BoseEinstein");
 
+  // Check settings for rescattering
+  if (doRescatter && !settings.flag("Fragmentation:setVertices")) {
+    infoPtr->errorMsg("Error in HadronLevel::init: HadronLevel:Rescatter "
+      "is on, but Fragmentation:setVertices is off");
+    return false;
+  }
+
   // Boundary mass between string and ministring handling.
   mStringMin      = settings.parm("HadronLevel:mStringMin");
 
@@ -79,9 +86,6 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
 
   // Allow R-hadron formation.
   allowRH         = settings.flag("RHadrons:allow");
-
-  // Allow decayed/rescattered particles to rescatter again
-  scatterManyTimes = settings.flag("Rescattering:scatterManyTimes");
 
   // Particles that should decay or not before Bose-Einstein stage.
   widthSepBE      = settings.parm("BoseEinstein:widthSep");
@@ -95,6 +99,9 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
   doFlavour       = settings.flag("Ropewalk:doFlavour");
   doVertex        = settings.flag("PartonVertex:setVertex");
   doBuffon        = settings.flag("Ropewalk:doBuffon");
+
+  // Allow decayed/rescattered particles to rescatter again
+  scatterManyTimes = settings.flag("Rescattering:scatterManyTimes");
 
   // Initialize Ropewalk and Flavour Ropes.
   if (doRopes) {
@@ -116,23 +123,14 @@ bool HadronLevel::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
   ministringFrag.init(infoPtr, settings, particleDataPtr, rndmPtr,
     &flavSel, &pTSel, &zSel);
 
-  // Initialize low energy.
-  if (!lowEnergyProcess.init(infoPtr, settings, rndmPtr, 
-    particleDataPtr, hadronWidthsPtrIn,
-    &stringFrag, &ministringFrag))
-    return false;
-
   // Initialize particle decays.
   decays.init(infoPtr, settings, particleDataPtr, rndmPtr,
     hadronWidthsPtrIn, couplingsPtr, timesDecPtr, &flavSel,
     decayHandlePtr, handledParticles);
 
-  if (doRescatter && !settings.flag("Fragmentation:setVertices"))
-  {
-    // @TODO Handle error message correctly and at the right location
-    infoPtr->errorMsg("Error in HadronLevel::init: HadronLevel:Rescatter "
-      "is on, but Fragmentation:setVertices is off.");
-  }
+  // Initialize low energy.
+  lowEnergyProcess.init(infoPtr, settings, rndmPtr, 
+    particleDataPtr, hadronWidthsPtrIn, &stringFrag, &ministringFrag);
 
   // Initialize BoseEinstein.
   boseEinstein.init(infoPtr, settings, *particleDataPtr);

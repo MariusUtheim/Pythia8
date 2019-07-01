@@ -37,7 +37,7 @@ public:
     stringFragPtr(), ministringFragPtr() {}
 
   // Initialize the class.
-  bool init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
+  void init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
     ParticleData* particleDataPtrIn, HadronWidths* hadronWidthsPtrIn,
     StringFragmentation* stringFragPtrIn,
     MiniStringFragmentation* ministringFragPtrIn);

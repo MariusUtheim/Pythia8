@@ -36,7 +36,7 @@ const double LowEnergyProcess::ALPHAPRIME = 0.25;
 
 // Initialize the LowEnergyProcess class as required.
 
-bool LowEnergyProcess::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
+void LowEnergyProcess::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
   ParticleData* particleDataPtrIn, HadronWidths* hadronWidthsPtrIn,
   StringFragmentation* stringFragPtrIn,
   MiniStringFragmentation* ministringFragPtrIn) {
@@ -75,9 +75,6 @@ bool LowEnergyProcess::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
 
   // Initialize collision event record.
   leEvent.init( "(low energy event)", particleDataPtr);
-
-  // Done.
-  return true;
 
 }
 
