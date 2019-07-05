@@ -125,14 +125,14 @@ bool HadronWidths::readXML(istream& stream) {
       entries.emplace(id, Entry{m0, Interpolator(left, right, data), {}});
     }
     // @TODO rename br to partial width
-    else if (word1 == "<br") {
+    else if (word1 == "<partialWidth") {
       completeTag(stream, line);
 
       int id = intAttributeValue(line, "id");
       auto entryIter = entries.find(id);
       if (entryIter == entries.end()) {
         infoPtr->errorMsg( "Error in HadronWidths::readXML: "
-          "got br for a particle with undefined or ill-defined width",
+          "got partial width for a particle with undefined total width",
           std::to_string(id));
         continue;
       }
@@ -153,7 +153,7 @@ bool HadronWidths::readXML(istream& stream) {
       keyType key = getKey(id, prod1, prod2);
       
       auto& entry = entryIter->second;
-      Interpolator br(entry.widths.left(), entry.widths.right(), data);
+      Interpolator br(entry.width.left(), entry.width.right(), data);
       entry.decayChannels.emplace(key, DecayChannel{br, prod1, prod2, lType});
     }
   }
@@ -279,21 +279,21 @@ vector<int> HadronWidths::getResonances() const {
 
 double HadronWidths::width(int id, double eCM) const {
   auto iter = entries.find(abs(id));
-  return (iter != entries.end()) ? iter->second.widths(eCM) : 0.;
+  return (iter != entries.end()) ? iter->second.width(eCM) : 0.;
 }
 
 double HadronWidths::branchingRatio(int idR, int idA, int idB, double m) const {
   const Entry* entry;
   const DecayChannel* channel;
   return _getEntryAndChannel(idR, idA, idB, entry, channel)
-       ? channel->br(m) : 0.;
+       ? channel->partialWidth(m) / entry->width(m) : 0.;
 }
 
 double HadronWidths::partialWidth(int idR, int idA, int idB, double m) const {
   const Entry* entry;
   const DecayChannel* channel;
   return _getEntryAndChannel(idR, idA, idB, entry, channel)
-       ? entry->widths(m) * channel->br(m) : 0.;
+       ? channel->partialWidth(m) : 0.;
 }
 
 
@@ -358,8 +358,8 @@ bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   }
   Entry& entry = iter->second;
 
-  double mMin = entry.widths.left(), 
-         mMax = min(entry.widths.right(), eCM - mB),
+  double mMin = entry.width.left(), 
+         mMax = min(entry.width.right(), eCM - mB),
          mPeak = particleDataPtr->m0(idRes),
          m0 = particleDataPtr->m0(idRes);
 
@@ -373,7 +373,7 @@ bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
     return false;
   }
 
-  double gamma = entry.widths(mPeak);
+  double gamma = entry.width(mPeak);
 
   // Scale factor is chosen based on what empirically gives sufficient
   // accuracy and a high efficiency.
@@ -412,7 +412,7 @@ bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
     
     // Rejection step
     double yDistr = pow(pCMS(eCM, mCand, mB), lType) 
-                  * breitWigner(entry.widths(mCand), mCand - m0);
+                  * breitWigner(entry.width(mCand), mCand - m0);
   
     if (rndmPtr->flat() * envelope < yDistr) {
       mAOut = mCand;
@@ -465,22 +465,24 @@ bool HadronWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
 
   // Pick decay channel
   vector<pair<int, int>> prodss;
-  vector<double> brs;
+  vector<double> sigmas;
   bool gotAny = false;
   for (const auto& channel : entry.decayChannels) {
-    prodss.push_back(channel.first);
-    double br = channel.second.br(m);
-    if (br > 0) gotAny = true;
-    brs.push_back(br);
+    double sigma = channel.second.partialWidth(m);
+    if (sigma > 0) {
+      gotAny = true;
+      prodss.push_back(channel.first);
+      sigmas.push_back(sigma);
+    }
   }
 
   if (!gotAny) {
     infoPtr->errorMsg("Warning in HadronWidths::pickDecay: "
-      "no channels have positive branching ratios");
+      "no channels have positive widths");
     return false;
   }
   
-  auto prods = prodss[rndmPtr->pick(brs)];
+  auto prods = prodss[rndmPtr->pick(sigmas)];
   auto lType = entry.decayChannels.at(prods).lType;
 
   if (lType == 0) {

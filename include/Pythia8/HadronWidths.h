@@ -58,7 +58,7 @@ private:
   typedef pair<int, int> keyType;
 
   struct DecayChannel {
-    Interpolator br;
+    Interpolator partialWidth;
     int idA, idB, lType;
   };
 
@@ -69,7 +69,7 @@ private:
 
   struct Entry {
     double m0;
-    Interpolator widths;
+    Interpolator width;
     map<keyType, DecayChannel> decayChannels;
   };
 
