@@ -277,6 +277,16 @@ static double HERAFit(double a, double b, double n, double c, double d, double p
   return a + b * pow(p, n) + c * pow2(log(p)) + d * log(p);
 }
 
+static double HPR1R2(double p, double r1, double r2, double mA, double mB, double s) {
+  static constexpr double H    = 0.2720;
+  static constexpr double M    = 2.1206;
+  static constexpr double eta1 = 0.4473;
+  static constexpr double eta2 = 0.5486;
+  
+  double ss = s / pow2(mA + mB + M);
+  return p + H * pow2(log(ss)) + r1 * pow(ss, -eta1) + r2 * pow(ss, -eta2);
+}
+
 double LowEnergySigma::calcAX(int idA, int idB, double eCM,
   double lBound, double mBound) const {
 
@@ -441,18 +451,30 @@ constexpr double SaSDLThreshold = 8.;
 
 
 double LowEnergySigma::BBTotal(int idA, int idB, double eCM) const {
+  // @TODO HPR1R2 fits for Sigma- p+
   // Use parametrisation for pp/nn
   if ((idA == 2212 && idB == 2212) || (idA == 2112 && idB == 2112)) {
-    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
-    return (1 - t) * ppTotalData(eCM) 
-               + t * ReggeFit(35.45, 42.53, 33.34, eCM * eCM);
+    if (eCM < 5.) 
+      return ppTotalData(eCM);
+    else
+      return HPR1R2(34.41, 13.07, -7.394, particleDataPtr->m0(idA), particleDataPtr->m0(idB), eCM * eCM);
+    
+
+//    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
+//    return (1 - t) * ppTotalData(eCM) 
+//               + t * ReggeFit(35.45, 42.53, 33.34, eCM * eCM);
+//               //+ t * HPR1R2(34.41, 13.07, -7.394, particleDataPtr->m0(idA), particleDataPtr->m0(idB), eCM * eCM);
   }
   // Use parametrisation for pn
   else if (idA == 2212 && idB == 2112)
   {
-    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
-    return (1 - t) * pnTotalData(eCM) 
-               + t * ReggeFit(35.80, 40.15, 30.00, eCM * eCM);
+    if (eCM < 5.)
+      return pnTotalData(eCM);
+    else 
+      return HPR1R2(34.71, 12.52, -6.66, particleDataPtr->m0(idA), particleDataPtr->m0(idB), eCM * eCM);
+//    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
+//    return (1 - t) * pnTotalData(eCM) 
+//               + t * ReggeFit(35.80, 40.15, 30.00, eCM * eCM);
   }
   // @TODO: Something special for Delta1232+N or Delta1232+Delta1232
   // ...
@@ -498,15 +520,15 @@ double LowEnergySigma::BBNonDiff(int idA, int idB, double eCM) const {
 
 
 double LowEnergySigma::BBDiffractiveAX(int idA, int idB, double eCM) const {
-  return calcAX(idA, idB, eCM, SaSDLThreshold, NNExciteThreshold);
+  return calcAX(idA, idB, eCM, NNExciteThreshold, SaSDLThreshold);
 }
 
 double LowEnergySigma::BBDiffractiveXB(int idA, int idB, double eCM) const {
-  return calcAX(idB, idA, eCM, SaSDLThreshold, NNExciteThreshold);
+  return calcAX(idB, idA, eCM, NNExciteThreshold, SaSDLThreshold);
 }
 
 double LowEnergySigma::BBDiffractiveXX(int idA, int idB, double eCM) const {
-  return calcXX(idA, idB, eCM, SaSDLThreshold, NNExciteThreshold);
+  return calcXX(idA, idB, eCM, NNExciteThreshold, SaSDLThreshold);
 }
 
 double LowEnergySigma::BBExcite(int idA, int idB, double eCM) const {
@@ -549,7 +571,8 @@ double LowEnergySigma::BBbarTotal(int idA, int idB, double eCM) const {
   double sNN = 4 * pow2(m0) + (sBB - pow2(mA + mB)) 
                             * (sBB - pow2(mA - mB)) / sBB;
   double pLab = sqrt(sNN * (sNN - 4. * m0 * m0)) / (2. * m0);
-  
+
+  // @TODO HPR1R2 fits?  
   // Get parametrised cross section for ppbar
   double sigmaTotNN =
       (pLab < 0.3) ? 271.6 * exp(-1.1 * pLab * pLab)

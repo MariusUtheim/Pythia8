@@ -40,6 +40,7 @@ public:
 
   // Picks a resonance according to their partial cross sections
   int pickResonance(int idA, int idB, double eCM);
+  vector<int> possibleResonances(int idX, int idM) const;
 
 private:
 
@@ -90,9 +91,11 @@ private:
   double XMTotal(int idX, int idM, double eCM) const;
   double XMNonDiffractive(int idX, int idM, double eCM) const;
   double XMElastic(int idX, int idM, double eCM) const;
+  double XMDiffractiveAX(int idX, int idM, double eCM) const;
+  double XMDiffractiveXB(int idX, int idM, double eCM) const;
+  double XMDiffractiveXX(int idX, int idM, double eCM) const;
   double XMResonant(int idX, int idM, double eCM) const;
   double XMResonantPartial(int idX, int idM, int idR, double eCM) const;
-  vector<int> possibleResonances(int idX, int idM) const;
 
   // @TODO: Make a more intutive system?
   // The signature of a particle is the three digit number BQS, where B is 
