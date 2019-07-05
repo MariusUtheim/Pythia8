@@ -136,8 +136,10 @@ bool LowEnergySigma::sigmaPartial(int idA, int idB, double eCM,
       return true;
 
     case 3: case 4: // XM
-      procsOut = { 1, 2 };
-      sigmasOut = { XMNonDiffractive(idA, idB, eCM), XMElastic(idA, idB, eCM)};
+      procsOut = { 1, 2, 3, 4, 5 };
+      sigmasOut = { XMNonDiffractive(idA, idB, eCM), XMElastic(idA, idB, eCM),
+        XMDiffractiveAX(idA, idB, eCM), XMDiffractiveXB(idA, idB, eCM),
+        XMDiffractiveXX(idA, idB, eCM) };
       // Add resonances with nonzero cross sections
       for (auto idR : possibleResonances(idA, idB)) {
         double sigmaRes = XMResonantPartial(idA, idB, idR, eCM);
@@ -196,6 +198,9 @@ double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM,
       switch (type) {
         case 1: return XMNonDiffractive(idA, idB, eCM);
         case 2: return XMElastic(idA, idB, eCM);
+        case 3: return XMDiffractiveAX(idA, idB, eCM);
+        case 4: return XMDiffractiveXB(idA, idB, eCM);
+        case 5: return XMDiffractiveXX(idA, idB, eCM);
         case 9: return XMResonant(idA, idB, eCM);
         default:
           return abs(type) > 100 ? XMResonantPartial(idA, idB, type, eCM) : 0.;
@@ -274,10 +279,6 @@ static double HERAFit(double a, double b, double n, double c, double d, double p
 
 double LowEnergySigma::calcAX(int idA, int idB, double eCM,
   double lBound, double mBound) const {
-
-  // @TODO: Diffractive scattering is only implemented for NN collisions
-  if ((idA != 2212 && idA != 2112) || (idB != 2212 && idB != 2112))
-    return 0.;
 
   // No continuous diffraction in the resonance region
   if (eCM < lBound) 
@@ -587,15 +588,36 @@ double LowEnergySigma::BBbarNonDiff(int idA, int idB, double eCM) const {
 }
 
 double LowEnergySigma::BBbarDiffractiveAX(int idA, int idB, double eCM) const {
-  return BBDiffractiveAX(idA, -idB, eCM);
+  // Calculate effective energy, i.e. energy of protons with the same momenta
+  double m0 = particleDataPtr->m0(2212);
+  double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
+  double sBB = pow2(eCM);
+  double sNN = 4 * pow2(m0) + (sBB - pow2(mA + mB)) 
+                            * (sBB - pow2(mA - mB)) / sBB;
+
+  return calcAX(2212, -2212, sNN, 3.8, 8.0) * aqm(idA, idB) / aqmNN();
 }
 
 double LowEnergySigma::BBbarDiffractiveXB(int idA, int idB, double eCM) const {
-  return BBDiffractiveXB(idA, -idB, eCM);
+  // Calculate effective energy, i.e. energy of protons with the same momenta
+  double m0 = particleDataPtr->m0(2212);
+  double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
+  double sBB = pow2(eCM);
+  double sNN = 4 * pow2(m0) + (sBB - pow2(mA + mB)) 
+                            * (sBB - pow2(mA - mB)) / sBB;
+
+  return calcAX(-2212, 2212, sNN, 3.8, 8.0) * aqm(idA, idB) / aqmNN();
 }
 
 double LowEnergySigma::BBbarDiffractiveXX(int idA, int idB, double eCM) const {
-  return BBDiffractiveXX(idA, -idB, eCM);
+  // Calculate effective energy, i.e. energy of protons with the same momenta
+  double m0 = particleDataPtr->m0(2212);
+  double mA = particleDataPtr->m0(idA), mB = particleDataPtr->m0(idB);
+  double sBB = pow2(eCM);
+  double sNN = 4 * pow2(m0) + (sBB - pow2(mA + mB)) 
+                            * (sBB - pow2(mA - mB)) / sBB;
+
+  return calcXX(2212, -2212, sNN, 3.8, 8.0) * aqm(idA, idB) / aqmNN();
 }
 
 double LowEnergySigma::BBbarAnnihilation(int idA, int idB, double eCM) const {
@@ -677,7 +699,8 @@ double LowEnergySigma::XMTotal(int idX, int idM, double eCM) const {
 }
 
 double LowEnergySigma::XMNonDiffractive(int idX, int idM, double eCM) const {
-  double sigmappi = ppiStringData(eCM);
+  double sigmappi = ppiStringData(eCM) - XMDiffractiveAX(idX, idM, eCM)
+    - XMDiffractiveXB(idX, idM, eCM) - XMDiffractiveXX(idX, idM, eCM);
   double aqmFactor = aqm(idX, idM) / aqm(2212, 211);
   return sigmappi * aqmFactor;
 }
@@ -690,6 +713,38 @@ double LowEnergySigma::XMElastic(int idX, int idM, double eCM) const {
   else
     // For meson-meson, return a fixed cross section
     return 5.;
+}
+
+double LowEnergySigma::XMDiffractiveAX(int idX, int idM, double eCM) const {
+  // If SaS/DL can handle these particles 
+  if ((idX == 2212 || idX == 2112) && (abs(idM) == 211 || idM == 111
+      || abs(idM) == 213 || idM == 113 || idM == 333 || idM == 443))
+    return calcAX(idX, idM, eCM, 1.9, 3.0);
+  else {
+    // @TBD What otherwise?
+    return 0.;
+  }
+}
+
+double LowEnergySigma::XMDiffractiveXB(int idX, int idM, double eCM) const {
+  // If SaS/DL can handle these particles 
+  if ((idX == 2212 || idX == 2112) && (abs(idM) == 211 || idM == 111
+      || abs(idM) == 213 || idM == 113 || idM == 333 || idM == 443))
+    return calcAX(idM, idX, eCM, 1.9, 3.0);
+  else {
+    // @TBD What otherwise?
+    return 0.;
+  }
+}
+double LowEnergySigma::XMDiffractiveXX(int idX, int idM, double eCM) const {
+  // If SaS/DL can handle these particles 
+  if ((idX == 2212 || idX == 2112) && (abs(idM) == 211 || idM == 111
+      || abs(idM) == 213 || idM == 113 || idM == 333 || idM == 443))
+    return calcXX(idX, idM, eCM, 1.9, 3.0);
+  else {
+    // @TBD What otherwise?
+    return 0.;
+  }
 }
 
 double LowEnergySigma::XMResonant(int idX, int idM, double eCM) const {
