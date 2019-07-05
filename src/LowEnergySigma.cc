@@ -531,7 +531,6 @@ double LowEnergySigma::BBExcite(int idA, int idB, double eCM) const {
 
 /**TODO list for BBbar:
  * @TODO Check that sNN is correct
- * @TODO UrQMD actually uses Regge fit instead of HERA fit for sigmaTotNN
  * @TODO sigmaTotNN and sigmaElNN do not match data well for pLab < 0.3
  * @TODO Should there be a different parametrisation for npbar?
  * @TODO Check that the aqmFactor is correct (should we use the elastic one?)
@@ -555,10 +554,9 @@ double LowEnergySigma::BBbarTotal(int idA, int idB, double eCM) const {
   double sigmaTotNN =
       (pLab < 0.3) ? 271.6 * exp(-1.1 * pLab * pLab)
     : (pLab < 5.)  ? 75.0 + 43.1 / pLab + 2.6 / pow2(pLab) - 3.9 * pLab
-                   : HERAFit(38.4, 77.6, -0.64, 0.26, -1.2, pLab);
+    :                HERAFit(38.4, 77.6, -0.64, 0.26, -1.2, pLab);
 
   // Scale by AQM factor
-  // @TODO should this be elastic AQM factor?
   return sigmaTotNN * aqm(idA, idB) / aqmNN();
 }
 
