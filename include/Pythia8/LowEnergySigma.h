@@ -40,6 +40,7 @@ public:
 
   // Picks a resonance according to their partial cross sections
   int pickResonance(int idA, int idB, double eCM);
+
   vector<int> possibleResonances(int idX, int idM) const;
 
 private:
