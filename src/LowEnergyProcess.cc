@@ -81,12 +81,12 @@ void LowEnergyProcess::init(Info* infoPtrIn, Settings& settings,Rndm* rndmPtrIn,
 //--------------------------------------------------------------------------
 
 // Produce outgoing primary hadrons from collision of incoming pair.
-// type | 1: nondiff; | 2 : el; | 3: SD (XB); | 4: SD (AX);
+// proc | 1: nondiff; | 2 : el; | 3: SD (XB); | 4: SD (AX);
 //      | 5: DD;  | 6: CD (AXB, not implemented) 
 //      | 7: excitation | 8: annihilation | 9: resonant
 //      | >100: resonant through the specified resonance particle
 
-bool LowEnergyProcess::collide( int i1, int i2, int type, Event& event,
+bool LowEnergyProcess::collide( int i1, int i2, int proc, Event& event,
   Vec4 vtx) {
 
   // Check that incoming hadrons. Store current event size.
@@ -112,24 +112,24 @@ bool LowEnergyProcess::collide( int i1, int i2, int type, Event& event,
   RotBstMatrix MtoCM = toCMframe( leEvent[1].p(), leEvent[2].p());
   leEvent.rotbst( MtoCM);
 
-  // Get code from type
+  // Get code from proc
   int code;
-  if (type >= 1 && type <= 8 && type != 6)
-    code = type;
-  else if (abs(type) > 100)
+  if (proc >= 1 && proc <= 8 && proc != 6)
+    code = proc;
+  else if (abs(proc) > 100)
     code = 9;
   else {
     infoPtr->errorMsg( "Error in LowEnergyProcess::collide: "
-          "invalid type code ", std::to_string(type));
+          "invalid process code ", std::to_string(proc));
     return false;
   }
   
   // Perform collision specified by code
   if      (code == 1)              { if (!nondiff())       return false; }
-  else if (code >= 2 && code <= 5) { if (!eldiff(type))    return false; }
+  else if (code >= 2 && code <= 5) { if (!eldiff(proc))    return false; }
   else if (code == 7)              { if (!excitation())    return false; }
   else if (code == 8)              { if (!annihilation())  return false; }
-  else if (code == 9)              { if (!resonance(type)) return false; }
+  else if (code == 9)              { if (!resonance(proc)) return false; }
 
   // Hadronize new strings if necessary
   bool needHadronize = (code == 1 || code == 3 || code == 4 || code == 5 
@@ -276,13 +276,13 @@ bool LowEnergyProcess::nondiff() {
 //--------------------------------------------------------------------------
 
 // Do an elastic or diffractive scattering.
-// type = 2: elastic; = 3: SD (XB); = 4: SD (AX); = 5: DD.
+// proc = 2: elastic; = 3: SD (XB); = 4: SD (AX); = 5: DD.
 
-bool LowEnergyProcess::eldiff( int type) {
+bool LowEnergyProcess::eldiff( int proc) {
 
   // Classify process type.
-  bool excite1 = (type == 3 || type == 5);
-  bool excite2 = (type == 4 || type == 5);
+  bool excite1 = (proc == 3 || proc == 5);
+  bool excite2 = (proc == 4 || proc == 5);
 
   // Find excited mass ranges.
   mA           = m1;
@@ -388,7 +388,7 @@ bool LowEnergyProcess::eldiff( int type) {
     * (sA - sB) / sCM + sqrtpos(lambda12 *  lambdaAB) / sCM);
   double tUpp     = ( (sA - s1) * (sB - s2) + (s1 + sB - s2 - sA)
     * (s1 * sB - s2 * sA) / sCM ) / tLow;
-  double bNow     = bSlope( type);
+  double bNow     = bSlope( proc);
   double eBtLow   = exp( bNow * tLow);
   double eBtUpp   = exp( bNow * tUpp);
   double tNow     = log( eBtLow + rndmPtr->flat() * (eBtUpp - eBtLow) ) / bNow;
@@ -945,7 +945,7 @@ double LowEnergyProcess::mThreshold( int iq1, int iq2) {
 
 // Pick slope b of exp(b * t) for elastic and diffractive events.
 
-double LowEnergyProcess::bSlope( int type) {
+double LowEnergyProcess::bSlope( int proc) {
 
   // Steeper slope for baryons than mesons.
   // To do: charm and bottom should have smaller slopes.
@@ -953,12 +953,12 @@ double LowEnergyProcess::bSlope( int type) {
   double bB = (isBaryon2) ? 2.3 : 1.4;
 
   // Elastic slope.
-  if (type == 2)
+  if (proc == 2)
     return 2. * bA + 2. * bB + 2. * ALPHAPRIME * log(ALPHAPRIME * sCM);
 
   // Single diffractive slope for XB and AX, respectively.
-  if (type == 3) return 2. * bB + 2. * ALPHAPRIME * log(sCM / (mA * mA));
-  if (type == 4) return 2. * bA + 2. * ALPHAPRIME * log(sCM / (mB * mB));
+  if (proc == 3) return 2. * bB + 2. * ALPHAPRIME * log(sCM / (mA * mA));
+  if (proc == 4) return 2. * bA + 2. * ALPHAPRIME * log(sCM / (mB * mB));
 
   // Double diffractive slope.
   return 2. * ALPHAPRIME * log(exp(4.) + sCM / (ALPHAPRIME * pow2(mA * mB)) );

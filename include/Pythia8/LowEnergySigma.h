@@ -23,17 +23,17 @@ public:
   double sigmaTotal(int idA, int idB, double eCM) const;
 
   // Get the partial cross section for the specified collision and process.
-  // type | 0: mix; | 1: nondiff; | 2 : el; | 3: SD (XB); | 4: SD (AX);
+  // proc | 0: mix; | 1: nondiff; | 2 : el; | 3: SD (XB); | 4: SD (AX);
   //      | 5: DD;  | 6: CD (AXB, not implemented) 
   //      | 7: excitation | 8: annihilation | 9: resonant
   //      | >100: resonant through the specified resonance particle
-  double sigmaPartial(int idA, int idB, double eCM, int type) const;
+  double sigmaPartial(int idA, int idB, double eCM, int proc) const;
 
   // Gets all partial cross sections for the specified collision. 
   // This is used when all cross sections are needed to determine which 
   // process to execute. Returns false if no processes are available.
   bool sigmaPartial(int idA, int idB, double eCM, 
-    vector<int>& typesOut, vector<double>& sigmasOut) const;
+    vector<int>& procsOut, vector<double>& sigmasOut) const;
 
   // Picks a process randomly according to their partial cross sections
   int pickProcess(int idA, int idB, double eCM);

@@ -3,6 +3,13 @@
 
 namespace Pythia8 {
 
+//==========================================================================
+
+// The HadronWidths class.
+
+//--------------------------------------------------------------------------
+
+// @TODO Typedef is temporary for now. Remove when architecture is final
 typedef pair<int, int> keyType;
 
 // @TODO Clean up these static functions
@@ -42,7 +49,10 @@ static void completeTag(istream& stream, string& line) {
   } 
 }
 
+//--------------------------------------------------------------------------
+
 // Gets key for the decay and flips idR if necessary
+
 keyType HadronWidths::getKey(int& idR, int idA, int idB) const {
 
   if (idR < 0) {
@@ -57,6 +67,7 @@ keyType HadronWidths::getKey(int& idR, int idA, int idB) const {
     return { idA, idB };
 }
 
+//--------------------------------------------------------------------------
 
 bool HadronWidths::init(Info* infoPtrIn, Rndm* rndmPtrIn,
   ParticleData* particleDataPtrIn, string path) {
@@ -72,6 +83,8 @@ bool HadronWidths::init(Info* infoPtrIn, Rndm* rndmPtrIn,
   }
   return readXML(stream);
 }
+
+//--------------------------------------------------------------------------
 
 bool HadronWidths::readXML(istream& stream) {
 
@@ -114,7 +127,7 @@ bool HadronWidths::readXML(istream& stream) {
 
       double left  = doubleAttributeValue(line, "left");
       double right = doubleAttributeValue(line, "right");
-      double m0    = doubleAttributeValue(line, "m0");
+      double mPeak = doubleAttributeValue(line, "mPeak");
 
       istringstream dataStr(attributeValue(line, "data"));
       vector<double> data;
@@ -122,9 +135,8 @@ bool HadronWidths::readXML(istream& stream) {
       while (dataStr >> currentData)
         data.push_back(currentData);
 
-      entries.emplace(id, Entry{m0, Interpolator(left, right, data), {}});
+      entries.emplace(id, Entry{mPeak, Interpolator(left, right, data), {}});
     }
-    // @TODO rename br to partial width
     else if (word1 == "<partialWidth") {
       completeTag(stream, line);
 
@@ -160,6 +172,8 @@ bool HadronWidths::readXML(istream& stream) {
 
   return true;
 }
+
+//--------------------------------------------------------------------------
 
 bool HadronWidths::check() {
 
@@ -251,8 +265,10 @@ bool HadronWidths::check() {
   return true;
 }
 
-bool HadronWidths::_getEntryAndChannel(int idR, int idA, int idB, 
-  const Entry*& entryOut, const DecayChannel*& channelOut) const {
+//--------------------------------------------------------------------------
+
+bool HadronWidths::getEntryAndChannel(int idR, int idA, int idB, 
+  Entry& entryOut, DecayChannel& channelOut) const {
 
   auto key = getKey(idR, idA, idB);
 
@@ -264,11 +280,12 @@ bool HadronWidths::_getEntryAndChannel(int idR, int idA, int idB,
   if (channelIter == entryIter->second.decayChannels.end())
     return false;
   
-  entryOut   = &entryIter->second;
-  channelOut = &channelIter->second;
+  entryOut   = entryIter->second;
+  channelOut = channelIter->second;
   return true;
 }
 
+//--------------------------------------------------------------------------
 
 vector<int> HadronWidths::getResonances() const {
   vector<int> resonances;
@@ -277,30 +294,37 @@ vector<int> HadronWidths::getResonances() const {
   return resonances;
 }
 
+//--------------------------------------------------------------------------
+
 double HadronWidths::width(int id, double eCM) const {
   auto iter = entries.find(abs(id));
   return (iter != entries.end()) ? iter->second.width(eCM) : 0.;
 }
 
+//--------------------------------------------------------------------------
+
 double HadronWidths::branchingRatio(int idR, int idA, int idB, double m) const {
-  const Entry* entry;
-  const DecayChannel* channel;
-  return _getEntryAndChannel(idR, idA, idB, entry, channel)
-       ? channel->partialWidth(m) / entry->width(m) : 0.;
+  Entry entry;
+  DecayChannel channel;
+  return getEntryAndChannel(idR, idA, idB, entry, channel)
+       ? channel.partialWidth(m) / entry.width(m) : 0.;
 }
+
+//--------------------------------------------------------------------------
 
 double HadronWidths::partialWidth(int idR, int idA, int idB, double m) const {
-  const Entry* entry;
-  const DecayChannel* channel;
-  return _getEntryAndChannel(idR, idA, idB, entry, channel)
-       ? channel->partialWidth(m) : 0.;
+  Entry entry;
+  DecayChannel channel;
+  return getEntryAndChannel(idR, idA, idB, entry, channel)
+       ? channel.partialWidth(m) : 0.;
 }
 
+//--------------------------------------------------------------------------
 
-bool HadronWidths::pickMasses(int idA, int idB, double eCM, double& mAOut, double& mBOut) {
+bool HadronWidths::pickMasses(int idA, int idB, double eCM,
+  double& mAOut, double& mBOut) {
   return _pickMasses(idA, idB, eCM, mAOut, mBOut, 1);
 }
-
 bool HadronWidths::_pickMasses(int idA, int idB, double eCM,
   double& mAOut, double& mBOut, int lType) {
 
@@ -308,18 +332,18 @@ bool HadronWidths::_pickMasses(int idA, int idB, double eCM,
 
   // If neither particle has mass-dependent width
   if (isResA && isResB) {
-    return _pickMass2(idA, idB, eCM, lType, mAOut, mBOut);
+    return pickMass2(idA, idB, eCM, lType, mAOut, mBOut);
   }
   else if (isResA) {
     double mA, mB = particleDataPtr->m0(idB);
-    if (!_pickMass1(idA, eCM, mB, lType, mA))
+    if (!pickMass1(idA, eCM, mB, lType, mA))
       return false;
     mAOut = mA; mBOut = mB;
     return true;
   }
   else if (isResB) {
     double mB, mA = particleDataPtr->m0(idA);
-    if (!_pickMass1(idB, eCM, mA, lType, mB))
+    if (!pickMass1(idB, eCM, mA, lType, mB))
       return false;
     mAOut = mA; mBOut = mB;
     return true;
@@ -331,6 +355,8 @@ bool HadronWidths::_pickMasses(int idA, int idB, double eCM,
   }
 }
 
+//--------------------------------------------------------------------------
+
 static double pCMS(double eCM, double mA, double mB) {
   double sCM = eCM * eCM;
   return sqrt((sCM - pow2(mA + mB)) * (sCM - pow2(mA - mB))) / (2. * eCM);
@@ -340,9 +366,9 @@ static double breitWigner(double gamma, double dm) {
   return 1. / (2. * M_PI) * gamma / (dm * dm + 0.25 * gamma * gamma);
 }
 
-static constexpr double MAX_LOOPS = 1000;
+static constexpr double MAX_LOOPS = 100;
 
-bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
+bool HadronWidths::pickMass1(int idRes, double eCM, double mB, int lType,
   double& mAOut) {
 
   // Ensure resonance is positive - the mass distribution doesn't change
@@ -356,11 +382,11 @@ bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
       std::to_string(idRes));
     return false;
   }
-  Entry& entry = iter->second;
+  Entry& entry = iter->second; 
 
   double mMin = entry.width.left(), 
          mMax = min(entry.width.right(), eCM - mB),
-         mPeak = particleDataPtr->m0(idRes),
+         mPeak = entry.mPeak,
          m0 = particleDataPtr->m0(idRes);
 
   // This can happen due to interpolation imprecision if eCM - mB is near mMin
@@ -394,11 +420,12 @@ bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   // Relative probabilities of being below/above peak
   vector<double> ps = { cdfLow, 2. * cdfHigh };
 
-  // @TODO: Compare w/ hit-and-miss implementations in other parts of code
+  // @TODO: Compare w/ other hit-and-miss implementations for consistency
   for (int i = 0; i < MAX_LOOPS; ++i) {
 
     double mCand, envelope;
 
+    // Sample overestimate
     if (rndmPtr->pick(ps) == 0) {
       double r = (0.5 - cdfLow) + rndmPtr->flat() * cdfLow;
       mCand = mPeak + 0.5 * gamma * tan(M_PI * (r - 0.5));
@@ -421,32 +448,35 @@ bool HadronWidths::_pickMass1(int idRes, double eCM, double mB, int lType,
   }
 
   infoPtr->errorMsg("Warning in HadronWidths::pickMass: "
-    "Could not pick mass within prescribed number of iterations. ",
-    std::to_string(idRes) + " in (" + std::to_string(mMin) + ", " + std::to_string(mMax) + ")");
+    "Could not pick mass within maximum number of iterations");
   
   mAOut = mMin + rndmPtr->flat() * (mMax - mMin);
   return true;
 }
 
+//--------------------------------------------------------------------------
+
 // @TODO: Implement this properly
 //        For the first iteration, we just pick id2 on shell
-bool HadronWidths::_pickMass2(int id1, int id2, double eCM, int lType,
+bool HadronWidths::pickMass2(int id1, int id2, double eCM, int lType,
   double& m1Out, double& m2Out) {
   
-  double m2 = particleDataPtr->m0(id2);
+  double m2Tmp = particleDataPtr->m0(id2);
 
   auto iter = entries.find(id2);
   if (iter == entries.end()) return false;
 
-  double m1;
-  if (!_pickMass1(id1, eCM, m2, lType, m1))
+  double m1Tmp;
+  if (!pickMass1(id1, eCM, m2Tmp, lType, m1Tmp))
     return false;
 
-  m1Out = m1; m2Out = m2;
+  m1Out = m1Tmp; m2Out = m2Tmp;
   return true;
 }
 
+//--------------------------------------------------------------------------
 
+// Pick decays and mass distribution for the specified decaying particle
 
 bool HadronWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
     double& mAOut, double& mBOut) {
@@ -502,6 +532,9 @@ bool HadronWidths::pickDecay(int idDec, double m, int& idAOut, int& idBOut,
   return true;
 }
 
+//--------------------------------------------------------------------------
+
+// Pick an excitation and mass distribution for the specified particles
 
 bool HadronWidths::pickExcitation(int idA, int idB, double eCM, 
   int& idCOut, double& mCOut, int& idDOut, double& mDOut) {
@@ -510,12 +543,14 @@ bool HadronWidths::pickExcitation(int idA, int idB, double eCM,
   if (idA * idB < 0)
     return false;
 
+  // If antiparticles, flip signs and flip back at the end
   bool isAnti = (idA < 0);
   if (isAnti) {
     idA = -idA; 
     idB = -idB;
   }
 
+  // Excitations are calculated only for nucleons
   if (!(idA == 2112 || idA == 2212) || !(idA == 2112 || idA == 2212))
     return false;
 
@@ -530,7 +565,7 @@ bool HadronWidths::pickExcitation(int idA, int idB, double eCM,
   if (rndmPtr->flat() > 0.5)
     swap(maskA, maskB);
 
-  // Construct ids of resonances from masks plus incoming ids
+  // Construct ids of resonances from masks plus incoming quark content
   int idCtmp = maskA + (idA - idA % 10);
   int idDtmp = maskB + (idB - idB % 10);
   
@@ -540,9 +575,13 @@ bool HadronWidths::pickExcitation(int idA, int idB, double eCM,
     return false;
 
   // Set output values and return
-  idCOut = isAnti ? -idCtmp : idCtmp; mCOut = mCtmp;
-  idDOut = isAnti ? -idDtmp : idDtmp; mDOut = mDtmp;
+  idCOut = isAnti ? -idCtmp : idCtmp;
+  idDOut = isAnti ? -idDtmp : idDtmp;
+  mCOut = mCtmp;
+  mDOut = mDtmp;
   return true;
 }
+
+//==========================================================================
 
 }
