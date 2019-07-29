@@ -3531,7 +3531,8 @@ The meaning of the various properties and the format used are explained
 </particle> 
  
 <particle id="3114" name="Sigma*-" antiName="Sigma*bar+" spinType="4" chargeType="-3" colType="0" 
-          m0="1.38720" mWidth="0.03940" mMin="1.34000" mMax="1.70000"> 
+          m0="1.38720" mWidth="0.03940" mMin="1.34000" mMax="1.70000"
+          useMassDependentWidth="true"> 
  <channel onMode="1" bRatio="0.8814590" products="3122 -211"/> 
  <channel onMode="1" bRatio="0.0592705" products="3212 -211"/> 
  <channel onMode="1" bRatio="0.0592705" products="3112 111"/> 
@@ -3547,7 +3548,8 @@ The meaning of the various properties and the format used are explained
 </particle> 
  
 <particle id="3124" name="Lambda(1520)0" antiName="Lambda(1520)bar0" spinType="4" chargeType="0" colType="0" 
-          m0="1.51950" mWidth="0.01560" mMin="1.40000" mMax="1.65000"> 
+          m0="1.51950" mWidth="0.01560" mMin="1.40000" mMax="1.65000"
+          useMassDependentWidth="true"> 
  <channel onMode="1" bRatio="0.2300000" products="2212 -321"/> 
  <channel onMode="1" bRatio="0.2300000" products="2112 -311"/> 
  <channel onMode="1" bRatio="0.1400000" products="3222 -211"/> 
@@ -3577,7 +3579,8 @@ The meaning of the various properties and the format used are explained
 </particle> 
  
 <particle id="3214" name="Sigma*0" antiName="Sigma*bar0" spinType="4" chargeType="0" colType="0" 
-          m0="1.38370" mWidth="0.03600" mMin="1.34000" mMax="1.70000"> 
+          m0="1.38370" mWidth="0.03600" mMin="1.34000" mMax="1.70000"
+          useMassDependentWidth="true"> 
  <channel onMode="1" bRatio="0.8700000" products="3122 111"/> 
  <channel onMode="1" bRatio="0.0585000" products="3222 -211"/> 
  <channel onMode="1" bRatio="0.0585000" products="3112 211"/> 
@@ -3593,7 +3596,8 @@ The meaning of the various properties and the format used are explained
 </particle> 
  
 <particle id="3224" name="Sigma*+" antiName="Sigma*bar-" spinType="4" chargeType="3" colType="0" 
-          m0="1.38280" mWidth="0.03600" mMin="1.34000" mMax="1.70000"> 
+          m0="1.38280" mWidth="0.03600" mMin="1.34000" mMax="1.70000"
+          useMassDependentWidth="true"> 
  <channel onMode="1" bRatio="0.8814590" products="3122 211"/> 
  <channel onMode="1" bRatio="0.0592705" products="3222 111"/> 
  <channel onMode="1" bRatio="0.0592705" products="3212 211"/> 
@@ -9912,10 +9916,11 @@ The meaning of the various properties and the format used are explained
           m0="1.830" mWidth="0.095" mMin="" mMax=""
           useMassDependentWidth="true"/>
 
+<!-- @TODO -->
 <particle id="23124" name="Lambda(1890)0" antiName="Lambda(1890)bar0"
           spinType="4" chargeType="0" colType="0"
           m0="1.890" mWidth="0.100" mMin="" mMax="" 
-          useMassDependentWidth="true"/>
+          />
 
 <particle id="3128" name="Lambda(2100)0" antiName="Lambda(2100)bar0"
           spinType="8" chargeType="0" colType="0"
@@ -10037,18 +10042,19 @@ The meaning of the various properties and the format used are explained
           m0="2.030" mWidth="0.180" mMin="" mMax=""
           useMassDependentWidth="true"/>
 
+<!-- @TODO -->
 
 <!-- Xi exitations -->
 <!-- Xi*(1530) already implemented -->
 <particle id="13314" name="Xi(1820)-" antiName="Xi(1820)bar+"
           spinType="4" chargeType="-3" colType="0"
           m0="1.823" mWidth="0.024" mMin="" mMax=""
-          useMassDependentWidth="true"/>
+          />
 
 <particle id="13324" name="Xi(1820)0" antiName="Xi(1820)bar0"
           spinType="4" chargeType="0" colType="0"
           m0="1.823" mWidth="0.024" mMin="" mMax=""
-          useMassDependentWidth="true"/>
+          />
 
 
 <!-- Further mesons -->
