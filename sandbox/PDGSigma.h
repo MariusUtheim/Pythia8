@@ -3,7 +3,12 @@
 
 #include "Pythia8/Pythia.h"
 
+// All data given as function of pLab. First particle is beam, second is target
+
 static double interpol(vector<pair<double, double>> data, double x) {
+  if (x < data[0].first || x > data[data.size() - 1].first) 
+    return 0.;
+  
   if (x < data[0].first)
     return data[0].second;
   else if (x > data[data.size() - 1].first)
@@ -18,7 +23,7 @@ static double interpol(vector<pair<double, double>> data, double x) {
 
 }
 
-static vector<pair<double, double>> ppbarTotal {
+static vector<pair<double, double>> pbarpTotal {
   {0.18100,339.40},{0.21900,292.10},
   {0.22190,317.71},{0.22960,304.67},{0.23700,297.12},{0.23900,261.20},
   {0.23900,261.20},{0.24990,286.47},{0.25490,279.66},{0.25880,273.95},
@@ -125,7 +130,7 @@ static vector<pair<double, double>> ppbarTotal {
   {50.00000,43.100},{50.00000,43.930},{50.00000,43.860}
 };
 
-static vector<pair<double, double>> ppbarElastic {
+static vector<pair<double, double>> pbarpElastic {
   {0.15367,93.700},{0.23916,89.000},{0.29406,80.000},{0.30600,74.700},
   {0.31037,86.500},{0.33600,75.700},{0.34870,77.600},{0.36000,73.100},
   {0.38100,71.100},{0.39900,68.000},{0.40455,71.100},{0.41600,65.500},
@@ -160,7 +165,7 @@ static vector<pair<double, double>> ppbarElastic {
   {48.90000,7.8100},{50.00000,8.2000}
 };
 
-static vector<pair<double, double>> npbarTotal {
+static vector<pair<double, double>> pbarnTotal {
   {1.13456,119.00},{1.34297,96.000},{1.48227,112.00},
   {1.63636,102.00},{1.77335,109.00},{3.50000,68.300},{5.55000,55.000},
   {6.00000,59.500},{6.65000,56.000},{8.00000,57.300},{10.00000,51.800},
@@ -172,7 +177,7 @@ static vector<pair<double, double>> npbarTotal {
   {50.00000,42.500},{50.00000,43.690},{50.00000,44.100},{70.00000,43.180}
 };
 
-static vector<pair<double, double>> npbarElastic {
+static vector<pair<double, double>> pbarnElastic {
   {1.13456,40.000},{1.34297,25.000},{1.48227,44.000},{1.63636,39.000},
   {1.77335,42.000},{3.50000,20.600},{5.55000,16.500}
 };
