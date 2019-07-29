@@ -339,7 +339,6 @@ double LowEnergySigma::calcXX(int idA, int idB, double eCM,
  * @TODO Implement strangeness exchange
  * @TODO Implement parametrisation for Lambda+p and Sigma+p special cases
  * @TODO Implement D+N and D+D collisions
- * @TODO Do something abour charm and bottom? 
  **/
 
 // === Begin interpolation data for NN cross sections ===
@@ -458,7 +457,7 @@ double LowEnergySigma::BBTotal(int idA, int idB, double eCM) const {
       return ppTotalData(eCM);
     else
       return HPR1R2(34.41, 13.07, -7.394, particleDataPtr->m0(idA), particleDataPtr->m0(idB), eCM * eCM);
-    
+
 
 //    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
 //    return (1 - t) * ppTotalData(eCM) 
@@ -517,7 +516,6 @@ double LowEnergySigma::BBNonDiff(int idA, int idB, double eCM) const {
         - BBDiffractiveAX(idA, idB, eCM) - BBDiffractiveXB(idA, idB, eCM)
         - BBDiffractiveXX(idA, idB, eCM) - BBExcite(idA, idB, eCM);
 }
-
 
 double LowEnergySigma::BBDiffractiveAX(int idA, int idB, double eCM) const {
   return calcAX(idA, idB, eCM, NNExciteThreshold, SaSDLThreshold);
@@ -680,7 +678,6 @@ double LowEnergySigma::BBbarAnnihilation(int idA, int idB, double eCM) const {
 // Hadron-Meson section
 
 /**TODO list for XM:
- * @TODO Diffraction using SaSDL
  * @TODO Consider parametrising ppiTotal, and define diff = total - res - elastic
  * @TODO Parametrise other cases explicitly, such as other pi+N and K+N
  * @TODO Get full elastic cross section (i.e. include resonant elastic)
@@ -715,6 +712,10 @@ static Interpolator ppiElData(1.975, 3.18545,
 );
 
 double LowEnergySigma::XMTotal(int idX, int idM, double eCM) const {
+  if (eCM > 5.) {
+    return HPR1R2(18.75, 9.56, -1.767, 0.138, 0.938, eCM * eCM);
+  }
+  else
   return XMNonDiffractive(idX, idM, eCM) + XMElastic(idX, idM, eCM) 
        + XMResonant(idX, idM, eCM);
 }
