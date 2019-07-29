@@ -2630,7 +2630,7 @@ bool Pythia::nextNonPert() {
     procType = nonPertProcesses[rndm.pick(sigmas)];
   }
 
-  // For type = 9, pick specific resonance
+  // For proc = 9, pick specific resonance
   if (procType == 9) {
     procType = lowEnergySigma.pickResonance(idA, idB, eCM);
     if (procType == 0) {

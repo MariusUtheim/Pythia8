@@ -43,7 +43,7 @@ public:
     MiniStringFragmentation* ministringFragPtrIn);
 
   // Produce outgoing primary hadrons from collision of incoming pair.
-  bool collide( int i1, int i2, int type, Event& event, Vec4 vtx = Vec4() );
+  bool collide( int i1, int i2, int proc, Event& event, Vec4 vtx = Vec4() );
 
   // Event record to handle hadronization.
   Event         leEvent;
@@ -94,7 +94,7 @@ private:
   bool nondiff();
 
   // Handle elastic and diffractive collisions.
-  bool eldiff( int type);
+  bool eldiff( int proc);
 
   // Handle excitation collisions.
   bool excitation();
@@ -122,7 +122,7 @@ private:
   double mThreshold( int iq1, int iq2);
 
   // Pick slope b of exp(b * t) for elastic and diffractive events.
-  double bSlope( int type);
+  double bSlope( int proc);
 
 };
 

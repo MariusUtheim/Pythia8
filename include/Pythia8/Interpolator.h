@@ -20,6 +20,8 @@ namespace Pythia8 {
 class Interpolator {
 public:
 
+  Interpolator() = default;
+  
   // Constructor.
   Interpolator(double leftIn, double rightIn, vector<double> ysIn)
     : leftSave(leftIn), rightSave(rightIn), ysSave(ysIn) { }

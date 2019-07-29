@@ -68,7 +68,7 @@ private:
   };
 
   struct Entry {
-    double m0;
+    double mPeak;
     Interpolator width;
     map<keyType, DecayChannel> decayChannels;
   };
@@ -84,12 +84,12 @@ private:
 
   keyType getKey(int& idR, int idA, int idB) const;
 
-  bool _getEntryAndChannel(int idR, int idA, int idB,
-    const Entry*& entryOut, const DecayChannel*& channelOut) const;
+  bool getEntryAndChannel(int idR, int idA, int idB,
+    Entry& entryOut, DecayChannel& channelOut) const;
 
-  bool _pickMass1(int idRes, double eCM, double mB, int lType, double& mAOut);
+  bool pickMass1(int idRes, double eCM, double mB, int lType, double& mAOut);
 
-  bool _pickMass2(int id1, int id2, double eCM, int lType,
+  bool pickMass2(int id1, int id2, double eCM, int lType,
     double& m1Out, double& m2Out);
 
   bool _pickMasses(int idA, int idB, double eCM,

@@ -19,7 +19,7 @@ void LowEnergySigma::init(Info* infoPtrIn, Settings& settings, Rndm* rndmPtrIn,
   rndmPtr           = rndmPtrIn;
   hadronWidthsPtr = hadronWidthsPtrIn;
 
-  // @TODO: Maybe just copy the relevant parts from sigmaSaSDL
+  // @TODO: Maybe just copy the relevant code from sigmaSaSDL?
   sigmaSaSDL.init(infoPtrIn, settings, particleDataPtrIn, nullptr);
 
   // Initialize map of resonance particles
@@ -86,10 +86,12 @@ int LowEnergySigma::canonicalForm(int& idA, int& idB) const {
 
 //--------------------------------------------------------------------------
 
+// Get the total cross section for the specified collision
+
 double LowEnergySigma::sigmaTotal(int idA, int idB, double eCM) const {
  
   // If energy is less than the hadron masses, return 0.
-  if (particleDataPtr->m0(idA) + particleDataPtr->m0(idB) > eCM)
+  if (eCM <= particleDataPtr->m0(idA) + particleDataPtr->m0(idB))
     return 0.;
 
   switch (canonicalForm(idA, idB)) {
@@ -98,15 +100,75 @@ double LowEnergySigma::sigmaTotal(int idA, int idB, double eCM) const {
     case 2: return BBbarTotal(idA, idB, eCM);
     case 3: case 4: return XMTotal(idA, idB, eCM);
     
-    // This should never occur
+    // This should never occur if the program is correct.
     default: 
-      infoPtr->errorMsg("Warning in LowEnergySigma::sigmaTotal: "
+      infoPtr->errorMsg("Error in LowEnergySigma::sigmaTotal: "
+        "Unhandled case encountered");
+      return 0.;
+  }
+}
+
+//--------------------------------------------------------------------------
+
+// Gets the partial cross section for the specified process
+
+double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM,
+  int proc) const {
+
+  if (particleDataPtr->m0(idA) + particleDataPtr->m0(idB) > eCM)
+    return 0.;
+
+  switch (canonicalForm(idA, idB)) {
+    case 0: // E.g. if particles are not hadrons
+      return 0.;
+
+    case 1: // BB
+      switch (proc) {
+        case 0: return BBTotal(idA, idB, eCM);
+        case 1: return BBNonDiff(idA, idB, eCM);
+        case 2: return BBElastic(idA, idB, eCM);
+        case 3: return BBDiffractiveAX(idA, idB, eCM);
+        case 4: return BBDiffractiveXB(idA, idB, eCM);
+        case 5: return BBDiffractiveXX(idA, idB, eCM);
+        case 7: return BBExcite(idA, idB, eCM);
+        default: return 0.;
+      }
+
+    case 2: // BBbar
+      switch (proc) {
+        case 0: return BBbarTotal(idA, idB, eCM);
+        case 1: return BBbarNonDiff(idA, idB, eCM);
+        case 2: return BBbarElastic(idA, idB, eCM);
+        case 3: return BBbarDiffractiveAX(idA, idB, eCM);
+        case 4: return BBbarDiffractiveXB(idA, idB, eCM);
+        case 5: return BBbarDiffractiveXX(idA, idB, eCM);
+        case 8: return BBbarAnnihilation(idA, idB, eCM);
+        default: return 0.;
+      }
+    
+    case 3: case 4: // XM
+      switch (proc) {
+        case 1: return XMNonDiffractive(idA, idB, eCM);
+        case 2: return XMElastic(idA, idB, eCM);
+        case 3: return XMDiffractiveAX(idA, idB, eCM);
+        case 4: return XMDiffractiveXB(idA, idB, eCM);
+        case 5: return XMDiffractiveXX(idA, idB, eCM);
+        case 9: return XMResonant(idA, idB, eCM);
+        default:
+          return abs(proc) > 100 ? XMResonantPartial(idA, idB, proc, eCM) : 0.;
+      }
+
+    default: 
+      infoPtr->errorMsg("Warning in LowEnergySigma::sigmaPartial: "
         "Unhandled case encountered. This indicates a bug in LowEnergySigma.");
       return 0.;
   }
 }
 
 //--------------------------------------------------------------------------
+
+// Gets all partial cross sections for the specified collision.
+// Returns whether any processes have positive cross sections.
 
 bool LowEnergySigma::sigmaPartial(int idA, int idB, double eCM,
   vector<int>& procsOut, vector<double>& sigmasOut) const {
@@ -160,60 +222,7 @@ bool LowEnergySigma::sigmaPartial(int idA, int idB, double eCM,
 
 //--------------------------------------------------------------------------
 
-double LowEnergySigma::sigmaPartial(int idA, int idB, double eCM,
-  int type) const {
-
-  if (particleDataPtr->m0(idA) + particleDataPtr->m0(idB) > eCM)
-    return 0.;
-
-  switch (canonicalForm(idA, idB)) {
-    case 0: // E.g. if particles are not hadrons
-      return 0.;
-
-    case 1: // BB
-      switch (type) {
-        case 0: return BBTotal(idA, idB, eCM);
-        case 1: return BBNonDiff(idA, idB, eCM);
-        case 2: return BBElastic(idA, idB, eCM);
-        case 3: return BBDiffractiveAX(idA, idB, eCM);
-        case 4: return BBDiffractiveXB(idA, idB, eCM);
-        case 5: return BBDiffractiveXX(idA, idB, eCM);
-        case 7: return BBExcite(idA, idB, eCM);
-        default: return 0.;
-      }
-
-    case 2: // BBbar
-      switch (type) {
-        case 0: return BBbarTotal(idA, idB, eCM);
-        case 1: return BBbarNonDiff(idA, idB, eCM);
-        case 2: return BBbarElastic(idA, idB, eCM);
-        case 3: return BBbarDiffractiveAX(idA, idB, eCM);
-        case 4: return BBbarDiffractiveXB(idA, idB, eCM);
-        case 5: return BBbarDiffractiveXX(idA, idB, eCM);
-        case 8: return BBbarAnnihilation(idA, idB, eCM);
-        default: return 0.;
-      }
-    
-    case 3: case 4: // XM
-      switch (type) {
-        case 1: return XMNonDiffractive(idA, idB, eCM);
-        case 2: return XMElastic(idA, idB, eCM);
-        case 3: return XMDiffractiveAX(idA, idB, eCM);
-        case 4: return XMDiffractiveXB(idA, idB, eCM);
-        case 5: return XMDiffractiveXX(idA, idB, eCM);
-        case 9: return XMResonant(idA, idB, eCM);
-        default:
-          return abs(type) > 100 ? XMResonantPartial(idA, idB, type, eCM) : 0.;
-      }
-
-    default: 
-      infoPtr->errorMsg("Warning in LowEnergySigma::sigmaPartial: "
-        "Unhandled case encountered. This indicates a bug in LowEnergySigma.");
-      return 0.;
-  }
-}
-
-//--------------------------------------------------------------------------
+// Picks a process randomly according to their partial cross sections
 
 int LowEnergySigma::pickProcess(int idA, int idB, double eCM) {
   vector<int> processes;
@@ -225,6 +234,8 @@ int LowEnergySigma::pickProcess(int idA, int idB, double eCM) {
 }
 
 //--------------------------------------------------------------------------
+
+// Picks a resonance according to their partial cross sections
 
 int LowEnergySigma::pickResonance(int idA, int idB, double eCM) {
   int process = canonicalForm(idA, idB);
@@ -287,8 +298,19 @@ static double HPR1R2(double p, double r1, double r2, double mA, double mB, doubl
   return p + H * pow2(log(ss)) + r1 * pow(ss, -eta1) + r2 * pow(ss, -eta2);
 }
 
+static bool SaSDLcanHandle(int id) {
+  return id == 2212 || id == -2212 || id == 2112 || id == -2112 
+      || id == 211 || id == 111 || id == -211 
+      || id == 213 || id == 113 || id == -213
+      || id == 333 || id == 443;
+}
+
 double LowEnergySigma::calcAX(int idA, int idB, double eCM,
   double lBound, double mBound) const {
+
+  // @TODO What to do in this case? 
+  if (!SaSDLcanHandle(idA) || !SaSDLcanHandle(idB)) 
+    return 0.;
 
   // No continuous diffraction in the resonance region
   if (eCM < lBound) 
@@ -300,7 +322,7 @@ double LowEnergySigma::calcAX(int idA, int idB, double eCM,
     t = (eCM - lBound) / (mBound - lBound);
     eCM = mBound;
   }
-  
+
   // Calculate cross section from SaSDL
   sigmaSaSDL.calcDiff(idA, idB, eCM * eCM, 
                       particleDataPtr->m0(idA), particleDataPtr->m0(idB));
@@ -309,8 +331,9 @@ double LowEnergySigma::calcAX(int idA, int idB, double eCM,
 
 double LowEnergySigma::calcXX(int idA, int idB, double eCM,
   double lBound, double mBound) const {
-  // @TODO: Diffractive scattering is only implemented for NN collisions
-  if ((idA != 2212 && idA != 2112) || (idB != 2212 && idB != 2112))
+
+  // @TODO What to do in this case? 
+  if (!SaSDLcanHandle(idA) || !SaSDLcanHandle(idB)) 
     return 0.;
 
   // No continuous diffraction in the resonance region
@@ -335,8 +358,9 @@ double LowEnergySigma::calcXX(int idA, int idB, double eCM,
 // Baryon-Baryon section
 
 /** Todo list for BB:
- * @TODO Check that the tables are correct and sufficiently smooth, compare w/ data
- * @TODO Implement strangeness exchange
+ * @TODO Smoothen tables?
+ * @TODO Compare with PDG or UrQMD
+ * @TODO Implement strangeness exchange?
  * @TODO Implement parametrisation for Lambda+p and Sigma+p special cases
  * @TODO Implement D+N and D+D collisions
  **/
@@ -457,12 +481,6 @@ double LowEnergySigma::BBTotal(int idA, int idB, double eCM) const {
       return ppTotalData(eCM);
     else
       return HPR1R2(34.41, 13.07, -7.394, particleDataPtr->m0(idA), particleDataPtr->m0(idB), eCM * eCM);
-
-
-//    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
-//    return (1 - t) * ppTotalData(eCM) 
-//               + t * ReggeFit(35.45, 42.53, 33.34, eCM * eCM);
-//               //+ t * HPR1R2(34.41, 13.07, -7.394, particleDataPtr->m0(idA), particleDataPtr->m0(idB), eCM * eCM);
   }
   // Use parametrisation for pn
   else if (idA == 2212 && idB == 2112)
@@ -471,11 +489,8 @@ double LowEnergySigma::BBTotal(int idA, int idB, double eCM) const {
       return pnTotalData(eCM);
     else 
       return HPR1R2(34.71, 12.52, -6.66, particleDataPtr->m0(idA), particleDataPtr->m0(idB), eCM * eCM);
-//    double t = clamp((eCM - 3.) / (5. - 3.), 0., 1.);
-//    return (1 - t) * pnTotalData(eCM) 
-//               + t * ReggeFit(35.80, 40.15, 30.00, eCM * eCM);
   }
-  // @TODO: Something special for Delta1232+N or Delta1232+Delta1232
+  // @TODO: Something special for Delta1232+N or Delta1232+Delta1232?
   // ...
   // Use AQM + strangeness exchange for all others
   else {
@@ -550,13 +565,9 @@ double LowEnergySigma::BBExcite(int idA, int idB, double eCM) const {
 // Baryon-Antibaryon section
 
 /**TODO list for BBbar:
- * @TODO Check that sNN is correct
  * @TODO sigmaTotNN and sigmaElNN do not match data well for pLab < 0.3
- * @TODO Should there be a different parametrisation for npbar?
- * @TODO Check that the aqmFactor is correct (should we use the elastic one?)
- * @TODO Figure out if the annihilation cross section parametrisation is up to date
- * @TODO Decide how to split the diffractive cross sections among specific processes
- * @TODO Compare with data cases: ppbar, npbar, +others?
+ * @TODO Use data and parametrisation for all processes where available
+ * @TODO Compare with PDG data: ppbar, npbar, +others?
  * */
 
 double LowEnergySigma::BBbarTotal(int idA, int idB, double eCM) const {
@@ -570,7 +581,6 @@ double LowEnergySigma::BBbarTotal(int idA, int idB, double eCM) const {
                             * (sBB - pow2(mA - mB)) / sBB;
   double pLab = sqrt(sNN * (sNN - 4. * m0 * m0)) / (2. * m0);
 
-  // @TODO HPR1R2 fits?  
   // Get parametrised cross section for ppbar
   double sigmaTotNN =
       (pLab < 0.3) ? 271.6 * exp(-1.1 * pLab * pLab)
@@ -681,13 +691,14 @@ double LowEnergySigma::BBbarAnnihilation(int idA, int idB, double eCM) const {
  * @TODO Consider parametrising ppiTotal, and define diff = total - res - elastic
  * @TODO Parametrise other cases explicitly, such as other pi+N and K+N
  * @TODO Get full elastic cross section (i.e. include resonant elastic)
+ * @TODO Diffraction for cases that SaS/DL cannot handle directly
+ * @TODO Use data and parametrisation where available
  * @TODO Something with strangeness exchange?
  * @TODO UrQMD includes something about Danielewicz forward delay
  * @TODO Decide which resonances should be implemented
- * @TODO Check that all excited particles have the correct data, including id
+ * @TODO Check that all particle excitations have the correct data, including id
  * @TODO Verify that mass-dependent widths are correct for all particles, esp. rho
- * @TODO Compare pi/K + p cross sections to PDG data
- * @TODO Compare a lot of cases to UrQMD
+ * @TODO Compare cases to PDG where available, or other important cases to UrQMD
  **/
 
 static Interpolator ppiStringData(1.9, 3.19642, {
@@ -738,35 +749,14 @@ double LowEnergySigma::XMElastic(int idX, int idM, double eCM) const {
 }
 
 double LowEnergySigma::XMDiffractiveAX(int idX, int idM, double eCM) const {
-  // If SaS/DL can handle these particles 
-  if ((idX == 2212 || idX == 2112) && (abs(idM) == 211 || idM == 111
-      || abs(idM) == 213 || idM == 113 || idM == 333 || idM == 443))
-    return calcAX(idX, idM, eCM, 1.9, 3.0);
-  else {
-    // @TBD What otherwise?
-    return 0.;
-  }
+  return calcAX(idX, idM, eCM, 1.9, 3.0);
 }
 
 double LowEnergySigma::XMDiffractiveXB(int idX, int idM, double eCM) const {
-  // If SaS/DL can handle these particles 
-  if ((idX == 2212 || idX == 2112) && (abs(idM) == 211 || idM == 111
-      || abs(idM) == 213 || idM == 113 || idM == 333 || idM == 443))
-    return calcAX(idM, idX, eCM, 1.9, 3.0);
-  else {
-    // @TBD What otherwise?
-    return 0.;
-  }
+  return calcAX(idM, idX, eCM, 1.9, 3.0);
 }
 double LowEnergySigma::XMDiffractiveXX(int idX, int idM, double eCM) const {
-  // If SaS/DL can handle these particles 
-  if ((idX == 2212 || idX == 2112) && (abs(idM) == 211 || idM == 111
-      || abs(idM) == 213 || idM == 113 || idM == 333 || idM == 443))
-    return calcXX(idX, idM, eCM, 1.9, 3.0);
-  else {
-    // @TBD What otherwise?
-    return 0.;
-  }
+  return calcXX(idX, idM, eCM, 1.9, 3.0);
 }
 
 double LowEnergySigma::XMResonant(int idX, int idM, double eCM) const {
