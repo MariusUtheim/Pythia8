@@ -408,6 +408,9 @@ public:
     book(titleIn, nBinIn, xMinIn, xMaxIn, logXIn);}
   Hist(Hist&&) = default;
 
+  Hist& operator=(const Hist&) = default;
+  Hist& operator=(Hist&&) = default;
+
   // Create a histogram that is the plot of the function
   static Hist plotFunc(std::function<double(double)> f, string titleIn = "  ",
     int nBinIn = 100, double xMinIn = 0., double xMaxIn = 1.,
