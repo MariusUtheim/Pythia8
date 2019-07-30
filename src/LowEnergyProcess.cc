@@ -799,7 +799,8 @@ pair< int, int> LowEnergyProcess::splitFlav( int id) {
    else if (id == 333) {
      return make_pair(3, -3);
    }
-
+  // @TODO: Does this really work? What about e.g. Sigma(1775)+, with id 3226?
+  // @TODO: In these cases, what about spin conservation?
   // Octet baryons.
   } else if (idAbs%10 == 2) {
     // Three identical quarks: emergency in case of higher spin 1/2 multiplet.
@@ -827,10 +828,14 @@ pair< int, int> LowEnergyProcess::splitFlav( int id) {
 
   // Decuplet baryons.
   } else {
+    // Ensure descending quark order, e.g. for Lambda (with id 3122)
+    if (iq2 < iq3) swap(iq2, iq3);
+
     double rr3 = 3. * rndmPtr->flat();
     if (rr3 < 1.)      { iq4 = iq1; iq5 = 1000 * iq2 + 100 * iq3 + 3;}
     else if (rr3 < 2.) { iq4 = iq2; iq5 = 1000 * iq1 + 100 * iq3 + 3;}
     else               { iq4 = iq3; iq5 = 1000 * iq1 + 100 * iq2 + 3;}
+
     if (id > 0) return make_pair(  iq4,  iq5);
     else        return make_pair( -iq5, -iq4);
   }
