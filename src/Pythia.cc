@@ -1061,8 +1061,32 @@ bool Pythia::init() {
   info.setTooLowPTmin(false);
   info.sigmaReset();
 
+  // Special initialization for non-perturbative
+  doNonPertall     = settings.flag("NonPerturbative:all");
+  if (!doNonPertall) {
+    if (settings.flag("NonPerturbative:nonDiffractive")) 
+      nonPertProcesses.push_back(1);
+    if (settings.flag("NonPerturbative:elastic")) 
+      nonPertProcesses.push_back(2);
+    if (settings.flag("NonPerturbative:singleDiffractive")
+     || settings.flag("NonPerturbative:singleDiffractiveAX"))
+      nonPertProcesses.push_back(3);
+    if (settings.flag("NonPerturbative:singleDiffractive")
+     || settings.flag("NonPerturbative:singleDiffractiveXB")) 
+      nonPertProcesses.push_back(4);
+    if (settings.flag("NonPerturbative:doubleDiffractive")) 
+      nonPertProcesses.push_back(5);
+    if (settings.flag("NonPerturbative:excitation")) 
+      nonPertProcesses.push_back(7);
+    if (settings.flag("NonPerturbative:annihilation")) 
+      nonPertProcesses.push_back(8);
+    if (settings.flag("NonPerturbative:resonant")) 
+      nonPertProcesses.push_back(9);
+  }
+  doNonPert        = doNonPertall || nonPertProcesses.size() > 0;
+
   // Initialize data members extracted from database.
-  doPartonLevel    = settings.flag("PartonLevel:all");
+  doPartonLevel    = !doNonPert && settings.flag("PartonLevel:all");
   doHadronLevel    = settings.flag("HadronLevel:all");
   doCentralDiff    = settings.flag("SoftQCD:centralDiffractive");
   doSoftQCDall     = settings.flag("SoftQCD:all");
@@ -1086,29 +1110,6 @@ bool Pythia::init() {
   abortIfVeto      = settings.flag("Check:abortIfVeto");
   checkEvent       = settings.flag("Check:event");
   checkHistory     = settings.flag("Check:history");
-
-  doNonPertall     = settings.flag("NonPerturbative:all");
-  if (!doNonPertall) {
-    if (settings.flag("NonPerturbative:nonDiffractive")) 
-      nonPertProcesses.push_back(1);
-    if (settings.flag("NonPerturbative:elastic")) 
-      nonPertProcesses.push_back(2);
-    if (settings.flag("NonPerturbative:singleDiffractive")
-     || settings.flag("NonPerturbative:singleDiffractiveAX"))
-      nonPertProcesses.push_back(3);
-    if (settings.flag("NonPerturbative:singleDiffractive")
-     || settings.flag("NonPerturbative:singleDiffractiveXB")) 
-      nonPertProcesses.push_back(4);
-    if (settings.flag("NonPerturbative:doubleDiffractive")) 
-      nonPertProcesses.push_back(5);
-    if (settings.flag("NonPerturbative:excitation")) 
-      nonPertProcesses.push_back(7);
-    if (settings.flag("NonPerturbative:annihilation")) 
-      nonPertProcesses.push_back(8);
-    if (settings.flag("NonPerturbative:resonant")) 
-      nonPertProcesses.push_back(9);
-  }
-  doNonPert        = doNonPertall || nonPertProcesses.size() > 0;
 
   nErrList         = settings.mode("Check:nErrList");
   epTolErr         = settings.parm("Check:epTolErr");
@@ -1259,6 +1260,14 @@ bool Pythia::init() {
 
   // Do not set up beam kinematics when no process level.
   if (!doProcessLevel) boostType = 1;
+  else if (doNonPert) {
+    // Set up beam kinematics.
+    if (!initKinematics()) {
+      info.errorMsg("Abort from Pythia::init: "
+        "kinematics initialization failed");
+      return false;
+    }
+  }
   else {
 
     // Set up beam kinematics.
@@ -2640,7 +2649,7 @@ bool Pythia::nextNonPert() {
     }
   }
 
-  // Do a low-energy collision, for now inelastic nondiffractive only.
+  // Do a low-energy collision.
   if (!doLowEnergyProcess( 1, 2, procType)) {
     info.errorMsg("Error from Pythia::nextNonPert: fragmentation failed");
     return false;
