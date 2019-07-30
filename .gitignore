@@ -34,6 +34,7 @@
 
 # Mac
 .DS_Store
+*.directory
 
 # VSCode
 .vscode/*
