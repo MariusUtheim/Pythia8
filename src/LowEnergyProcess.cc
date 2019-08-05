@@ -391,9 +391,15 @@ bool LowEnergyProcess::eldiff( int proc) {
   double bNow     = bSlope( proc);
   double eBtLow   = exp( bNow * tLow);
   double eBtUpp   = exp( bNow * tUpp);
-  double tNow     = log( eBtLow + rndmPtr->flat() * (eBtUpp - eBtLow) ) / bNow;
+  double s = rndmPtr->flat();
+  double q = eBtLow + s * (eBtUpp - eBtLow);
+  double tNow     = log( q ) / bNow;
   double theta    = acos( (2. * tNow - tLow - tUpp) / (tUpp - tLow) );
   double phi      = 2. * M_PI * rndmPtr->flat();
+
+  // @TODO: This might happen if energy is very high and eBtUpp == 0
+  if (isnan(theta)) return false;
+
   for (int i = 3; i < leEvent.size(); ++i) leEvent[i].rot( theta, phi);
 
   // Done.
